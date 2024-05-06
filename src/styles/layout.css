@@ -1,0 +1,7 @@
+@import "../index.css";
+
+.main {
+  background-color: var(--bg-s-primary);
+  display: flex;
+  flex-direction: column;
+}

@@ -1,0 +1,119 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 15px;
+  padding-top: 10px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.header-left img {
+  width: 50px;
+  /* margin-right: 10px; */
+  cursor: pointer;
+}
+
+.header-left input {
+  display: flex;
+  align-items: center;
+  padding: 7px;
+  padding-left: 15px;
+  border: 1px solid var(--bg-s-third);
+  border-radius: 15px;
+  background-color: var(--bg-s-fourth);
+  color: var(--text-s-secondary);
+  margin-left: 15px;
+}
+
+.header-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 13%;
+  gap: 0 20px;
+  padding: 3px 20px;
+  background-color: var(--bg-s-secondary);
+  border-radius: 15px;
+  border: 1px solid var(--bg-s-fourth);
+}
+
+.header.center h1 {
+  font-size: 1.5rem;
+  color: var(--green-color2);
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-right: 10px;
+}
+
+.header-user img {
+  width: 50px;
+  background-color: #2b2b2b;
+  border-radius: 15px;
+  background-color: var(--bg-s-third);
+  border: 3px var(--bg-s-third) solid;
+  cursor: pointer;
+}
+
+.user-settings-icon {
+  position: absolute;
+  bottom: 0;
+  left: 29px;
+}
+
+.header-right button:hover {
+  background-color: var(--green-color2);
+}
+
+.header-right button:active {
+  background-color: var(--green-color2);
+}
+
+.header-right button:focus {
+  outline: none;
+}
+
+.user-header-menu {
+  display: none;
+  position: absolute;
+  /* right: 10px; */
+  top: 49px;
+  right: 0px;
+  background-color: var(--bg-s-secondary);
+  border-radius: 15px;
+  padding: 10px;
+  width: 200px;
+  z-index: 1;
+}
+
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 15px;
+  margin: 5px 0;
+  cursor: pointer;
+}
+
+.user-header-menu h1 {
+  display: block;
+  border-top: 2px solid var(--color-input-border);
+  padding-top: 5px;
+  margin-top: 15px;
+  font-size: 1.2rem;
+  color: var(--color-primary);
+  text-align: center;
+  cursor: pointer;
+}
+
+.show-user-header-menu {
+  display: block;
+}

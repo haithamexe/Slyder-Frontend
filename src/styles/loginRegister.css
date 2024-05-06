@@ -1,0 +1,37 @@
+.loginRegister {
+  position: relative;
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--bg-s-primary);
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 7%;
+  padding: 0 2px;
+  gap: 0 5px;
+  margin-bottom: 7px;
+}
+
+.buttons button {
+  width: 48%;
+  padding: 9px 6px;
+  border-radius: 15px;
+  background-color: var(--color-primary);
+  color: #000000;
+  font-size: 1.1rem;
+  cursor: pointer;
+  border: rgb(104, 104, 104) 1px solid;
+}
+
+.btn-clicked {
+  background-color: #1e1e1e !important;
+  color: var(--color-secondary) !important;
+  border: none;
+  cursor: pointer;
+}

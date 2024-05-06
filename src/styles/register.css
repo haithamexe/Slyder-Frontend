@@ -1,0 +1,153 @@
+@import "../index.css";
+
+.register {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1100px;
+  height: 750px;
+  /* background-color: #b56d6d !important; */
+  border-radius: 20px;
+  overflow: hidden;
+  gap: 0;
+  box-shadow: 0 0 10px 0 #000;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  /* align-items: center; */
+  background-color: var(--bg-primary);
+  width: 90%;
+  height: 100%;
+  padding: 60px;
+}
+
+.register-form input {
+  width: 100%;
+  padding: 10px;
+  margin: 7.5px 0;
+  border: none;
+  border-radius: 15px;
+  background-color: rgb(29, 29, 29);
+  border: #393939 1px solid;
+  color: #fff;
+}
+
+.half {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 0 10px;
+}
+
+.half input {
+  width: 50%;
+  /* margin: 0 10px; */
+  border-radius: 15px;
+}
+
+label {
+  color: rgb(124, 124, 124);
+  font-size: 0.75rem;
+  margin: 10px 0;
+}
+
+.register-date-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 0 10px;
+}
+
+.register-date-container select {
+  width: 33%;
+  padding: 10px;
+  margin: 7.5px 0;
+  border: none;
+  border-radius: 15px;
+  background-color: rgb(29, 29, 29);
+  border: #393939 1px solid;
+  color: #fff;
+}
+
+.radio-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 0 10px;
+}
+
+.radio-select div {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: center;
+  background-color: #fff;
+  border-radius: 15px;
+  color: black;
+  padding: 5px 10px;
+  gap: 0 65px;
+  margin: 0;
+  background-color: rgb(29, 29, 29);
+  border: #393939 1px solid;
+  color: #fff;
+}
+
+.register-form p {
+  margin: 0px 60px;
+  font-size: 0.7rem;
+  color: var(--color-secondary);
+}
+.register-form a {
+  color: var(--color-primary);
+}
+
+.register-button {
+  width: 100%;
+  padding: 10px;
+  margin: 7.5px 0;
+  border: none;
+  border-radius: 15px;
+  background-color: var(--color-primary);
+  color: #000000;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.logo-register {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 135px;
+  /* padding-top: 60px; */
+}
+
+.logo-register img {
+  width: 90px;
+  height: 90px;
+  margin-bottom: 27px;
+}
+
+/* .buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 0 5px;
+}
+
+.buttons button {
+  width: 48%;
+  padding: 9px 6px;
+  border-radius: 10px;
+  background-color: #3c3c3c;
+  color: #000000;
+  font-size: 1.1rem;
+  cursor: pointer;
+  border: rgb(104, 104, 104) 1px solid;
+} */

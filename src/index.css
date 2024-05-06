@@ -1,0 +1,154 @@
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap");
+
+@font-face {
+  font-family: "Walting";
+  src: url("./fonts/Walting_Font.ttf") format("truetype");
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Ubuntu", sans-serif;
+}
+body {
+  /* font-family: "Ubuntu", sans-serif; */
+  /* font-family: Helvetica, Arial, sans-serif; */
+  background-color: var(--bg-s-primary);
+}
+
+.main {
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-primary);
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+.btn {
+  color: var(--bg-primary);
+  background-color: var(--blue-color);
+  border: none;
+  border-radius: 8px;
+  padding: 0 15px;
+  font-size: 20px;
+  height: 50px;
+  font-weight: 700;
+}
+.btn:hover {
+  cursor: pointer;
+}
+
+:root {
+  --font-logo: "Walting", "Ubuntu", sans-serif;
+  --font-general: "Ubuntu", sans-serif;
+  --bg-primary: #18181b;
+  --bg-secondary: #303030;
+  --bg-third: rgb(29, 30, 41);
+  --bg-forth: #f0f2f5;
+
+  --text-pri: #d9d9d9;
+  --text-s-primary: #f5f5f5;
+  --text-s-secondary: #838383;
+  --text-s-third: #747474;
+
+  --bg-s-primary: #1d2029;
+  --bg-s-secondary: #222735;
+  --bg-s-third: #161921;
+  --bg-s-fourth: #181e29;
+
+  /* best version */
+  /* --bg-s-primary: #151920;
+  --bg-s-secondary: #1a1f2b;
+  --bg-s-third: #000000;
+  --bg-s-fourth: #121720; */
+
+  /* --bg-s-primary: #161a21;
+  --bg-s-secondary: #212632;
+  --bg-s-third: #172428;
+  --bg-s-fourth: #15181d; */
+
+  /* --bg-s-primary: #0c0f14; */
+  /* --bg-s-primary: #1a1a1a; */
+  /* --bg-s-primary: #1a1a1a; */
+  /* --bg-s-secondary: #282828; */
+  /* --bg-s-third: #373636; */
+  /* --bg-s-fourth: #1f1f1f; */
+  /* --bg-s-third: #2f2e2e; */
+  --color-primary: #5976ff;
+  --color-secondary: #a7c750;
+  --color-secondary02: #95bc29;
+  --color-input-border: #393939;
+  /* --color-secondary2: #272727; */
+  /* --color-secondary22: #f5f6f7; */
+  --divider: #ced0d4;
+  --dark-bg-primary: #18191a;
+  --dark-bg-secondary: #242526;
+  --dark-bg-third: #3a3b3c;
+  --dark-color-primary: #242526;
+  --dark-color-secondary: #b0b3b8;
+  --blue-color: #1876f2;
+  --blue-color2: #385898;
+  --green-color: #42b72a;
+  --green-color2: #2a9314;
+  --red-color: #be4b49;
+  --light-blue-color: #e7f3ff;
+  --border-color: #ccced2;
+  --popup-color: #be4b49;
+  --shadow-1: rgba(0, 0, 0, 0.2);
+  --shadow-2: rgba(0, 0, 0, 0.1);
+  --shadow-3: rgba(0, 0, 0, 0.3);
+  --shadow-4: 0px 4px 15px -3px rgba(0, 0, 0, 0.31);
+  -moz-box-shadow: 0px 4px 15px -3px rgba(0, 0, 0, 0.31);
+  box-shadow: 0px 4px 15px -3px rgba(0, 0, 0, 0.31);
+  --shadow-inset: rgba(255, 255, 255, 0.5);
+}
+
+.notFound404 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 2.1rem;
+  font-weight: 900;
+  color: var(--color-secondary);
+  gap: 10px;
+}
+.notFound404 button {
+  margin-top: 30px;
+  padding: 0 40px;
+  height: 50px;
+  border-radius: 8px;
+  background-color: var(--blue-color);
+  color: var(--bg-primary);
+  font-size: 20px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+}
+
+::-webkit-scrollbar {
+  width: 0.6em;
+  height: 0.6em;
+}
+::-webkit-scrollbar-track {
+  background: rgb(22, 21, 27);
+  border-radius: 100vw;
+  margin-block: 0.5em;
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(108, 125, 192);
+  border-radius: 100vw;
+  border: 0.12em solid var(--bg-secondary);
+}
+
+@supports (not selector(::-webkit-scrollbar)) {
+  * {
+    scrollbar-color: rgb(108, 125, 192) rgb(22, 21, 27);
+    scrollbar-width: thin;
+  }
+}

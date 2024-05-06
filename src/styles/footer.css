@@ -1,0 +1,49 @@
+@import "../icons/icons.css";
+
+.footer-box {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 30px;
+  width: 100%;
+  height: 100%;
+}
+.footer-content {
+  max-width: 910px;
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--color-secondary2);
+}
+.footer-content-langs {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 5px 10px;
+  flex-wrap: wrap;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--divider);
+}
+.footer-content-langs button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 31px;
+  height: 18px;
+  font-weight: 400;
+  font-size: 20px;
+  padding-top: 2px;
+}
+.footer-content-links {
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  gap: 2px 14px;
+  flex-wrap: wrap;
+  margin-bottom: 26px;
+}
+.footer-content p {
+  font-size: 11px;
+}

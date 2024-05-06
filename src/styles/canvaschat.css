@@ -1,0 +1,25 @@
+@import "../index.css";
+
+.canvas-container-chat {
+  /* position: absolute; */
+  /* top: 90px; */
+  /* right: 50px; */
+  width: 200px;
+  height: 500px;
+  /* background-color: rgb(12, 12, 48); */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 4;
+  /* overflow: hidden; */
+}
+
+.canvasChat {
+  /* background-color: rgb(25, 24, 32, 0.1); */
+  background-color: var(--bg-s-third);
+  z-index: 0;
+  cursor: pointer;
+  border-radius: 15px;
+
+  /* filter: blur(10px) contrast(30); */
+}

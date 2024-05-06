@@ -1,0 +1,83 @@
+@import "../index.css";
+
+.activate {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.activate-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: rgba(23, 23, 23, 0.6);
+  width: 700px;
+  height: 500px;
+  padding: 20px;
+  border-radius: 10px;
+  border: 3px solid var(--color-secondary);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  gap: 20px;
+  /* color: var(--text-s-primary); */
+}
+
+.activate-container h1 {
+  font-size: 37px;
+  font-weight: 900;
+  color: var(--color-secondary);
+}
+
+.activate-container .desc-activate {
+  width: 80%;
+  font-size: 25px;
+  font-weight: 900;
+  color: var(--text-s-primary);
+  text-align: center;
+}
+
+.activate-container h2 {
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--text-s-primary);
+  border-bottom: 2px solid #343434;
+  padding-bottom: 20px;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+.activate-container input {
+  width: 65%;
+  padding: 10px;
+  border: none;
+  border-radius: 15px;
+  background-color: rgb(38, 38, 38);
+  border: #484848 1px solid;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.activate-container button {
+  width: 65%;
+  height: 50px;
+  border-radius: 8px;
+  background-color: var(--color-secondary);
+  color: var(--bg-primary);
+  font-size: 20px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+}
+
+.activate-container p {
+  margin-top: 10px;
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--text-s-primary);
+  text-align: center;
+}
+.activate-container p span {
+  color: var(--color-primary);
+}
