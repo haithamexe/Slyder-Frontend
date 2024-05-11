@@ -303,7 +303,7 @@
   width: 100%;
   gap: 0 15px;
   padding: 5px 0;
-  border-radius: 15px;
+  /* border-radius: 15px; */
   border-bottom: 2px solid var(--bg-s-secondary);
   cursor: pointer;
 }
@@ -346,69 +346,6 @@
   /* align-items: center; */
 }
 
-.slyde {
-  display: flex;
-  position: relative;
-  /* flex-direction: column; */
-  justify-content: center;
-  align-items: center;
-  height: 40px;
-  width: 100%;
-  background-color: var(--bg-s-secondary);
-  border-radius: 15px;
-  padding: 20px;
-  /* gap: 0 1px; */
-  cursor: pointer;
-}
-
-.ai-text {
-  color: var(--color-secondary);
-  /* font-family: var(--font-logo); */
-  font-size: 1.4rem;
-  font-weight: 900;
-}
-
-.slyde img {
-  width: 120px;
-  /* padding-top: 20px; */
-  /* object-fit: cover; */
-}
-
-.slide-option {
-  width: 40px !important;
-}
-
-.slyders-menu {
-  /* position: absolute; */
-  /* top: 33px; */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-radius: 15px;
-  width: 100%;
-  height: 630px;
-  gap: 10px;
-  padding: 10px;
-  background-color: var(--bg-s-secondary);
-  z-index: 3;
-}
-
-.slyder-show {
-  display: none;
-}
-
-.slyders {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 60%;
-  /* height: 100%; */
-  gap: 10px;
-  padding: 10px;
-}
-
 .post {
   position: relative;
   display: flex;
@@ -421,6 +358,19 @@
   /* margin-top: 20px; */
   background-color: var(--bg-s-secondary);
   border-radius: 15px;
+  gap: 4px 0;
+}
+
+.post-new-button {
+  text-align: left;
+  width: 100%;
+  gap: 0 10px;
+  padding: 10px;
+  border-radius: 15px;
+  background-color: var(--bg-s-fourth);
+  cursor: pointer;
+  border: none;
+  color: var(--text-s-secondary);
 }
 
 .post-input-img {
@@ -439,7 +389,8 @@
 }
 
 .post-input-img img {
-  width: 50px;
+  width: 40px;
+  margin: 0 5px;
   object-fit: cover;
   border-radius: 15px;
   background-color: var(--bg-s-fourth);
@@ -447,8 +398,8 @@
 }
 .post-input-img input {
   width: 95%;
-  padding: 12px;
-  margin: 7.5px 0;
+  padding: 8px 13px;
+  /* margin: 7.5px 0; */
   border: none;
   border-radius: 15px;
   background-color: var(--bg-s-fourth);
@@ -463,12 +414,14 @@
   align-items: center;
   width: 100%;
   gap: 0 10px;
-  padding: 10px;
+  /* padding: 10px; */
 }
 
 .post-options {
   display: flex;
   justify-content: start;
+  align-items: center;
+  height: 25px;
   padding-left: 66px;
   align-items: center;
   gap: 0 15px;
@@ -938,82 +891,6 @@
   cursor: pointer;
 }
 
-.slyder-container-main {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  /* margin-top: 25px; */
-  background-color: var(--bg-s-secondary);
-  border-radius: 15px;
-  display: none;
-}
-
-.slyder-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 20px;
-  border-radius: 15px;
-  background-color: var(--bg-s-secondary);
-  display: none;
-}
-
-.slyder-container-main h1 {
-  color: var(--text-s-secondary);
-  font-size: 1.14rem;
-  font-weight: 100;
-  flex-grow: 0.9;
-  /* padding: 10px 0; */
-}
-
-.slide-box-container {
-  display: flex;
-  flex-direction: column;
-  /* align-items: center; */
-  justify-content: center;
-  gap: 20px 0;
-  border-radius: 15px;
-  padding: 20px;
-  /* margin-top: 25px; */
-  display: none;
-  background-color: var(--bg-s-secondary);
-}
-
-.slide-box {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-width: 355px;
-  flex-grow: 1;
-  gap: 0 10px;
-  padding: 10px 15px;
-  border-radius: 15px;
-  background-color: var(--bg-s-secondary);
-  box-shadow: 10px 10px 25px #161525, -5px -5px 15px #313550;
-  visibility: inherit;
-}
-
-.slide-box h1 {
-  color: var(--color-primary);
-  font-size: 1.23rem;
-  font-weight: 900;
-}
-
-.slide-box input {
-  flex-grow: 1;
-  height: 12px;
-  appearance: none;
-  background: var(--bg-s-secondary);
-  outline: none;
-  border-radius: 15px;
-  box-shadow: 5px 5px 5px #1a1a2c, -5px -5px 10px #26273c,
-    inset 5px 5px 5px #272e42;
-}
-
 /* .slide-box input::-moz-range-thumb {
   appearance: none;
   width: 20px;
@@ -1061,6 +938,7 @@
 }
 
 .resize-column {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1068,5 +946,4 @@
   height: 80vh;
   cursor: ew-resize;
   margin-top: 50px;
-  background-color: var(--bg-s-secondary);
 }

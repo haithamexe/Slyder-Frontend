@@ -50,7 +50,7 @@ const ChatPlay = () => {
               value={numberOfParticlesChanged}
               min={1}
               max={310}
-              step={10}
+              step={1}
               onChange={(e) => setNumberOfParticles(e.target.value)}
             />
             <span>{numberOfParticlesChanged}</span>

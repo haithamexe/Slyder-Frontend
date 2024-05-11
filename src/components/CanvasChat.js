@@ -20,8 +20,8 @@ const CanvasChat = (props) => {
     );
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
-    canvas.width = 400;
-    canvas.height = 500;
+    canvas.width = 370;
+    canvas.height = 530;
 
     let frameCount = 0;
     let animationFrameId;
@@ -148,7 +148,7 @@ const CanvasChat = (props) => {
         x: this.width / 2,
         y: this.height / 2,
         pressed: false,
-        radius: 120,
+        radius: 80,
       };
 
       // window.addEventListener("resize", (e) => {
