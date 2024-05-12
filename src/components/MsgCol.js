@@ -1,6 +1,8 @@
 import { useState } from "react";
-import NotificationsRoundedIcon from "@mui/icons-material/NotificationsRounded";
-
+import TurnedInRoundIcon from "@mui/icons-material/TurnedInRounded";
+import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
+import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
+import EditNoteRoundedIcon from "@mui/icons-material/EditNoteRounded";
 const MsgCol = (props) => {
   const { Panel, PanelGroup, PanelResizeHandle } = props;
   const [activityScrollable, setActivityScrollable] = useState(false);
@@ -87,7 +89,7 @@ const MsgCol = (props) => {
           <button>See All</button>
         </div>
       </div>
-      <div className="home-messages">
+      {/* <div className="home-messages">
         <div className="messages-header">
           <h1>Messages</h1>
           <button>notif</button>
@@ -149,6 +151,54 @@ const MsgCol = (props) => {
         </div>
         <div className="messages-footer">
           <button>See All</button>
+        </div>
+      </div> */}
+
+      <div className="quick-access">
+        <div className="quick-access-header">
+          <h1>Quick Access</h1>
+        </div>
+        <div className="quick-access-body">
+          <div className="quick-access-card">
+            <h1>Saved</h1>
+            <TurnedInRoundIcon
+              sx={{
+                fontSize: 27,
+                color: "#a7c750;",
+                cursor: "pointer",
+              }}
+            />
+          </div>
+          <div className="quick-access-card">
+            <h1>Likes</h1>
+            <FavoriteRoundedIcon
+              sx={{
+                fontSize: 27,
+                color: "#a7c750;",
+                cursor: "pointer",
+              }}
+            />
+          </div>
+          <div className="quick-access-card">
+            <h1>Notes</h1>
+            <EditNoteRoundedIcon
+              sx={{
+                fontSize: 27,
+                color: "#a7c750;",
+                cursor: "pointer",
+              }}
+            />
+          </div>
+          <div className="quick-access-card">
+            <h1>Report A Problem</h1>
+            <ErrorOutlineRoundedIcon
+              sx={{
+                fontSize: 27,
+                color: "#a7c750;",
+                cursor: "pointer",
+              }}
+            />
+          </div>
         </div>
       </div>
     </>

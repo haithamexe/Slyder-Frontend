@@ -7,6 +7,7 @@ import ReviewsRoundedIcon from "@mui/icons-material/ReviewsRounded";
 import WhatshotRoundedIcon from "@mui/icons-material/WhatshotRounded";
 import SettingsRoundedIcon from "@mui/icons-material/Settings";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
+import NotificationsRoundedIcon from "@mui/icons-material/NotificationsRounded";
 import { userActions, userAuthed } from "../features/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useLogoutUserApiMutation } from "../features/user/userApiSlice";
@@ -46,6 +47,14 @@ const Header = () => {
             sx={{ fontSize: 32, color: "#a7c750;", cursor: "pointer" }}
           />
         </Link>
+        <NotificationsRoundedIcon
+          sx={{
+            fontSize: 30,
+            color: "#a7c750;",
+            cursor: "pointer",
+          }}
+        />
+
         <ReviewsRoundedIcon
           onClick={() => navigate("/chat")}
           sx={{

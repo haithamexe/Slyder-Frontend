@@ -1,6 +1,9 @@
 import React from "react";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import { useEffect, useState } from "react";
+import { userAuthed } from "../features/user/userSlice";
+import { useSelector } from "react-redux";
+
 const UserCol = () => {
   const [communityScrolled, setCommunityScrolled] = useState(false);
 
@@ -17,7 +20,7 @@ const UserCol = () => {
       <div className="user-container">
         <div className="cover">
           <img src="/images/demo/cover2.png" alt="cover" />
-          <button type="button" className="options">
+          {/* <button type="button" className="options">
             <MoreVertRoundedIcon
               sx={{
                 fontSize: 30,
@@ -25,7 +28,7 @@ const UserCol = () => {
                 cursor: "pointer",
               }}
             />
-          </button>
+          </button> */}
           {/* <button type="button" className="exit">
             x
           </button> */}
@@ -60,7 +63,7 @@ const UserCol = () => {
           </div>
         </div>
       </div>
-      <div className="skills-container">
+      {/* <div className="skills-container">
         <p>Skills</p>
         <div className="skills">
           <h1>Art</h1>
@@ -71,7 +74,7 @@ const UserCol = () => {
           <h1>pew pew</h1>
           <h1>Web Dev</h1>
         </div>
-      </div>
+      </div> */}
       <div className="communities-container">
         <p>Communities</p>
         <div

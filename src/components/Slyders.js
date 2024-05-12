@@ -1,5 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import Chart from "chart.js/auto";
+import RestartAltRoundedIcon from "@mui/icons-material/RestartAltRounded";
+import SaveRoundedIcon from "@mui/icons-material/SaveRounded";
 
 const Slyders = (props) => {
   const canvasRef = useRef(null);
@@ -115,26 +117,44 @@ const Slyders = (props) => {
         </div>
         <div className="slyder-info slyder-show">
           <h1>
-            We are excited to introduce you to our unique feature - interactive
-            sliders! These sliders are a powerful tool that allows you to have
-            direct control over the recommendations you receive from our
-            algorithm.
+            We're thrilled to unveil our new feature: interactive sliders! These
+            sliders empower you to directly influence our recommendation
+            algorithm. Each slider corresponds to a specific parameter
+            considered by the algorithm. By adjusting them, you can tailor the
+            recommendations to your preferences. For instance, increase the
+            "Sport" slider to receive more sports-related posts.
           </h1>
-          <h1>
-            Each slider represents a different parameter that our recommendation
-            algorithm considers. By adjusting these sliders, you can influence
-            the algorithm's decision-making process. For example, if you prefer
-            sport items over other ones, you can adjust the "Sport" slider to
-            reflect this preference.
-          </h1>
+          <div className="trending-slyder-btns">
+            <button className="algo-save-btn">
+              Save
+              <SaveRoundedIcon
+                sx={{
+                  fontSize: 19,
+                  color: "#181e29",
+                }}
+              ></SaveRoundedIcon>
+            </button>
+            <button className="algo-reset-btn">
+              Reset
+              <RestartAltRoundedIcon
+                sx={{
+                  fontSize: 19,
+                  color: "#a7c750",
+                }}
+              ></RestartAltRoundedIcon>
+            </button>
+          </div>
         </div>
       </div>
 
-      {width > 1749 && (
-        <div className="slyder-stats">
-          <canvas ref={canvasRef} className="slyder-canvas"></canvas>
-        </div>
-      )}
+      <div className="slyder-stats">
+        <canvas
+          ref={canvasRef}
+          className={
+            width >= 1805 ? "slyder-canvas" : "slyder-canvas slyder-stat-hide"
+          }
+        ></canvas>
+      </div>
     </>
   );
 };
