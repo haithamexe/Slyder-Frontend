@@ -7,6 +7,16 @@ import { useState } from "react";
 
 const TrendNotes = () => {
   const [NewNote, setNewNote] = useState("");
+  const [noteScroll, setNoteScroll] = useState(false);
+
+  const handleScrollEnter = () => {
+    setNoteScroll(true);
+  };
+
+  const handleScrollExit = () => {
+    setNoteScroll(false);
+  };
+
   return (
     <div className="trending-notes">
       <div className="trending-timer">
@@ -33,7 +43,13 @@ const TrendNotes = () => {
             }}
           />
         </div>
-        <div className="note-container">
+        <div
+          className={
+            noteScroll ? "note-container note-scroll" : "note-container"
+          }
+          onMouseEnter={handleScrollEnter}
+          onMouseLeave={handleScrollExit}
+        >
           <div className="note">
             <h2 className="note-title">Hello</h2>
             <h3 className="note-content">

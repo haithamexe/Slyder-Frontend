@@ -28,6 +28,7 @@
   background-color: var(--bg-s-fourth);
   color: var(--text-s-secondary);
   margin-left: 15px;
+  /* box-shadow: 10px 10px 25px #171823, -5px -5px 15px #272a39; */
 }
 
 .header-center {
@@ -40,6 +41,7 @@
   background-color: var(--bg-s-secondary);
   border-radius: 15px;
   border: 1px solid var(--bg-s-fourth);
+  /* box-shadow: 10px 10px 25px #171823, -5px -5px 15px #272a39; */
 }
 
 .header.center h1 {
@@ -61,6 +63,7 @@
   background-color: var(--bg-s-third);
   border: 3px var(--bg-s-third) solid;
   cursor: pointer;
+  /* box-shadow: 10px 10px 25px #171823, -5px -5px 15px #272a39; */
 }
 
 .user-settings-icon {
@@ -92,18 +95,28 @@
   padding: 10px;
   width: 200px;
   z-index: 1;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--bg-s-fourth);
 }
 
 .menu-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 5px 10px;
+  padding: 10px 10px;
   border-radius: 15px;
   margin: 5px 0;
   cursor: pointer;
 }
 
+.menu-item h3 {
+  color: var(--text-pri);
+}
+.menu-item:hover {
+  background-color: var(--bg-s-fourth);
+}
+.user-header-menu {
+}
 .user-header-menu h1 {
   display: block;
   border-top: 2px solid var(--color-input-border);
@@ -117,4 +130,23 @@
 
 .show-user-header-menu {
   display: block;
+}
+.logout-btn-header {
+  background-color: var(--bg-s-secondary);
+  border: none;
+  border-radius: 15px;
+  padding: 5px 10px;
+  color: var(--text-pri);
+  cursor: pointer;
+  margin-top: 10px;
+  width: 100%;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 500;
+  transition: 0.3s;
+  border: none !important;
+}
+.logout-btn-header:hover {
+  background-color: var(--bg-s-fourth);
+  /* border: none; */
 }

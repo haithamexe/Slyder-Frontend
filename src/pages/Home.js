@@ -1,6 +1,8 @@
 import "../styles/home.css";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { userAuthed } from "../features/user/userSlice";
+import { useSelector } from "react-redux";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 
 import {
@@ -17,6 +19,7 @@ import HomeFeed from "../components/HomeFeed";
 import MsgCol from "../components/MsgCol";
 
 const Home = () => {
+  const user = useSelector(userAuthed);
   const [width, setWidth] = useState(window.innerWidth);
   const navigate = useNavigate();
 
@@ -44,7 +47,7 @@ const Home = () => {
         {width >= 1400 && (
           <>
             <Panel className="left" defaultSize={20} minSize={17}>
-              <UserCol />
+              <UserCol user={user} />
             </Panel>
             <div className="resize-column">
               <MoreVertRoundedIcon
@@ -66,7 +69,7 @@ const Home = () => {
         )}
 
         <Panel className="center" defaultSize={35} minSize={35} maxSize={50}>
-          <HomeFeed />
+          <HomeFeed user={user} />
         </Panel>
 
         {width >= 900 && (
@@ -92,6 +95,7 @@ const Home = () => {
                 Panel={Panel}
                 PanelGroup={PanelGroup}
                 PanelResizeHandle={PanelResizeHandle}
+                user={user}
               />
             </Panel>
           </>

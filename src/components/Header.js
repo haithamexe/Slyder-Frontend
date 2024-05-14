@@ -97,26 +97,28 @@ const Header = () => {
             }
           >
             <div className="menu-item">
+              <h3>Profile</h3>
               <AccountCircleRoundedIcon
                 sx={{
                   fontSize: 20,
-                  color: "#dfdfdf",
+                  color: "#a7c750",
                   marginRight: "10px",
                 }}
               />
-              Profile
             </div>
             <div className="menu-item">
+              <h3>Settings</h3>
               <SettingsRoundedIcon
                 sx={{
                   fontSize: 20,
-                  color: "#dfdfdf",
+                  color: "#a7c750",
                   marginRight: "10px",
                 }}
               />
-              Settings
             </div>
-            <h1 onClick={handleLogout}> Logout </h1>
+            <h1 className="logout-btn-header" onClick={handleLogout}>
+              Logout
+            </h1>
           </div>
         </div>
       </div>

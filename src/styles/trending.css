@@ -75,7 +75,7 @@
   flex-direction: column;
   height: 68vh;
   gap: 10px 0;
-  overflow-y: scroll;
+  overflow-y: hidden;
   overflow-x: hidden;
 }
 
@@ -282,6 +282,11 @@
 .algo-reset-btn {
   background-color: var(--bg-s-fourth);
   color: var(--color-secondary) !important;
+}
+
+.note-scroll {
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 /* .trending-post {

@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@auth-kit/react-router": "^3.1.2",
+    "@cloudinary/react": "^1.13.0",
+    "@cloudinary/url-gen": "^1.19.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
     "@hookform/resolvers": "^3.3.1",
