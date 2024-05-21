@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { userAuthed } from "../features/user/userSlice";
 import { useSelector } from "react-redux";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
-
+import NewPost from "../components/NewPost";
 import {
   getPanelElement,
   getPanelGroupElement,
@@ -21,6 +21,7 @@ import MsgCol from "../components/MsgCol";
 const Home = () => {
   const user = useSelector(userAuthed);
   const [width, setWidth] = useState(window.innerWidth);
+  const [newPost, setNewPost] = useState(false); // [new]
   const navigate = useNavigate();
 
   const handleResize = () => {
@@ -69,7 +70,7 @@ const Home = () => {
         )}
 
         <Panel className="center" defaultSize={35} minSize={35} maxSize={50}>
-          <HomeFeed user={user} />
+          <HomeFeed user={user} setNewPost={setNewPost} />
         </Panel>
 
         {width >= 900 && (
@@ -101,6 +102,8 @@ const Home = () => {
           </>
         )}
       </PanelGroup>
+
+      <NewPost setNewPost={setNewPost} newPost={newPost} />
     </>
   );
 };

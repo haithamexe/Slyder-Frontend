@@ -8,6 +8,7 @@ import Register from "./pages/Register";
 import AuthRoutes from "./components/AuthRoutes";
 import Trending from "./pages/Trending";
 import Chat from "./pages/Chat";
+import Profile from "./components/Profile";
 
 const App = () => {
   return (
@@ -16,12 +17,14 @@ const App = () => {
       <Route path="/" element={<AuthRoutes />}>
         <Route path="/" element={<Layout />}>
           <Route path="/" element={<Home />} />
+          <Route path="/:username" element={<Profile />} />
           <Route path="/trending" element={<Trending />} />
           <Route path="/chat" element={<Chat />} />
         </Route>
       </Route>
 
       {/* public routes  */}
+      <Route path="/profile/:username" element={<Profile />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/activate/:token" element={<Activate />} />

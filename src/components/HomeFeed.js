@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import Slyders from "./Slyders";
+import Post from "./Post";
 
 import VideoLibraryRoundedIcon from "@mui/icons-material/VideoLibraryRounded";
 import LibraryMusicRoundedIcon from "@mui/icons-material/LibraryMusicRounded";
@@ -12,8 +13,28 @@ import ChatRoundedIcon from "@mui/icons-material/ChatRounded";
 import TurnedInRoundIcon from "@mui/icons-material/TurnedInRounded";
 import ShortcutRoundIcon from "@mui/icons-material/ShortcutRounded";
 import ArrowDropUpRoundedIcon from "@mui/icons-material/ArrowDropUpRounded";
+import { useGetHomePostsQuery } from "../features/post/postApiSlice";
+import { homePosts, postActions } from "../features/post/postSlice";
+import { useDispatch, useSelector } from "react-redux";
+import PostPreveiw from "./PostPreveiw";
 
-const HomeFeed = () => {
+const HomeFeed = ({ setNewPost, user }) => {
+  const dispatch = useDispatch();
+  const [postsLoading, setPostsLoading] = useState(true);
+  const [postId, setFetchPostId] = useState("");
+
+  // const [{ data: homePosts }] = useGetHomePostsQuery();
+  const {
+    data: fetchedHomePosts,
+    isLoading,
+    isSuccess,
+    error,
+    isError,
+    refetch,
+  } = useGetHomePostsQuery(user.id);
+
+  const posts = useSelector(homePosts);
+
   const [newPostText, setNewPostText] = useState("");
   const [feedScrollable, setFeedScrollable] = useState(false);
   const feedRef = useRef(null);
@@ -33,77 +54,35 @@ const HomeFeed = () => {
     // setScrolledAmount(scrollPercentage);
   };
 
+  useEffect(() => {
+    // console.log(fetchedHomePosts, posts);
+    if (isSuccess && !posts) {
+      setPostsLoading(false);
+      dispatch(postActions.setHomePosts(fetchedHomePosts));
+    }
+    if (isLoading) {
+      setPostsLoading(true);
+    }
+
+    // console.log(postId, "postId");
+    // if (!isSuccess) {
+    refetch();
+    // }
+  }, [isSuccess, fetchedHomePosts, postId, posts]);
+
   return (
     <>
       <div className="post">
         <div className="post-input-img">
-          <img src="/images/demo/3.png" alt="post" />
-          <button type="button" className="post-new-button">
+          <img src={user.picture} alt="post" />
+          <button
+            type="button"
+            className="post-new-button"
+            onClick={() => setNewPost(true)}
+          >
             What's on your mind?
           </button>
-          {/* <input
-            type="text"
-            placeholder="What's on your mind?"
-            value={newPostText}
-            onChange={(e) => setNewPostText(e.target.value)}
-          /> */}
-          {/* <SendRoundedIcon
-            className="post-send-icon"
-            sx={{
-              fontSize: 30,
-              color: "#a7c750;",
-              cursor: "pointer",
-            }}
-          /> */}
         </div>
-        {/* <div className="post-options">
-          <button className="post-option">
-            <PhotoLibraryRoundedIcon
-              sx={{
-                fontSize: 20,
-                color: "#a7c750;",
-              }}
-            />
-            <h1>Photo</h1>
-          </button>
-          <button className="post-option">
-            <VideoLibraryRoundedIcon
-              sx={{
-                fontSize: 20,
-                color: "#a7c750;",
-              }}
-            />
-
-            <h1>Video</h1>
-          </button>
-          <button className="post-option">
-            <PollRoundedIcon
-              sx={{
-                fontSize: 20,
-                color: "#a7c750;",
-              }}
-            />
-            <h1>Poll</h1>
-          </button>
-          <button className="post-option">
-            <LibraryMusicRoundedIcon
-              sx={{
-                fontSize: 20,
-                color: "#a7c750;",
-              }}
-            />
-            <h1>Music</h1>
-          </button>
-          <button className="post-option">
-            <MoreVertRoundedIcon
-              sx={{
-                fontSize: 20,
-                color: "#a7c750;",
-              }}
-            />
-            <h1>More</h1>
-          </button>
-        </div> */}
       </div>
 
       <div
@@ -112,86 +91,14 @@ const HomeFeed = () => {
         onMouseLeave={handleScrollExit}
         ref={feedRef}
       >
-        <div className="feed-post">
-          <div className="feed-post-header">
-            <div className="feed-post-header-img">
-              <img src="/images/demo/user1.png" alt="post" />
-            </div>
-            <div className="feed-post-header-info">
-              <div className="feed-post-header-info-name">
-                <h1>John Doe</h1>
-                <p>@time</p>
-              </div>
-              <button className="post-follow">Unfollow</button>
-              <MoreVertRoundedIcon
-                onClick={() => console.log("options")}
-                className="post-on-options"
-                sx={{
-                  fontSize: 24,
-                  color: "#a7c750;",
-                  cursor: "pointer",
-                  width: "27px",
-                  height: "27px",
-                }}
-              />
-            </div>
-          </div>
-          <div className="feed-post-body">
-            <p>
-              Hello this is my firas d as dhgauhghujg asdg as jhg asd g ajsgd j
-              kashd ahskd hk hakshdk h askjd h akjsdh hkjkjashd h kjahsk dhkahsd
-              h dkhakdh ajhdkahkaak hsajdhakh kasdakjh haksd kh haksjdh k lkasdj
-              lkjst post here hehe jeje hoho pew pew ....... . . . pew pew
-            </p>
-          </div>
-          <div className="feed-post-img">
-            <img src="/images/demo/post.jpg" alt="post" />
-          </div>
-          <div className="feed-post-footer">
-            <FavoriteRoundedIcon
-              sx={{
-                fontSize: 27,
-                color: "#a7c750;",
-                cursor: "pointer",
-              }}
-            />
-            <ChatRoundedIcon
-              sx={{
-                fontSize: 27,
-                color: "#a7c750;",
-                cursor: "pointer",
-              }}
-            />
-            <ShortcutRoundIcon
-              sx={{
-                fontSize: 27,
-                color: "#a7c750;",
-                cursor: "pointer",
-              }}
-            />
-            <TurnedInRoundIcon
-              className="post-save"
-              sx={{
-                fontSize: 27,
-                color: "#a7c750;",
-                cursor: "pointer",
-              }}
-            />
-          </div>
-          <div className="feed-post-comments">
-            <img src="/images/demo/3.png" alt="post" />
-            <input type="text" placeholder="Write a comment" />
-            <SendRoundedIcon
-              className="comment-send-icon"
-              sx={{
-                fontSize: 27,
-                color: "#a7c750;",
-                cursor: "pointer",
-              }}
-            />
-          </div>
-        </div>
+        {posts?.map((post) => (
+          <Post key={post?._id} post={post} setFetchPostId={setFetchPostId} />
+        ))}
+        {/* <Post /> */}
       </div>
+      {postId && (
+        <PostPreveiw postId={postId} setFetchPostId={setFetchPostId} />
+      )}
     </>
   );
 };

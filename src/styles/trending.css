@@ -1,12 +1,14 @@
 @import "../index.css";
 
 .trending {
-  padding: 25px;
+  padding: 40px;
+  padding-bottom: 27px;
   padding-top: 17px;
   height: 91.5%;
   display: flex;
   align-items: center;
-  gap: 0 30px;
+  justify-content: center;
+  gap: 0 70px;
 }
 
 .trending-list {
@@ -14,23 +16,33 @@
   width: 600px;
   /* height: 88vh; */
   height: 100%;
-  flex-grow: 1;
+}
+
+.trend-windows {
+  display: flex;
+  /* gap: 20px; */
+  /* width: 100%; */
+  height: 100%;
+  padding: 20px 0;
 }
 
 .trending-notes {
   /* margin-left: 30px; */
+  position: absolute;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  width: 500px;
+  width: 700px;
   /* height: 88vh; */
-  height: 100%;
+  /* height: 100%; */
   /* background-color: var(--bg-s-secondary); */
   /* background-color: rgba(34, 40, 63, 0.4); */
   /* border: 1px solid var(--bg-s-third); */
   border-radius: 15px;
   /* padding: 15px; */
   gap: 17px 0;
+  z-index: 5;
+  background-color: var(--bg-s-primary);
 }
 
 .trending-timer {
@@ -39,12 +51,12 @@
   align-items: center;
   padding: 10px;
   /* background-color: rgba(18, 23, 35, 0.6); */
-  background-color: var(--bg-s-secondary);
+  /* background-color: var(--bg-s-secondary); */
 
   border-radius: 15px;
   gap: 0 10px;
   color: rgb(109, 109, 109);
-  border: 1px solid var(--bg-s-third);
+  border: 5px solid var(--bg-s-secondary);
 }
 
 .notes {
@@ -52,12 +64,12 @@
   flex-direction: column;
   padding: 10px;
   /* background-color: rgba(18, 23, 35, 0.6); */
-  background-color: var(--bg-s-secondary);
+  /* background-color: var(--bg-s-secondary); */
   border-radius: 15px;
   gap: 0 10px;
   color: rgb(109, 109, 109);
-  height: 89.2%;
-  border: 1px solid var(--bg-s-third);
+  height: 73.7vh;
+  border: 5px solid var(--bg-s-secondary);
 }
 
 .note-header {
@@ -67,13 +79,13 @@
   padding: 10px;
   gap: 0 10px;
   color: rgb(109, 109, 109);
-  border-bottom: 2px solid var(--bg-s-secondary);
+  /* border-bottom: 2px solid var(--bg-s-secondary); */
 }
 
 .note-container {
   display: flex;
   flex-direction: column;
-  height: 68vh;
+  height: 70vh;
   gap: 10px 0;
   overflow-y: hidden;
   overflow-x: hidden;
@@ -87,13 +99,47 @@
   background-color: var(--bg-s-fourth);
   border-radius: 15px;
   color: rgb(109, 109, 109);
-  border: 2px solid var(--bg-s-secondary);
+  /* border: 2px solid var(--bg-s-secondary); */
 }
 
-.trending-sliders {
-  height: 100%;
+.trending-sliders-new {
+  height: 84.5vh;
+  width: 710px;
+  /* background-color: #1100ff; */
+
+  /* margin-left: 4cm; */
+  /* position: relative; */
+  background-color: var(--bg-s-secondary);
+  border-radius: 15px;
 }
 
+.trend-Ai-icon {
+  position: absolute;
+  top: -19px;
+  background-color: var(--bg-s-secondary);
+  border-radius: 30%;
+  left: 0;
+  margin-left: 65px;
+  /* left: 5px; */
+}
+
+.trend-timer02-icon {
+  position: absolute;
+  /* top: 76px; */
+  top: -19px;
+  background-color: var(--bg-s-secondary);
+  border-radius: 30%;
+  left: 0;
+  transform: translate(50%, 0);
+}
+
+.trending-icons-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0 10px;
+}
 .slyde {
   display: flex;
   /* flex-direction: column; */
@@ -130,8 +176,8 @@
   align-items: center;
   justify-content: center;
   border-radius: 15px;
-  /* width: 100%; */
-  height: 630px;
+  /* width: 10%; */
+  height: 650px;
   gap: 10px;
   padding: 10px;
   z-index: 3;
@@ -151,6 +197,7 @@
 .slyder-container-main {
   display: flex;
   /* align-items: center; */
+  /* width: 800px; */
   justify-content: center;
   padding: 0 20px;
   /* margin-top: 25px; */
@@ -238,6 +285,7 @@
 
 .slyder-stats {
   display: flex;
+  width: 20px;
   align-items: center;
   padding-left: 30px;
 }

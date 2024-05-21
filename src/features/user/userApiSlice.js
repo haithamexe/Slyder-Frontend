@@ -63,6 +63,19 @@ const userApiSlice = apiSlice.injectEndpoints({
         body: { email: email },
       }),
     }),
+    getUserWithIdApi: builder.query({
+      query: (userId) => `api/user/${userId}`,
+    }),
+    getUserWithUsernameApi: builder.query({
+      query: (username) => `api/user/username/${username}`,
+    }),
+    updateUserApi: builder.mutation({
+      query: (userData) => ({
+        url: "api/user/update",
+        method: "PUT",
+        body: userData,
+      }),
+    }),
   }),
 });
 
@@ -75,6 +88,8 @@ export const {
   useForgotPasswordApiMutation,
   useLogoutUserApiMutation,
   useRefreshActivationTokenApiMutation,
+  useGetUserWithIdApiQuery,
+  useGetUserWithUsernameApiQuery,
 } = userApiSlice;
 
 export default userApiSlice;

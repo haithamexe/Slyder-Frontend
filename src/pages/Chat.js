@@ -27,7 +27,7 @@ const Chat = () => {
 
   return (
     <div onMouseMove={handleMouseMove} className="chat">
-      <Blob x={pos.x} y={pos.y} />
+      {/* <Blob x={pos.x} y={pos.y} /> */}
 
       <ChatList />
       {width > 1400 ? <ChatPlay /> : null}

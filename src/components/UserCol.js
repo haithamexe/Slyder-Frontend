@@ -64,10 +64,10 @@ const UserCol = ({ user }) => {
           onMouseEnter={handleScrollEnter}
           onMouseLeave={handleScrollExit}
         >
-          <div className="community">
+          {/* <div className="community">
             <img src="/images/demo/post.jpg" alt="community" />
             <h1>Managers</h1>
-          </div>
+          </div> */}
         </div>
       </div>
     </>

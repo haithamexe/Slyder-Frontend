@@ -154,6 +154,36 @@ const userSlice = createSlice({
         state.error = action.error.message;
       }
     );
+    builder.addMatcher(
+      userApiSlice.endpoints.getUserWithIdApi.matchFulfilled,
+      (state, action) => {
+        state.user = action.payload;
+        state.status = "fulfilled";
+        state.error = null;
+      }
+    );
+    builder.addMatcher(
+      userApiSlice.endpoints.getUserWithIdApi.matchRejected,
+      (state, action) => {
+        state.status = "rejected";
+        state.error = action.error.message;
+      }
+    );
+    builder.addMatcher(
+      userApiSlice.endpoints.getUserWithUsernameApi.matchFulfilled,
+      (state, action) => {
+        state.user = action.payload;
+        state.status = "fulfilled";
+        state.error = null;
+      }
+    );
+    builder.addMatcher(
+      userApiSlice.endpoints.getUserWithUsernameApi.matchRejected,
+      (state, action) => {
+        state.status = "rejected";
+        state.error = action.error.message;
+      }
+    );
   },
 });
 

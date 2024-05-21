@@ -39,7 +39,7 @@ const MsgCol = (props) => {
           onMouseEnter={handleActivtyScrollEnter}
           onMouseLeave={handleActivtyScrollExit}
         >
-          <div className="activity-card">
+          {/* <div className="activity-card">
             <div className="activity-card-img">
               <img src="/images/demo/user1.png" alt="activity" />
             </div>
@@ -47,43 +47,7 @@ const MsgCol = (props) => {
               <h1>John Doe</h1>
               <p>followed you</p>
             </div>
-          </div>
-          <div className="activity-card">
-            <div className="activity-card-img">
-              <img src="/images/demo/user3.jpg" alt="activity" />
-            </div>
-            <div className="activity-card-info">
-              <h1>John Doe</h1>
-              <p>followed you</p>
-            </div>
-          </div>
-          <div className="activity-card">
-            <div className="activity-card-img">
-              <img src="/images/slyder-logo-star.png" alt="activity" />
-            </div>
-            <div className="activity-card-info">
-              <h1>John Doe</h1>
-              <p>followed you</p>
-            </div>
-          </div>
-          <div className="activity-card">
-            <div className="activity-card-img">
-              <img src="/images/slyder-logo-star.png" alt="activity" />
-            </div>
-            <div className="activity-card-info">
-              <h1>John Doe</h1>
-              <p>followed you</p>
-            </div>
-          </div>
-          <div className="activity-card">
-            <div className="activity-card-img">
-              <img src="/images/slyder-logo-star.png" alt="activity" />
-            </div>
-            <div className="activity-card-info">
-              <h1>John Doe</h1>
-              <p>followed you</p>
-            </div>
-          </div>
+          </div> */}
         </div>
         <div className="activity-footer">
           <button>See All</button>

@@ -35,7 +35,7 @@ const Header = () => {
     <div className="header">
       <div className="header-left">
         <img
-          src="/images/slyder-logo-star.png"
+          src="/images/slyder-s.png"
           alt="logo"
           onClick={() => navigate("/")}
         />
@@ -77,14 +77,14 @@ const Header = () => {
           onClick={() => setMenuClicked(!menuClicked)}
           className="header-user"
         >
-          <img src="/images/demo/3.png" alt="post" />
+          <img src={user?.picture} alt="post" />
           <SettingsRoundedIcon
             className="user-settings-icon"
             sx={{
               fontSize: 25,
-              color: "#dfdfdf",
+              color: "#a7c750",
               cursor: "pointer",
-              backgroundColor: "#292929",
+              backgroundColor: "#161921",
               borderRadius: "50%",
               padding: "3px",
             }}

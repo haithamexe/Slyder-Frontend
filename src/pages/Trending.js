@@ -7,6 +7,7 @@ import TrendChat from "../components/TrendChat";
 import "../styles/trending.css";
 
 const Trending = () => {
+  const [elementShow, setElementShow] = useState("notes");
   const [width, setWidth] = useState(window.innerWidth);
   const [pos, setPos] = useState({ x: 650, y: 200 });
   const [currentTime, setCurrentTime] = useState(0);
@@ -33,10 +34,18 @@ const Trending = () => {
 
   return (
     <div onMouseMove={handleMouseMove} className="trending">
-      <Blob x={pos.x} y={pos.y} />
+      {/* <Blob x={pos.x} y={pos.y} /> */}
       <TrendingList />
-      {width > 950 ? <TrendNotes currentTime={currentTime} /> : null}
-      {width > 1680 ? <TrendChat /> : null}
+
+      <div className="trend-windows">
+        {/* {width > 950 ? (
+          <TrendNotes
+            currentTime={currentTime}
+            setElementShow={setElementShow}
+          />
+        ) : null} */}
+        {width > 580 ? <TrendChat /> : null}
+      </div>
     </div>
   );
 };

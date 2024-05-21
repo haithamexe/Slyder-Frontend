@@ -9,10 +9,13 @@
 .header-left {
   display: flex;
   align-items: center;
+  @media (max-width: 700px) {
+    display: none;
+  }
 }
 
 .header-left img {
-  width: 50px;
+  width: 33px;
   /* margin-right: 10px; */
   cursor: pointer;
   margin-left: 5px;
@@ -25,7 +28,7 @@
   padding-left: 15px;
   border: 1px solid var(--bg-s-third);
   border-radius: 15px;
-  background-color: var(--bg-s-fourth);
+  background-color: var(--bg-s-third);
   color: var(--text-s-secondary);
   margin-left: 15px;
   /* box-shadow: 10px 10px 25px #171823, -5px -5px 15px #272a39; */
@@ -35,7 +38,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 13%;
+  transform: translateX(-50%);
   gap: 0 20px;
   padding: 3px 20px;
   background-color: var(--bg-s-secondary);
@@ -146,6 +149,7 @@
   transition: 0.3s;
   border: none !important;
 }
+
 .logout-btn-header:hover {
   background-color: var(--bg-s-fourth);
   /* border: none; */

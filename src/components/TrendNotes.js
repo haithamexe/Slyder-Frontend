@@ -1,11 +1,12 @@
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
 import EditNoteRoundedIcon from "@mui/icons-material/EditNoteRounded";
-
+import SummarizeRoundedIcon from "@mui/icons-material/SummarizeRounded";
+import AutoAwesomeRoundedIcon from "@mui/icons-material/AutoAwesomeRounded";
 import Timer from "./Timer";
 import { useState } from "react";
 
-const TrendNotes = () => {
+const TrendNotes = ({ setElementShow }) => {
   const [NewNote, setNewNote] = useState("");
   const [noteScroll, setNoteScroll] = useState(false);
 
