@@ -60,6 +60,7 @@ const Profile = () => {
     if (fetchedPosts) {
       dispatch(postActions.setUserPosts(postsData));
     }
+
     refetchPosts();
   }, [
     currentUser,

@@ -27,6 +27,15 @@ const userSlice = createSlice({
     loginUser: (state, action) => {
       state.accessToken = action.payload;
     },
+    updateUser: (state, action) => {
+      state.user = action.payload;
+    },
+    clearUser: (state) => {
+      state.user = null;
+    },
+    clearToken: (state) => {
+      state.accessToken = null;
+    },
   },
   extraReducers: (builder) => {
     builder.addMatcher(

@@ -5,17 +5,12 @@ import ShortcutRoundIcon from "@mui/icons-material/ShortcutRounded";
 import TurnedInRoundIcon from "@mui/icons-material/TurnedInRounded";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import PhotoLibraryRoundedIcon from "@mui/icons-material/PhotoLibraryRounded";
-// import { useEffect } from "react";
-
+import { useState } from "react";
 import Post from "./Post";
+import PostPreveiw from "./PostPreveiw";
 
-const ProfilePostsElement = ({
-  user,
-  posts,
-  setNewPost,
-  setFetchPostId,
-  refetchPosts,
-}) => {
+const ProfilePostsElement = ({ user, posts, setNewPost, refetchPosts }) => {
+  const [postId, setFetchPostId] = useState("");
   return (
     <>
       <div className="feed-in-profile-container">
@@ -40,12 +35,15 @@ const ProfilePostsElement = ({
               key={post.id}
               post={post}
               setFetchPostId={setFetchPostId}
-              type="profile"
+              place="profile"
               refetchPosts={refetchPosts}
             />
           ))}
         </div>
       </div>
+      {postId && (
+        <PostPreveiw postId={postId} setFetchPostId={setFetchPostId} />
+      )}
     </>
   );
 };

@@ -4,7 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { userAuthed } from "../features/user/userSlice";
 import { useSelector } from "react-redux";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
+import { useGetHomePostsQuery } from "../features/post/postApiSlice";
 import NewPost from "../components/NewPost";
+import { postActions } from "../features/post/postSlice";
+import { useDispatch } from "react-redux";
+import { homePosts } from "../features/post/postSlice";
 import {
   getPanelElement,
   getPanelGroupElement,
@@ -22,6 +26,10 @@ const Home = () => {
   const user = useSelector(userAuthed);
   const [width, setWidth] = useState(window.innerWidth);
   const [newPost, setNewPost] = useState(false); // [new]
+  const [postsLoading, setPostsLoading] = useState(true);
+  const dispatch = useDispatch();
+  const posts = useSelector(homePosts);
+  const [currentPosts, setCurrentPosts] = useState(null);
   const navigate = useNavigate();
 
   const handleResize = () => {
@@ -29,14 +37,34 @@ const Home = () => {
     refreshPage();
   };
 
+  const {
+    data: fetchedHomePosts,
+    isLoading,
+    isSuccess,
+    error,
+    isError,
+    refetch: refetchHomePosts,
+  } = useGetHomePostsQuery(user.id);
+
   useEffect(() => {
+    if (!posts || !fetchedHomePosts) {
+      refetchHomePosts();
+    }
+    if (isSuccess && !posts) {
+      setPostsLoading(false);
+      dispatch(postActions.setHomePosts(fetchedHomePosts));
+    }
+    if (isLoading) {
+      setPostsLoading(true);
+    }
+    setCurrentPosts(posts);
     setWidth(window.innerWidth);
 
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [isSuccess, fetchedHomePosts, posts]);
 
   const refreshPage = () => {
     window.location.reload();
@@ -70,7 +98,11 @@ const Home = () => {
         )}
 
         <Panel className="center" defaultSize={35} minSize={35} maxSize={50}>
-          <HomeFeed user={user} setNewPost={setNewPost} />
+          <HomeFeed
+            user={user}
+            setNewPost={setNewPost}
+            refetchHomePosts={refetchHomePosts}
+          />
         </Panel>
 
         {width >= 900 && (
@@ -103,7 +135,11 @@ const Home = () => {
         )}
       </PanelGroup>
 
-      <NewPost setNewPost={setNewPost} newPost={newPost} />
+      <NewPost
+        setNewPost={setNewPost}
+        newPost={newPost}
+        refetchHomePosts={refetchHomePosts}
+      />
     </>
   );
 };

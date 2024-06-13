@@ -18,24 +18,15 @@ import { homePosts, postActions } from "../features/post/postSlice";
 import { useDispatch, useSelector } from "react-redux";
 import PostPreveiw from "./PostPreveiw";
 
-const HomeFeed = ({ setNewPost, user }) => {
+const HomeFeed = ({ setNewPost, user, refetchHomePosts }) => {
   const dispatch = useDispatch();
   const [postsLoading, setPostsLoading] = useState(true);
   const [postId, setFetchPostId] = useState("");
-
-  // const [{ data: homePosts }] = useGetHomePostsQuery();
-  const {
-    data: fetchedHomePosts,
-    isLoading,
-    isSuccess,
-    error,
-    isError,
-    refetch,
-  } = useGetHomePostsQuery(user.id);
-
+  const [currentPosts, setCurrentPosts] = useState([]);
   const posts = useSelector(homePosts);
 
-  const [newPostText, setNewPostText] = useState("");
+  // const [{ data: homePosts }] = useGetHomePostsQuery();
+
   const [feedScrollable, setFeedScrollable] = useState(false);
   const feedRef = useRef(null);
 
@@ -47,28 +38,23 @@ const HomeFeed = ({ setNewPost, user }) => {
     setFeedScrollable(false);
   };
 
+  useEffect(() => {
+    if (!posts) {
+      refetchHomePosts();
+    }
+    if (posts) {
+      dispatch(postActions.setHomePosts(posts));
+      setPostsLoading(false);
+    }
+    setCurrentPosts(posts);
+  }, [posts]);
+
   const handleScroll = () => {
     //very cool code for checking if the user has scrolled to the bottom of the feed
     // const { scrollTop, scrollHeight, clientHeight } = feedRef.current;
     // const scrollPercentage = (scrollTop / (scrollHeight - clientHeight)) * 100;
     // setScrolledAmount(scrollPercentage);
   };
-
-  useEffect(() => {
-    // console.log(fetchedHomePosts, posts);
-    if (isSuccess && !posts) {
-      setPostsLoading(false);
-      dispatch(postActions.setHomePosts(fetchedHomePosts));
-    }
-    if (isLoading) {
-      setPostsLoading(true);
-    }
-
-    // console.log(postId, "postId");
-    // if (!isSuccess) {
-    refetch();
-    // }
-  }, [isSuccess, fetchedHomePosts, postId, posts]);
 
   return (
     <>
@@ -92,7 +78,12 @@ const HomeFeed = ({ setNewPost, user }) => {
         ref={feedRef}
       >
         {posts?.map((post) => (
-          <Post key={post?._id} post={post} setFetchPostId={setFetchPostId} />
+          <Post
+            key={post?._id}
+            post={post}
+            setFetchPostId={setFetchPostId}
+            refetchHomePosts={refetchHomePosts}
+          />
         ))}
         {/* <Post /> */}
       </div>

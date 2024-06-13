@@ -27,7 +27,13 @@ import { useNavigate } from "react-router-dom";
 import { formatTimeAgo } from "../utils/formatTimeAgo";
 import { postActions } from "../features/post/postSlice";
 
-const Post = ({ post, setFetchPostId, refetchPosts, type }) => {
+const Post = ({
+  post,
+  setFetchPostId,
+  refetchPosts,
+  refetchHomePosts,
+  place,
+}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [dropDownMenu, setDropDownMenu] = useState(false);
@@ -55,14 +61,26 @@ const Post = ({ post, setFetchPostId, refetchPosts, type }) => {
   };
 
   const handleDeletePost = () => {
-    console.log("delete");
+    console.log("deleting post");
     deletePost(post._id);
+    setDropDownMenu(false);
   };
 
   useEffect(() => {
     // refetch();
-    console.log(post);
-    // document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    console.log(post, "deleting in useEffect");
+    if (isDeleteSuccess) {
+      dispatch(postActions.deleteHomePost(post._id));
+      dispatch(postActions.deleteProfilePost(post._id));
+      if (place !== "profile") {
+        refetchHomePosts();
+      } else {
+        refetchPosts();
+      }
+
+      // setFetchPostId(null);
+    }
     if (currentUser.id === post.user && !user) {
       setIsAuther(true);
       setUser(currentUser);
@@ -72,18 +90,13 @@ const Post = ({ post, setFetchPostId, refetchPosts, type }) => {
     } else if (!isUserSuccess) {
       refetchUser();
     }
-    if (isDeleteSuccess) {
-      dispatch(postActions.deletePost(post._id));
-      if (type === "profile") {
-        refetchPosts();
-      }
-      // setFetchPostId(null);
-    }
-    setFollowing(user?.following);
+
     return () => {
-      // document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [userData, post, currentUser, user, isUserSuccess]);
+
+    setFollowing(user?.following);
+  }, [userData, post, currentUser, user, isUserSuccess, isDeleteSuccess]);
 
   return (
     <>
@@ -114,7 +127,7 @@ const Post = ({ post, setFetchPostId, refetchPosts, type }) => {
             />
             <div className="post-menu-options-container">
               {dropDownMenu && (
-                <div className="post-menu-options">
+                <div className="post-menu-options" ref={menuRef}>
                   <div className="post-menu-option">
                     <InsertLinkRoundedIcon
                       sx={{

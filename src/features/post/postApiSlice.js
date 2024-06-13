@@ -13,9 +13,11 @@ const postApiSlice = apiSlice.injectEndpoints({
           userId: postData.userId,
         },
       }),
+      invalidatesTags: ["Post"],
     }),
     getPosts: builder.query({
       query: () => "api/post",
+      providesTags: ["Post"],
     }),
     getPost: builder.query({
       query: (postId) => `api/post/${postId}`,
@@ -26,12 +28,14 @@ const postApiSlice = apiSlice.injectEndpoints({
         method: "PUT",
         body: postData,
       }),
+      invalidatesTags: ["Post"],
     }),
     deletePost: builder.mutation({
       query: (postId) => ({
         url: `api/post/${postId}`,
         method: "DELETE",
       }),
+      invalidatesTags: ["Post"],
     }),
     likePost: builder.mutation({
       query: (postId) => ({

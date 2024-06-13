@@ -96,7 +96,10 @@ const Header = () => {
                 : "user-header-menu"
             }
           >
-            <div className="menu-item">
+            <div
+              className="menu-item"
+              onClick={() => navigate(`/${user?.username}`)}
+            >
               <h3>Profile</h3>
               <AccountCircleRoundedIcon
                 sx={{

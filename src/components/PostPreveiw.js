@@ -57,6 +57,7 @@ const PostPreveiw = ({ postId, setFetchPostId }) => {
     document.addEventListener("mousedown", handleClickOutside);
     if (currentUser.id === post?.user) {
       setIsAuther(true);
+      setUser(currentUser);
       setFollowing(currentUser.following);
     } else {
       if (!userSuccess) {
@@ -73,7 +74,7 @@ const PostPreveiw = ({ postId, setFetchPostId }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
     console.log("this is running");
-  }, [postSuccess, postData, postId, currentUser, post]);
+  }, [postSuccess, postData, postId, currentUser, post, userData]);
 
   return (
     <div className="post-preveiw-container">

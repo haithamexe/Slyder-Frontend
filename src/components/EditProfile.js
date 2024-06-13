@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
@@ -11,13 +13,21 @@ import CameraEnhanceRoundedIcon from "@mui/icons-material/CameraEnhanceRounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
-// import {}
+import { useUpdateUserApiMutation } from "../features/user/userApiSlice";
+import { userActions } from "../features/user/userSlice";
+import { postActions } from "../features/post/postSlice";
 
 const EditProfile = ({ setEditing, user }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [message, setMessage] = useState("");
+  const [
+    updateUser,
+    { data: userUpdated, isSuccess: userUpdateSuccess, isLoading },
+  ] = useUpdateUserApiMutation();
 
   const [userUpdates, setUserUpdates] = useState({
     username: "",
@@ -31,7 +41,48 @@ const EditProfile = ({ setEditing, user }) => {
     website: "",
   });
 
+  const handleEditSubmit = async () => {
+    const userData = {};
+    const dataCheck = () => {
+      if (userUpdates.username !== user.username) {
+        userData.username = userUpdates.username;
+      }
+      if (userUpdates.firstName !== user.firstName) {
+        userData.firstName = userUpdates.firstName;
+      }
+      if (userUpdates.surName !== user.surName) {
+        userData.surName = userUpdates.surName;
+      }
+      if (userUpdates.bio !== user.bio) {
+        userData.bio = userUpdates.bio;
+      }
+      if (userUpdates.picture !== user.picture) {
+        userData.picture = userUpdates.picture;
+      }
+      if (userUpdates.cover !== user.cover) {
+        userData.cover = userUpdates.cover;
+      }
+      if (userUpdates.skills !== user.skills) {
+        userData.skills = userUpdates.skills;
+      }
+      if (userUpdates.website !== user.website) {
+        userData.website = userUpdates.website;
+      }
+    };
+    dataCheck();
+    console.log(userData, "userData");
+    console.log(userUpdates, "userUpdates");
+    updateUser({ userData, userId: user.id });
+  };
+
   useEffect(() => {
+    if (userUpdateSuccess) {
+      setEditing(false);
+      dispatch(postActions.clearPosts());
+      dispatch(userActions.clearUser());
+      navigate(`/${userUpdated.username}`);
+    }
+
     setUserUpdates({
       username: user?.username,
       bio: user?.bio,
@@ -43,7 +94,7 @@ const EditProfile = ({ setEditing, user }) => {
       firstName: user?.firstName,
       surName: user?.surName,
     });
-  }, [user]);
+  }, [user, userUpdated, userUpdateSuccess]);
 
   const handleEditChange = (e) => {
     setUserUpdates({ ...userUpdates, [e.target.name]: e.target.value });
@@ -66,7 +117,9 @@ const EditProfile = ({ setEditing, user }) => {
         <div className="profile-edit-body">
           <form>
             <div className="profile-edit-cover">
-              {user?.cover && <img src={user?.cover} alt="user-cover" />}
+              {user?.cover && (
+                <img src={userUpdates.cover || user?.cover} alt="user-cover" />
+              )}
               <CameraEnhanceRoundedIcon
                 className="profile-edit-img-btn-icon"
                 sx={{
@@ -77,7 +130,10 @@ const EditProfile = ({ setEditing, user }) => {
               />
             </div>
             <div className="profile-edit-img">
-              <img src={user?.picture} alt="user-picture" />
+              <img
+                src={userUpdates.picture || user?.picture}
+                alt="user-picture"
+              />
               <CameraEnhanceRoundedIcon
                 className="profile-edit-profile-btn-icon"
                 sx={{
@@ -151,13 +207,17 @@ const EditProfile = ({ setEditing, user }) => {
               />
             </div>
             <input
-              type="email"
+              type="text"
               value={userUpdates.website}
-              name="email"
+              name="website"
               onChange={(e) => handleEditChange(e)}
               placeholder="Website"
             />
-            <button type="button" className="profile-edit-btn">
+            <button
+              type="button"
+              className="profile-edit-btn"
+              onClick={handleEditSubmit}
+            >
               Save
             </button>
           </form>

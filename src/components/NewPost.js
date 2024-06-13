@@ -15,7 +15,13 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 // const [submitError, setSubmitError] = useState(null);
-const NewPost = ({ newPost, setNewPost, place, refetchPosts }) => {
+const NewPost = ({
+  newPost,
+  setNewPost,
+  place,
+  refetchPosts,
+  refetchHomePosts,
+}) => {
   const navigate = useNavigate();
   const [newPostData, setNewPostData] = useState({
     content: "",
@@ -63,11 +69,14 @@ const NewPost = ({ newPost, setNewPost, place, refetchPosts }) => {
 
   useEffect(() => {
     if (isSuccess) {
-      dispatch(postActions.addPost(data));
+      dispatch(postActions.addProfilePost(data));
+      dispatch(postActions.addHomePost(data));
       console.log(data, "data");
+      dispatch(postActions.clearPosts());
       if (place === "profile") {
-        // navigate("/" + user.username);
         refetchPosts();
+      } else {
+        refetchHomePosts();
       }
       setNewPostData({ content: "", image: "", type: "" });
       setNewPost(false);

@@ -5,6 +5,7 @@ const initialState = {
   posts: [],
   homePosts: [],
   trendPosts: [],
+  userPosts: [],
   savedPosts: [],
   status: "idle",
   error: null,
@@ -15,7 +16,7 @@ const postSlice = createSlice({
   initialState,
   reducers: {
     setUserPosts: (state, action) => {
-      state.posts = action.payload;
+      state.userPosts = action.payload;
     },
     setTrendPosts: (state, action) => {
       state.trendPosts = action.payload;
@@ -26,7 +27,7 @@ const postSlice = createSlice({
     addProfilePost: (state, action) => {
       state.posts.push(action.payload);
     },
-    addPost: (state, action) => {
+    addHomePost: (state, action) => {
       state.homePosts.push(action.payload);
     },
     setHomePosts: (state, action) => {
@@ -48,13 +49,20 @@ const postSlice = createSlice({
         (postId) => postId !== action.payload.id
       );
     },
-    removeUserPost: (state, action) => {
-      state.posts = state.posts.filter((post) => post.id !== action.payload.id);
+    deleteProfilePost: (state, action) => {
+      state.userPosts = state.userPosts.filter(
+        (post) => post.id !== action.payload.id
+      );
     },
-    deletePost: (state, action) => {
+    deleteHomePost: (state, action) => {
       state.homePosts = state.homePosts.filter(
         (post) => post.id !== action.payload.id
       );
+    },
+    clearPosts: (state) => {
+      state.posts = [];
+      state.homePosts = [];
+      state.userPosts = [];
     },
   },
   extraReducers: (builder) => {
@@ -177,6 +185,19 @@ const postSlice = createSlice({
         state.error = action.error.message;
       }
     );
+    builder.addMatcher(
+      postApiSlice.endpoints.updateUserApi.matchFulfilled,
+      (state, action) => {
+        state.user = action.payload;
+      }
+    );
+    builder.addMatcher(
+      postApiSlice.endpoints.updateUserApi.matchRejected,
+      (state, action) => {
+        state.status = "rejected";
+        state.error = action.error.message;
+      }
+    );
 
     // builder.addMatcher(
     //   postApiSlice.endpoints.getHomePosts.matchFulfilled,
@@ -199,7 +220,7 @@ export const postError = (state) => state.post.error;
 export const homePosts = (state) => state.post.homePosts;
 export const trendPosts = (state) => state.post.trendPosts;
 export const savedPosts = (state) => state.post.savedPosts;
-export const userPosts = (state) => state.post.posts;
+export const userPosts = (state) => state.post.userPosts;
 // export const singlePost = (state) => state.post.post;
 
 export const { actions: postActions } = postSlice;

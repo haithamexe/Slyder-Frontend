@@ -15,7 +15,7 @@ const userApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: userData,
       }),
-      // providesTags: ["Token"],
+      providesTags: ["Token"],
     }),
     activateUserApi: builder.mutation({
       query: (token) => ({
@@ -23,7 +23,7 @@ const userApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: { token: token },
       }),
-      // providesTags: ["Token"],
+      providesTags: ["Token", "User"],
     }),
     authUserApi: builder.mutation({
       query: (accessToken) => ({
@@ -31,16 +31,14 @@ const userApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: accessToken,
       }),
-      // providesTags: ["User"],
-      // invalidatesTags: ["User"],
+      providesTags: ["User"],
     }),
     refreshTokenApi: builder.mutation({
       query: () => ({
         url: "api/user/refresh",
         method: "POST",
       }),
-      // providesTags: ["Token"],
-      // invalidatesTags: ["Token"],
+      invalidatesTags: ["Token", "User"],
     }),
     forgotPasswordApi: builder.mutation({
       query: (email) => ({
@@ -55,6 +53,7 @@ const userApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: {},
       }),
+      invalidatesTags: ["Token", "User"],
     }),
     refreshActivationTokenApi: builder.mutation({
       query: (email) => ({
@@ -70,11 +69,12 @@ const userApiSlice = apiSlice.injectEndpoints({
       query: (username) => `api/user/username/${username}`,
     }),
     updateUserApi: builder.mutation({
-      query: (userData) => ({
-        url: "api/user/update",
+      query: ({ userData, userId }) => ({
+        url: "api/user/update/" + userId,
         method: "PUT",
         body: userData,
       }),
+      invalidatesTags: ["User", "Post"],
     }),
   }),
 });
@@ -90,6 +90,7 @@ export const {
   useRefreshActivationTokenApiMutation,
   useGetUserWithIdApiQuery,
   useGetUserWithUsernameApiQuery,
+  useUpdateUserApiMutation,
 } = userApiSlice;
 
 export default userApiSlice;
