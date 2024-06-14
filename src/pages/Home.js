@@ -1,22 +1,11 @@
 import "../styles/home.css";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { userAuthed } from "../features/user/userSlice";
 import { useSelector } from "react-redux";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
-import { useGetHomePostsQuery } from "../features/post/postApiSlice";
 import NewPost from "../components/NewPost";
-import { postActions } from "../features/post/postSlice";
-import { useDispatch } from "react-redux";
-import { homePosts } from "../features/post/postSlice";
-import {
-  getPanelElement,
-  getPanelGroupElement,
-  getResizeHandleElement,
-  Panel,
-  PanelGroup,
-  PanelResizeHandle,
-} from "react-resizable-panels";
+
+import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 
 import UserCol from "../components/UserCol";
 import HomeFeed from "../components/HomeFeed";
@@ -26,49 +15,23 @@ const Home = () => {
   const user = useSelector(userAuthed);
   const [width, setWidth] = useState(window.innerWidth);
   const [newPost, setNewPost] = useState(false); // [new]
-  const [postsLoading, setPostsLoading] = useState(true);
-  const dispatch = useDispatch();
-  const posts = useSelector(homePosts);
-  const [currentPosts, setCurrentPosts] = useState(null);
-  const navigate = useNavigate();
 
   const handleResize = () => {
     setWidth(window.innerWidth);
     refreshPage();
   };
 
-  const {
-    data: fetchedHomePosts,
-    isLoading,
-    isSuccess,
-    error,
-    isError,
-    refetch: refetchHomePosts,
-  } = useGetHomePostsQuery(user.id);
+  const refreshPage = () => {
+    window.location.reload();
+  };
 
   useEffect(() => {
-    if (!posts || !fetchedHomePosts) {
-      refetchHomePosts();
-    }
-    if (isSuccess && !posts) {
-      setPostsLoading(false);
-      dispatch(postActions.setHomePosts(fetchedHomePosts));
-    }
-    if (isLoading) {
-      setPostsLoading(true);
-    }
-    setCurrentPosts(posts);
     setWidth(window.innerWidth);
-
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [isSuccess, fetchedHomePosts, posts]);
-
-  const refreshPage = () => {
-    window.location.reload();
-  };
+  }, []);
 
   return (
     <>
@@ -98,11 +61,7 @@ const Home = () => {
         )}
 
         <Panel className="center" defaultSize={35} minSize={35} maxSize={50}>
-          <HomeFeed
-            user={user}
-            setNewPost={setNewPost}
-            refetchHomePosts={refetchHomePosts}
-          />
+          <HomeFeed user={user} setNewPost={setNewPost} />
         </Panel>
 
         {width >= 900 && (
@@ -138,7 +97,7 @@ const Home = () => {
       <NewPost
         setNewPost={setNewPost}
         newPost={newPost}
-        refetchHomePosts={refetchHomePosts}
+        // refetchHomePosts={refetchHomePosts}
       />
     </>
   );

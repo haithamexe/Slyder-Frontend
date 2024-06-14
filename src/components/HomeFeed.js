@@ -18,14 +18,21 @@ import { homePosts, postActions } from "../features/post/postSlice";
 import { useDispatch, useSelector } from "react-redux";
 import PostPreveiw from "./PostPreveiw";
 
-const HomeFeed = ({ setNewPost, user, refetchHomePosts }) => {
+const HomeFeed = ({ setNewPost, user }) => {
   const dispatch = useDispatch();
-  const [postsLoading, setPostsLoading] = useState(true);
   const [postId, setFetchPostId] = useState("");
-  const [currentPosts, setCurrentPosts] = useState([]);
-  const posts = useSelector(homePosts);
+  const [posts, setPosts] = useState([]);
 
-  // const [{ data: homePosts }] = useGetHomePostsQuery();
+  const {
+    data: homePosts,
+    isSuccess,
+    refetch,
+    status,
+    error,
+    isFetching,
+    isUninitialized,
+    isFetchingError,
+  } = useGetHomePostsQuery(user?.id);
 
   const [feedScrollable, setFeedScrollable] = useState(false);
   const feedRef = useRef(null);
@@ -39,15 +46,11 @@ const HomeFeed = ({ setNewPost, user, refetchHomePosts }) => {
   };
 
   useEffect(() => {
-    if (!posts) {
-      refetchHomePosts();
+    if (isSuccess || homePosts || user) {
+      setPosts(homePosts);
     }
-    if (posts) {
-      dispatch(postActions.setHomePosts(posts));
-      setPostsLoading(false);
-    }
-    setCurrentPosts(posts);
-  }, [posts]);
+    console.log(homePosts);
+  }, [isSuccess, homePosts, user]);
 
   const handleScroll = () => {
     //very cool code for checking if the user has scrolled to the bottom of the feed
@@ -78,12 +81,7 @@ const HomeFeed = ({ setNewPost, user, refetchHomePosts }) => {
         ref={feedRef}
       >
         {posts?.map((post) => (
-          <Post
-            key={post?._id}
-            post={post}
-            setFetchPostId={setFetchPostId}
-            refetchHomePosts={refetchHomePosts}
-          />
+          <Post key={post} postId={post} setFetchPostId={setFetchPostId} />
         ))}
         {/* <Post /> */}
       </div>

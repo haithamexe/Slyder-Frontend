@@ -186,16 +186,22 @@ const postSlice = createSlice({
       }
     );
     builder.addMatcher(
-      postApiSlice.endpoints.updateUserApi.matchFulfilled,
+      postApiSlice.endpoints.getPostsByUserName.matchFulfilled,
       (state, action) => {
-        state.user = action.payload;
+        state.userPosts = action.payload;
       }
     );
     builder.addMatcher(
-      postApiSlice.endpoints.updateUserApi.matchRejected,
+      postApiSlice.endpoints.getPostsByUserName.matchRejected,
       (state, action) => {
         state.status = "rejected";
         state.error = action.error.message;
+      }
+    );
+    builder.addMatcher(
+      postApiSlice.endpoints.savePost.matchFulfilled,
+      (state, action) => {
+        state.savedPosts.push(action.payload);
       }
     );
 

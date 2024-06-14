@@ -96,6 +96,7 @@ const AuthRoutes = () => {
     authError,
     refreshTokenApi,
     timer,
+    auth,
   ]);
 
   return <>{user && <Outlet />}</>;

@@ -4,7 +4,9 @@ import PhotoLibraryRoundedIcon from "@mui/icons-material/PhotoLibraryRounded";
 import PollRoundedIcon from "@mui/icons-material/PollRounded";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
+import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
+import ChatBubbleOutlineRoundedIcon from "@mui/icons-material/ChatBubbleOutlineRounded";
 import ChatRoundedIcon from "@mui/icons-material/ChatRounded";
 import TurnedInRoundIcon from "@mui/icons-material/TurnedInRounded";
 import ShortcutRoundIcon from "@mui/icons-material/ShortcutRounded";
@@ -14,6 +16,7 @@ import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
 import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
 import PersonRemoveRoundedIcon from "@mui/icons-material/PersonRemoveRounded";
 import InsertLinkRoundedIcon from "@mui/icons-material/InsertLinkRounded";
+import TurnedInNotRoundedIcon from "@mui/icons-material/TurnedInNotRounded";
 
 import { useGetUserWithIdApiQuery } from "../features/user/userApiSlice";
 import { useEffect, useState, useRef } from "react";
@@ -41,20 +44,23 @@ const PostPreveiw = ({ postId, setFetchPostId }) => {
   const [dropDownMenu, setDropDownMenu] = useState(false);
   const [isAuther, setIsAuther] = useState(false);
   const [post, setPost] = useState(postData);
-  const menuRef = useRef();
+  const previewRef = useRef();
   const [following, setFollowing] = useState([]);
   const currentUser = useSelector(userAuthed);
   const [user, setUser] = useState(null);
   const [onFlyComment, setOnFlyComment] = useState("");
+  const [pageRootUrl, setPageRootUrl] = useState(window.location.pathname);
 
   const handleClickOutside = (e) => {
-    if (menuRef.current && !menuRef.current.contains(e.target)) {
-      setDropDownMenu(false);
+    if (previewRef.current && !previewRef.current.contains(e.target)) {
+      window.history.pushState(null, "", `${pageRootUrl}`);
+      setFetchPostId("");
     }
   };
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
+    window.history.pushState(null, "", `/post/${postId}`);
     if (currentUser.id === post?.user) {
       setIsAuther(true);
       setUser(currentUser);
@@ -78,7 +84,7 @@ const PostPreveiw = ({ postId, setFetchPostId }) => {
 
   return (
     <div className="post-preveiw-container">
-      <div className="post-preveiw-inside-container">
+      <div className="post-preveiw-inside-container" ref={previewRef}>
         <CloseRounded
           className="post-preveiw-close-icon"
           sx={{
@@ -86,7 +92,10 @@ const PostPreveiw = ({ postId, setFetchPostId }) => {
             color: "#a7c750;",
             cursor: "pointer",
           }}
-          onClick={() => setFetchPostId("")}
+          onClick={() => {
+            window.history.pushState(null, "", `${pageRootUrl}`);
+            setFetchPostId("");
+          }}
         />
         {post?.image && (
           <div className="post-preveiw-img-container">
@@ -120,7 +129,7 @@ const PostPreveiw = ({ postId, setFetchPostId }) => {
           </div>
           <div className="post-preveiw-post-footer">
             <div className="post-preveiw-post-footer-icons">
-              <FavoriteRoundedIcon
+              <FavoriteBorderRoundedIcon
                 onClick={() => console.log("like")}
                 sx={{
                   fontSize: 27,
@@ -128,7 +137,7 @@ const PostPreveiw = ({ postId, setFetchPostId }) => {
                   cursor: "pointer",
                 }}
               />
-              <ChatRoundedIcon
+              <ChatBubbleOutlineRoundedIcon
                 onClick={() => console.log("comment")}
                 sx={{
                   fontSize: 27,
@@ -136,7 +145,7 @@ const PostPreveiw = ({ postId, setFetchPostId }) => {
                   cursor: "pointer",
                 }}
               />
-              <SendRoundedIcon
+              <ShortcutRoundIcon
                 onClick={() => console.log("share")}
                 sx={{
                   fontSize: 27,
@@ -144,7 +153,7 @@ const PostPreveiw = ({ postId, setFetchPostId }) => {
                   cursor: "pointer",
                 }}
               />
-              <TurnedInRoundIcon
+              <TurnedInNotRoundedIcon
                 className="post-save"
                 sx={{
                   fontSize: 27,

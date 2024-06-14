@@ -15,8 +15,7 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import { useUpdateUserApiMutation } from "../features/user/userApiSlice";
 import { userActions } from "../features/user/userSlice";
-import { postActions } from "../features/post/postSlice";
-
+import apiSlice from "../features/api/apiSlice";
 const EditProfile = ({ setEditing, user }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -78,8 +77,15 @@ const EditProfile = ({ setEditing, user }) => {
   useEffect(() => {
     if (userUpdateSuccess) {
       setEditing(false);
-      dispatch(postActions.clearPosts());
       dispatch(userActions.clearUser());
+      dispatch(
+        apiSlice.util.invalidateTags([
+          {
+            type: ["User", "Post", "HomePost", "UserPost", "TrendPost"],
+            id: userUpdated.id,
+          },
+        ])
+      );
       navigate(`/${userUpdated.username}`);
     }
 

@@ -13,7 +13,13 @@ const postApiSlice = apiSlice.injectEndpoints({
           userId: postData.userId,
         },
       }),
-      invalidatesTags: ["Post"],
+      invalidatesTags: [
+        "Post",
+        "HomePost",
+        "TrendPost",
+        "SavedPost",
+        "UserPost",
+      ],
     }),
     getPosts: builder.query({
       query: () => "api/post",
@@ -28,26 +34,42 @@ const postApiSlice = apiSlice.injectEndpoints({
         method: "PUT",
         body: postData,
       }),
-      invalidatesTags: ["Post"],
+      invalidatesTags: (result, error, postId) => [
+        { type: ["Post", "HomePost", "UserPost", "TrendPost"], id: postId },
+      ],
     }),
     deletePost: builder.mutation({
       query: (postId) => ({
         url: `api/post/${postId}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Post"],
+      invalidatesTags: [
+        "Post",
+        "HomePost",
+        "TrendPost",
+        "SavedPost",
+        "UserPost",
+      ],
     }),
     likePost: builder.mutation({
-      query: (postId) => ({
+      query: ({ postId, userId }) => ({
         url: `api/post/${postId}/like`,
         method: "PUT",
+        body: { userId },
       }),
+      invalidatesTags: (result, error, postId) => [
+        { type: ["PostLike"], id: postId },
+      ],
     }),
     unlikePost: builder.mutation({
-      query: (postId) => ({
+      query: ({ postId, userId }) => ({
         url: `api/post/${postId}/unlike`,
         method: "PUT",
+        body: { userId },
       }),
+      invalidatesTags: (result, error, postId) => [
+        { type: ["PostLike"], id: postId },
+      ],
     }),
     commentPost: builder.mutation({
       query: ({ postId, comment }) => ({
@@ -55,6 +77,9 @@ const postApiSlice = apiSlice.injectEndpoints({
         method: "PUT",
         body: { comment },
       }),
+      invalidatesTags: (result, error, postId) => [
+        { type: ["PostComment"], id: postId },
+      ],
     }),
     uncommentPost: builder.mutation({
       query: ({ postId, commentId }) => ({
@@ -62,12 +87,13 @@ const postApiSlice = apiSlice.injectEndpoints({
         method: "PUT",
         body: { commentId },
       }),
+      invalidatesTags: (result, error, postId) => [
+        { type: ["PostComment"], id: postId },
+      ],
     }),
-    getPostsByUser: builder.query({
-      query: (userId) => `api/post/user/${userId}`,
-    }),
-    getPostsByFollowing: builder.query({
-      query: () => "api/post/following",
+    getPostsByUserName: builder.query({
+      query: (userName) => `api/post/user/${userName}`,
+      providesTags: ["UserPost"],
     }),
     savePost: builder.mutation({
       query: (postId) => ({
@@ -82,23 +108,33 @@ const postApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     getPostLikes: builder.query({
-      query: (postId) => `api/post/${postId}/likes`,
+      query: ({ postId, userId }) => `api/post/${postId}/likes/${userId}`,
+      providesTags: (result, error, postId) => [
+        { type: "PostLike", id: postId },
+      ],
     }),
     getPostComments: builder.query({
       query: (postId) => `api/post/${postId}/comments`,
+      providesTags: (result, error, postId) => [
+        { type: "PostComment", id: postId },
+      ],
     }),
     getSavedPostsByUser: builder.query({
       query: (userId) => `api/post/saved/${userId}`,
     }),
     getHomePosts: builder.query({
       query: (userId) => `api/post/home/${userId}`,
+      providesTags: ["HomePost"],
     }),
     getTrendPosts: builder.query({
       query: () => "api/post/trend",
+      providesTags: ["TrendPost"],
     }),
     getSavedPosts: builder.query({
       query: () => "api/post/saved",
+      providesTags: ["SavedPost"],
     }),
+
     getPostById: builder.query({
       query: (postId) => `api/post/${postId}`,
     }),
@@ -115,7 +151,6 @@ export const {
   useUnlikePostMutation,
   useCommentPostMutation,
   useUncommentPostMutation,
-  useGetPostsByUserQuery,
   useGetPostsByFollowingQuery,
   useSavePostMutation,
   useUnsavePostMutation,
@@ -126,6 +161,7 @@ export const {
   useGetTrendPostsQuery,
   useGetSavedPostsQuery,
   useGetPostByIdQuery,
+  useGetPostsByUserNameQuery,
 } = postApiSlice;
 
 export default postApiSlice;

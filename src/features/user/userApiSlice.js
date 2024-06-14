@@ -23,7 +23,7 @@ const userApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: { token: token },
       }),
-      providesTags: ["Token", "User"],
+      providesTags: ["Token"],
     }),
     authUserApi: builder.mutation({
       query: (accessToken) => ({
@@ -64,7 +64,9 @@ const userApiSlice = apiSlice.injectEndpoints({
     }),
     getUserWithIdApi: builder.query({
       query: (userId) => `api/user/${userId}`,
+      providesTags: ["UserWithId"],
     }),
+
     getUserWithUsernameApi: builder.query({
       query: (username) => `api/user/username/${username}`,
     }),
@@ -74,7 +76,14 @@ const userApiSlice = apiSlice.injectEndpoints({
         method: "PUT",
         body: userData,
       }),
-      invalidatesTags: ["User", "Post"],
+      invalidatesTags: [
+        "User",
+        "Post",
+        "HomePost",
+        "UserPost",
+        "TrendPost",
+        "UserWithId",
+      ],
     }),
   }),
 });

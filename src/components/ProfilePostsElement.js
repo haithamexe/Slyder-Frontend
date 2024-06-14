@@ -9,7 +9,7 @@ import { useState } from "react";
 import Post from "./Post";
 import PostPreveiw from "./PostPreveiw";
 
-const ProfilePostsElement = ({ user, posts, setNewPost, refetchPosts }) => {
+const ProfilePostsElement = ({ user, posts, setNewPost }) => {
   const [postId, setFetchPostId] = useState("");
   return (
     <>
@@ -32,11 +32,9 @@ const ProfilePostsElement = ({ user, posts, setNewPost, refetchPosts }) => {
         <div className="feed-in-profile">
           {posts?.map((post) => (
             <Post
-              key={post.id}
-              post={post}
+              key={post._id}
+              postId={post._id}
               setFetchPostId={setFetchPostId}
-              place="profile"
-              refetchPosts={refetchPosts}
             />
           ))}
         </div>

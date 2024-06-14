@@ -21,30 +21,25 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import { userPosts, postActions } from "../features/post/postSlice";
 import { useGetUserWithUsernameApiQuery } from "../features/user/userApiSlice";
-import { useGetPostsByUserQuery } from "../features/post/postApiSlice";
+import { useGetPostsByUserNameQuery } from "../features/post/postApiSlice";
 import Post from "./Post";
 import NewPost from "./NewPost";
+import PostPreveiw from "./PostPreveiw";
 
 const Profile = () => {
   const [newPost, setNewPost] = useState(false);
-  const dispatch = useDispatch();
+  const [postId, setFetchPostId] = useState("");
   const posts = useSelector(userPosts);
   const currentUser = useSelector(userAuthed);
-  // const posts = null;
-  // const posts = useSelector(postsAuthed);
   const [clickedItem, setClickedItem] = useState("Posts");
   const [ableToEdit, setAbleToEdit] = useState(false);
   const [editing, setEditing] = useState(false);
   const navigate = useNavigate();
   const AuthedUser = useSelector(userAuthed);
-  // const user = AuthedUser;
   const [user, setUser] = useState("");
   const { username } = useParams();
-  const {
-    data: postsData,
-    isSuccess: fetchedPosts,
-    refetch: refetchPosts,
-  } = useGetPostsByUserQuery(user?.id);
+  const { data: postsData, isSuccess: fetchedPosts } =
+    useGetPostsByUserNameQuery(user?.username);
 
   const { data: userData, isSuccess: fetchedUser } =
     useGetUserWithUsernameApiQuery(username);
@@ -57,21 +52,7 @@ const Profile = () => {
       setAbleToEdit(false);
       setUser(userData);
     }
-    if (fetchedPosts) {
-      dispatch(postActions.setUserPosts(postsData));
-    }
-
-    refetchPosts();
-  }, [
-    currentUser,
-    username,
-    fetchedUser,
-    fetchedPosts,
-    userData,
-    postsData,
-    dispatch,
-    refetchPosts,
-  ]);
+  }, [currentUser, username, fetchedUser]);
 
   return (
     <div className="profile">
@@ -185,7 +166,13 @@ const Profile = () => {
               <div className="photos-container">
                 <div className="photos-header">
                   <h1>Photos</h1>
-                  <h2>See all</h2>
+                  <h2
+                    onClick={() => {
+                      setClickedItem("Photos");
+                    }}
+                  >
+                    See all
+                  </h2>
                 </div>
                 <div className="profile-photos-body">
                   {posts
@@ -194,7 +181,12 @@ const Profile = () => {
                     .map(
                       (post) =>
                         post.image !== " " && (
-                          <img src={post.image} alt="post" key={post.id} />
+                          <img
+                            src={post.image}
+                            alt="post"
+                            key={post.id}
+                            onClick={() => setFetchPostId(post._id)}
+                          />
                         )
                     )}
                 </div>
@@ -202,7 +194,13 @@ const Profile = () => {
               <div className="profile-followers-container">
                 <div className="profile-followers-header">
                   <h1>Followers</h1>
-                  <h2> See all</h2>
+                  <h2
+                    onClick={() => {
+                      setClickedItem("Followers");
+                    }}
+                  >
+                    See all
+                  </h2>
                 </div>
                 <div className="profile-followers-body">
                   {user?.followers?.slice(0, 6)?.map((follower) => (
@@ -218,8 +216,6 @@ const Profile = () => {
                 user={user}
                 posts={posts}
                 setNewPost={setNewPost}
-                // setFetchPostId={setFetchPostId}
-                refetchPosts={refetchPosts}
               />
             )}
 
@@ -238,12 +234,10 @@ const Profile = () => {
           </div>
         </div>
       )}
-      <NewPost
-        setNewPost={setNewPost}
-        newPost={newPost}
-        refetchPosts={refetchPosts}
-        place="profile"
-      />
+      <NewPost setNewPost={setNewPost} newPost={newPost} />
+      {postId && (
+        <PostPreveiw postId={postId} setFetchPostId={setFetchPostId} />
+      )}
     </div>
   );
 };
