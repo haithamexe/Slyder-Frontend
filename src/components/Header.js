@@ -15,6 +15,7 @@ import { useLogoutUserApiMutation } from "../features/user/userApiSlice";
 const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [curWidth, setCurWidth] = useState(window.innerWidth);
   const user = useSelector(userAuthed);
   const [logoutUserApi, { data, error, isLoading, isSuccess: logoutSuccess }] =
     useLogoutUserApiMutation();
@@ -25,22 +26,33 @@ const Header = () => {
   };
 
   useEffect(() => {
+    window.addEventListener("resize", () => {
+      setCurWidth(window.innerWidth);
+    });
     if (logoutSuccess) {
       dispatch(userActions.logoutUser());
       navigate("/login", { replace: true });
     }
+
+    return () => {
+      window.removeEventListener("resize", () => {
+        setCurWidth(window.innerWidth);
+      });
+    };
   }, [logoutSuccess]);
 
   return (
     <div className="header">
-      <div className="header-left">
-        <img
-          src="/images/slyder-s.png"
-          alt="logo"
-          onClick={() => navigate("/")}
-        />
-        <input type="text" placeholder="Search" />
-      </div>
+      {curWidth > 900 && (
+        <div className="header-left">
+          <img
+            src="/images/slyder-s.png"
+            alt="logo"
+            onClick={() => navigate("/")}
+          />
+          <input type="text" placeholder="Search" />
+        </div>
+      )}
       <div className="header-center">
         <Link to="/">
           <HomeRoundedIcon
@@ -72,59 +84,63 @@ const Header = () => {
           }}
         />
       </div>
-      <div className="header-right">
-        <div
-          onClick={() => setMenuClicked(!menuClicked)}
-          className="header-user"
-        >
-          <img src={user?.picture} alt="post" />
-          <SettingsRoundedIcon
-            className="user-settings-icon"
-            sx={{
-              fontSize: 25,
-              color: "#a7c750",
-              cursor: "pointer",
-              backgroundColor: "#161921",
-              borderRadius: "50%",
-              padding: "3px",
-            }}
-          />
+      {curWidth > 900 && (
+        <div className="header-right">
           <div
-            className={
-              menuClicked
-                ? "user-header-menu show-user-header-menu"
-                : "user-header-menu"
-            }
+            onClick={() => setMenuClicked(!menuClicked)}
+            className="header-user"
           >
+            <div className="header-user-img-wrapper">
+              <img src={user?.picture} alt="post" />
+            </div>
+            <SettingsRoundedIcon
+              className="user-settings-icon"
+              sx={{
+                fontSize: 25,
+                color: "#a7c750",
+                cursor: "pointer",
+                backgroundColor: "#161921",
+                borderRadius: "50%",
+                padding: "3px",
+              }}
+            />
             <div
-              className="menu-item"
-              onClick={() => navigate(`/${user?.username}`)}
+              className={
+                menuClicked
+                  ? "user-header-menu show-user-header-menu"
+                  : "user-header-menu"
+              }
             >
-              <h3>Profile</h3>
-              <AccountCircleRoundedIcon
-                sx={{
-                  fontSize: 20,
-                  color: "#a7c750",
-                  marginRight: "10px",
-                }}
-              />
+              <div
+                className="menu-item"
+                onClick={() => navigate(`/${user?.username}`)}
+              >
+                <h3>Profile</h3>
+                <AccountCircleRoundedIcon
+                  sx={{
+                    fontSize: 20,
+                    color: "#a7c750",
+                    marginRight: "10px",
+                  }}
+                />
+              </div>
+              <div className="menu-item">
+                <h3>Settings</h3>
+                <SettingsRoundedIcon
+                  sx={{
+                    fontSize: 20,
+                    color: "#a7c750",
+                    marginRight: "10px",
+                  }}
+                />
+              </div>
+              <h1 className="logout-btn-header" onClick={handleLogout}>
+                Logout
+              </h1>
             </div>
-            <div className="menu-item">
-              <h3>Settings</h3>
-              <SettingsRoundedIcon
-                sx={{
-                  fontSize: 20,
-                  color: "#a7c750",
-                  marginRight: "10px",
-                }}
-              />
-            </div>
-            <h1 className="logout-btn-header" onClick={handleLogout}>
-              Logout
-            </h1>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

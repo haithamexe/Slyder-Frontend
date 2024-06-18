@@ -19,9 +19,11 @@ import CameraEnhanceRoundedIcon from "@mui/icons-material/CameraEnhanceRounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
+import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import { userPosts, postActions } from "../features/post/postSlice";
 import { useGetUserWithUsernameApiQuery } from "../features/user/userApiSlice";
 import { useGetPostsByUserNameQuery } from "../features/post/postApiSlice";
+
 import Post from "./Post";
 import NewPost from "./NewPost";
 import PostPreveiw from "./PostPreveiw";
@@ -35,11 +37,13 @@ const Profile = () => {
   const [ableToEdit, setAbleToEdit] = useState(false);
   const [editing, setEditing] = useState(false);
   const navigate = useNavigate();
-  const AuthedUser = useSelector(userAuthed);
   const [user, setUser] = useState("");
   const { username } = useParams();
-  const { data: postsData, isSuccess: fetchedPosts } =
-    useGetPostsByUserNameQuery(user?.username);
+  const {
+    data: postsData,
+    isSuccess: fetchedPosts,
+    refetch: refetchPosts,
+  } = useGetPostsByUserNameQuery(user?.username);
 
   const { data: userData, isSuccess: fetchedUser } =
     useGetUserWithUsernameApiQuery(username);
@@ -52,7 +56,9 @@ const Profile = () => {
       setAbleToEdit(false);
       setUser(userData);
     }
-  }, [currentUser, username, fetchedUser]);
+    refetchPosts();
+    console.log(postsData);
+  }, [currentUser, username, fetchedUser, fetchedPosts]);
 
   return (
     <div className="profile">
@@ -60,13 +66,25 @@ const Profile = () => {
         <EditProfile setEditing={setEditing} user={user} />
       ) : (
         <div className="profile-container">
+          <div className="go-back" onClick={() => navigate(-1)}>
+            <ArrowBackRoundedIcon
+              sx={{
+                fontSize: 30,
+                color: "#a7c750;",
+                cursor: "pointer",
+              }}
+            />
+          </div>
+
           <div className="profile-head-container">
             <div className="profile-head-container-inner">
               <div className="user-profile-cover">
                 {user?.cover && <img src={user?.cover} alt="cover" />}
               </div>
               <div className="user-header-body">
-                <img src={user?.picture} alt="user-picture" />
+                <div className="user-profile-header-body-img">
+                  <img src={user?.picture} alt="user-picture" />
+                </div>
                 <div className="user-header-info">
                   <div className="user-header-info-left">
                     <h1>{user?.firstName + " " + user?.surName}</h1>
@@ -76,19 +94,21 @@ const Profile = () => {
                       <p>{user?.followingNum} Following</p>
                     </div>
                   </div>
-                  <button
-                    className="user-header-info-btn"
-                    onClick={() => setEditing(true)}
-                  >
-                    <EditRoundedIcon
-                      sx={{
-                        fontSize: 24,
-                        color: "#a7c750;",
-                        cursor: "pointer",
-                      }}
-                    />
-                    <span>Edit profile</span>
-                  </button>
+                  {user.username === currentUser.username && (
+                    <button
+                      className="user-header-info-btn"
+                      onClick={() => setEditing(true)}
+                    >
+                      <EditRoundedIcon
+                        sx={{
+                          fontSize: 24,
+                          color: "#a7c750;",
+                          cursor: "pointer",
+                        }}
+                      />
+                      <span>Edit profile</span>
+                    </button>
+                  )}
                 </div>
               </div>
               <div className="user-profile-options">

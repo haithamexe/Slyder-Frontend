@@ -1,9 +1,11 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import PicDisplay from "./PicDisplay";
 
 const UserCol = ({ user }) => {
   const [communityScrolled, setCommunityScrolled] = useState(false);
+  const [picDisplay, setPicDisplay] = useState("");
   const navigate = useNavigate();
 
   const handleScrollEnter = () => {
@@ -18,10 +20,20 @@ const UserCol = ({ user }) => {
     <>
       <div className="user-container">
         <div className="cover">
-          {user?.cover && <img src={user?.cover} alt="cover" />}
+          {user?.cover && (
+            <img
+              src={user?.cover}
+              alt="cover"
+              onClick={() => setPicDisplay(user?.cover)}
+            />
+          )}
         </div>
         <div className="user-img">
-          <img src={user?.picture} alt="user-picture" />
+          <img
+            src={user?.picture}
+            alt="user-picture"
+            onClick={() => setPicDisplay(user?.picture)}
+          />
         </div>
         <div className="user-head">
           <div className="followers-container">
@@ -70,6 +82,9 @@ const UserCol = ({ user }) => {
           </div> */}
         </div>
       </div>
+      {picDisplay && (
+        <PicDisplay picDisplay={picDisplay} setPicDisplay={setPicDisplay} />
+      )}
     </>
   );
 };

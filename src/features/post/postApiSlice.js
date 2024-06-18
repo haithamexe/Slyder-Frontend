@@ -72,10 +72,10 @@ const postApiSlice = apiSlice.injectEndpoints({
       ],
     }),
     commentPost: builder.mutation({
-      query: ({ postId, comment }) => ({
+      query: ({ postId, comment, userId }) => ({
         url: `api/post/${postId}/comment`,
         method: "PUT",
-        body: { comment },
+        body: { userId, comment },
       }),
       invalidatesTags: (result, error, postId) => [
         { type: ["PostComment"], id: postId },
@@ -94,6 +94,7 @@ const postApiSlice = apiSlice.injectEndpoints({
     getPostsByUserName: builder.query({
       query: (userName) => `api/post/user/${userName}`,
       providesTags: ["UserPost"],
+      invalidatesTags: ["UserPost"],
     }),
     savePost: builder.mutation({
       query: (postId) => ({
@@ -114,7 +115,7 @@ const postApiSlice = apiSlice.injectEndpoints({
       ],
     }),
     getPostComments: builder.query({
-      query: (postId) => `api/post/${postId}/comments`,
+      query: ({ postId }) => `api/post/${postId}/comments`,
       providesTags: (result, error, postId) => [
         { type: "PostComment", id: postId },
       ],
@@ -137,6 +138,14 @@ const postApiSlice = apiSlice.injectEndpoints({
 
     getPostById: builder.query({
       query: (postId) => `api/post/${postId}`,
+    }),
+    getPostCommentById: builder.query({
+      query: ({ commentId }) => ({
+        url: `api/post/comment/${commentId}`,
+      }),
+      providesTags: (result, error, commentId) => [
+        { type: "PostCommentById", id: commentId },
+      ],
     }),
   }),
 });
@@ -162,6 +171,7 @@ export const {
   useGetSavedPostsQuery,
   useGetPostByIdQuery,
   useGetPostsByUserNameQuery,
+  useGetPostCommentByIdQuery,
 } = postApiSlice;
 
 export default postApiSlice;

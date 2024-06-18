@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
@@ -16,9 +16,14 @@ import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import { useUpdateUserApiMutation } from "../features/user/userApiSlice";
 import { userActions } from "../features/user/userSlice";
 import apiSlice from "../features/api/apiSlice";
+import Resizer from "react-image-file-resizer";
+
 const EditProfile = ({ setEditing, user }) => {
+  const [curWidth, setCurWidth] = useState(window.innerWidth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const fileRef1 = useRef();
+  const fileRef2 = useRef();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -38,6 +43,8 @@ const EditProfile = ({ setEditing, user }) => {
     skills: [],
     skill: "",
     website: "",
+    cover: "",
+    picture: "",
   });
 
   const handleEditSubmit = async () => {
@@ -74,7 +81,34 @@ const EditProfile = ({ setEditing, user }) => {
     updateUser({ userData, userId: user.id });
   };
 
+  const handleRemove = (e) => {
+    const skill = e.target.innerText;
+    setUserUpdates({
+      ...userUpdates,
+      skills: userUpdates.skills.filter((s) => s !== skill),
+    });
+  };
+
+  const handleWindowChange = () => {
+    setCurWidth(window.innerWidth);
+  };
+
+  const handleSkillChange = (e) => {
+    const skill = userUpdates.skill;
+    const skills = userUpdates.skills;
+    if (skills.includes(skill)) {
+      return;
+    }
+
+    setUserUpdates({
+      ...userUpdates,
+      skills: [...userUpdates.skills, userUpdates.skill],
+      skill: "",
+    });
+  };
+
   useEffect(() => {
+    window.addEventListener("resize", handleWindowChange);
     if (userUpdateSuccess) {
       setEditing(false);
       dispatch(userActions.clearUser());
@@ -100,133 +134,212 @@ const EditProfile = ({ setEditing, user }) => {
       firstName: user?.firstName,
       surName: user?.surName,
     });
+
+    return () => {
+      window.removeEventListener("resize", handleWindowChange);
+    };
   }, [user, userUpdated, userUpdateSuccess]);
 
   const handleEditChange = (e) => {
     setUserUpdates({ ...userUpdates, [e.target.name]: e.target.value });
   };
 
-  return (
-    <div className="profile-edit-container-wrapper">
-      <div className="profile-edit-container">
-        <div className="profile-edit-header">
-          <h1>Edit profile</h1>
-          <CloseRoundedIcon
-            onClick={() => setEditing(false)}
-            sx={{
-              fontSize: 24,
-              color: "#a7c750;",
-              cursor: "pointer",
-            }}
-          />
-        </div>
-        <div className="profile-edit-body">
-          <form>
-            <div className="profile-edit-cover">
-              {user?.cover && (
-                <img src={userUpdates.cover || user?.cover} alt="user-cover" />
-              )}
-              <CameraEnhanceRoundedIcon
-                className="profile-edit-img-btn-icon"
-                sx={{
-                  fontSize: 35,
-                  color: "#a7c750;",
-                  cursor: "pointer",
-                }}
-              />
-            </div>
-            <div className="profile-edit-img">
-              <img
-                src={userUpdates.picture || user?.picture}
-                alt="user-picture"
-              />
-              <CameraEnhanceRoundedIcon
-                className="profile-edit-profile-btn-icon"
-                sx={{
-                  fontSize: 29,
-                  color: "#a7c750;",
-                  cursor: "pointer",
-                }}
-              />
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      try {
+        Resizer.imageFileResizer(
+          file,
+          1920, // max width
+          1920, // max height
+          "JPEG", // compress format
+          60, // quality
+          0, // rotation
+          (uri) => {
+            setUserUpdates({ ...userUpdates, [e.target.name]: uri });
+          },
+          "base64" // output type
+        );
+      } catch (err) {
+        console.error("Error resizing the image:", err);
+      }
+    }
+  };
 
-              <div className="profile-edit-inputs-names">
-                <div className="profile-edit-inputs-halfs">
+  return (
+    <div className="profile-edit-container">
+      <div
+        className="profile-edit-header-close"
+        onClick={() => setEditing(false)}
+      >
+        <CloseRoundedIcon
+          sx={{
+            fontSize: 25,
+            color: "#a7c750;",
+            cursor: "pointer",
+          }}
+        />
+        <h1>Close</h1>
+      </div>
+      <h1>Edit profile</h1>
+      <div className="profile-edit-body">
+        {curWidth > 1200 && (
+          <div className="profile-edit-left">
+            <div className="profile-edit-photos">
+              <div className="profile-edit-cover">
+                {userUpdates.cover && <img src={userUpdates?.cover} />}
+                <input
+                  type="file"
+                  ref={fileRef1}
+                  onChange={handleFileChange}
+                  accept="image/*"
+                  name="cover"
+                  style={{ display: "none" }}
+                />
+                <CameraEnhanceRoundedIcon
+                  className="profile-edit-img-btn-icon"
+                  sx={{
+                    fontSize: 37,
+                    color: "#a7c750;",
+                    cursor: "pointer",
+                  }}
+                  name="cover"
+                  onClick={() => {
+                    fileRef1.current.click();
+                  }}
+                />
+                <p
+                  className="edit-images-text-cover"
+                  onClick={() => fileRef1.current.click()}
+                >
+                  Change Cover picture
+                </p>
+              </div>
+              <div className="profile-edit-img">
+                <img src={userUpdates?.picture} alt="user-picture" />
+                <input
+                  type="file"
+                  ref={fileRef2}
+                  onChange={handleFileChange}
+                  accept="image/*"
+                  name="picture"
+                  style={{ display: "none" }}
+                />
+                <CameraEnhanceRoundedIcon
+                  className="profile-edit-img-btn-icon"
+                  name="picture"
+                  sx={{
+                    fontSize: 37,
+                    color: "#a7c750;",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => fileRef2.current.click()}
+                />
+                <p
+                  className="edit-images-text"
+                  onClick={() => fileRef2.current.click()}
+                >
+                  Change Profile picture
+                </p>
+              </div>
+            </div>
+            <div className="profile-edit-skills">
+              <div className="skills-add">
+                <div className="skills-inputs">
                   <input
                     type="text"
-                    value={userUpdates.firstName}
-                    placeholder="First Name"
-                    name="firstName"
+                    placeholder="Add skill"
+                    name="skill"
+                    value={userUpdates.skill}
                     onChange={(e) => handleEditChange(e)}
                   />
-                  <input
-                    type="text"
-                    value={userUpdates.surName}
-                    placeholder="Surname"
-                    name="surName"
-                    onChange={(e) => handleEditChange(e)}
+                  <AddRoundedIcon
+                    onClick={handleSkillChange}
+                    sx={{
+                      fontSize: 35,
+                      color: "#a7c750;",
+                      cursor: "pointer",
+                    }}
                   />
                 </div>
+                <div className="skills-header">
+                  {userUpdates?.skills?.map((skill) => (
+                    <h1
+                      className="edit-skill"
+                      key={skill}
+                      onClick={handleRemove}
+                    >
+                      {skill}
+                    </h1>
+                  ))}
+                </div>
+                <p className="edit-skill-remove">click on skill to remove</p>
+              </div>
+            </div>
+          </div>
+        )}
+        <div className="profile-edit-right">
+          <div className="profile-edit-inputs">
+            <div className="profile-edit-input-names">
+              <div className="profile-edit-input">
+                <label>First Name</label>
                 <input
                   type="text"
-                  value={userUpdates.username}
-                  placeholder="Username"
-                  name="username"
+                  value={userUpdates.firstName}
+                  placeholder="First Name"
+                  name="firstName"
                   onChange={(e) => handleEditChange(e)}
                 />
+              </div>
+              <div className="profile-edit-input">
+                <label>Surname</label>
                 <input
                   type="text"
-                  value={userUpdates?.bio}
-                  placeholder="Bio"
+                  value={userUpdates.surName}
+                  placeholder="Surname"
+                  name="surName"
                   onChange={(e) => handleEditChange(e)}
-                  name="bio"
                 />
               </div>
             </div>
-
-            <div className="skills-add">
-              <div className="skills-header">
-                {userUpdates?.skills?.map((skill) => (
-                  <h1 className="edit-skill" key={skill}>
-                    {skill}
-                  </h1>
-                ))}
-              </div>
+            <div className="profile-edit-input">
+              <label>Username</label>
               <input
                 type="text"
-                placeholder="Add skill"
-                name="skill"
-                value={userUpdates.skill}
+                value={userUpdates.username}
+                placeholder="Username"
+                name="username"
                 onChange={(e) => handleEditChange(e)}
               />
-              <AddRoundedIcon
-                onClick={() => {
-                  setUserUpdates({
-                    ...userUpdates,
-                    skills: [...userUpdates.skills, userUpdates.skill],
-                  });
-                }}
-                sx={{
-                  fontSize: 24,
-                  color: "#a7c750;",
-                  cursor: "pointer",
-                }}
+            </div>
+            <div className="profile-edit-input">
+              <label>Bio</label>
+              <input
+                type="text"
+                value={userUpdates?.bio}
+                placeholder="Bio"
+                onChange={(e) => handleEditChange(e)}
+                name="bio"
               />
             </div>
-            <input
-              type="text"
-              value={userUpdates.website}
-              name="website"
-              onChange={(e) => handleEditChange(e)}
-              placeholder="Website"
-            />
-            <button
-              type="button"
-              className="profile-edit-btn"
-              onClick={handleEditSubmit}
-            >
-              Save
-            </button>
-          </form>
+            <div className="profile-edit-input">
+              <label>Website</label>
+              <input
+                type="text"
+                value={userUpdates.website}
+                name="website"
+                onChange={(e) => handleEditChange(e)}
+                placeholder="Website"
+              />
+            </div>
+          </div>
+          <button
+            type="button"
+            className="profile-edit-btn"
+            onClick={handleEditSubmit}
+          >
+            Save
+          </button>
         </div>
       </div>
     </div>

@@ -44,8 +44,10 @@ const Post = ({ postId, setFetchPostId }) => {
   const [likes, setLikes] = useState([]);
   const [isLiked, setIsLiked] = useState(false);
   const currentUser = useSelector(userAuthed);
+  const [onFlyComment, setOnFlyComment] = useState("");
   const [user, setUser] = useState(null);
   const [post, setPost] = useState(null);
+  const [comments, setComments] = useState([]);
   const [postIsLoading, setPostIsLoading] = useState(true);
   const { data: fetchedPost, isSuccess: isPostSuccess } =
     useGetPostByIdQuery(postId);
@@ -58,7 +60,7 @@ const Post = ({ postId, setFetchPostId }) => {
   const [deletePost, { isSuccess: isDeleteSuccess }] = useDeletePostMutation();
 
   const { data: getCommentData, isSuccess: isGetPostCommentsSuccess } =
-    useGetPostCommentsQuery(postId);
+    useGetPostCommentsQuery({ postId: post?._id });
 
   const [likePost, { isSuccess: isLikeSuccess }] = useLikePostMutation();
   const [unlikePost, { isSuccess: isUnlikeSuccess }] = useUnlikePostMutation();
@@ -88,6 +90,17 @@ const Post = ({ postId, setFetchPostId }) => {
     unlikePost({ postId: post._id, userId: currentUser.id });
   };
 
+  const handleCommentPost = () => {
+    if (onFlyComment || !onFlyComment === "") {
+      commentPost({
+        postId: post._id,
+        userId: currentUser.id,
+        comment: onFlyComment,
+      });
+      setOnFlyComment("");
+    }
+  };
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     if (isPostSuccess && !isUserSuccess) {
@@ -100,6 +113,9 @@ const Post = ({ postId, setFetchPostId }) => {
         setAnimateLike(true);
       }
     }
+    if (isGetPostCommentsSuccess) {
+      setComments(getCommentData);
+    }
     if (isUserSuccess) {
       setUser(userData);
       if (currentUser.id === post?.user) {
@@ -110,7 +126,6 @@ const Post = ({ postId, setFetchPostId }) => {
       }
       setPostIsLoading(false);
     }
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -123,8 +138,10 @@ const Post = ({ postId, setFetchPostId }) => {
     currentUser,
     isGetPostLikesSuccess,
     getLikeData,
-    isCommentSuccess,
     isDeleteSuccess,
+    isGetPostCommentsSuccess,
+    isCommentSuccess,
+    getCommentData,
   ]);
 
   const content = (
@@ -308,7 +325,10 @@ const Post = ({ postId, setFetchPostId }) => {
               />
             ) : (
               <ChatRoundedIcon
-                onClick={() => setIsCommenting(false)}
+                onClick={() => {
+                  setOnFlyComment("");
+                  setIsCommenting(false);
+                }}
                 sx={{
                   fontSize: 27,
                   color: "#a7c750;",
@@ -316,7 +336,7 @@ const Post = ({ postId, setFetchPostId }) => {
                 }}
               />
             )}
-            <p>{post?.commentsNum || 0}</p>
+            <p>{comments?.length}</p>
           </div>
           <ShortcutRoundIcon
             sx={{
@@ -337,13 +357,21 @@ const Post = ({ postId, setFetchPostId }) => {
         {isCommenting && (
           <div className="feed-post-comments">
             <img src={user?.picture} alt="post" />
-            <input type="text" placeholder="Write a comment" />
+            <input
+              type="text"
+              placeholder="Write a comment"
+              value={onFlyComment}
+              onChange={(e) => setOnFlyComment(e.target.value)}
+            />
             <SendRoundedIcon
               className="comment-send-icon"
               sx={{
                 fontSize: 27,
                 color: "#a7c750;",
                 cursor: "pointer",
+              }}
+              onClick={() => {
+                handleCommentPost();
               }}
             />
           </div>
