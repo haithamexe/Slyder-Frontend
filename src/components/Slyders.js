@@ -4,18 +4,16 @@ import RestartAltRoundedIcon from "@mui/icons-material/RestartAltRounded";
 import SaveRoundedIcon from "@mui/icons-material/SaveRounded";
 
 const Slyders = (props) => {
-  const canvasRef = useRef(null);
-  let myChart = null;
   const [width, setWidth] = useState(window.innerWidth);
   const [slyders, setSlyders] = useState({
-    sport: 30,
-    news: 30,
-    entertainment: 70,
-    politics: 20,
-    technology: 50,
-    fashion: 40,
-    travel: 60,
-    food: 50,
+    sport: 100,
+    news: 100,
+    entertainment: 100,
+    politics: 100,
+    technology: 100,
+    fashion: 100,
+    travel: 100,
+    food: 100,
   });
 
   const handleResize = () => {
@@ -24,65 +22,10 @@ const Slyders = (props) => {
 
   useEffect(() => {
     setWidth(window.innerWidth);
-    if (width > 1749) {
-      const canvas = canvasRef.current;
-      const ctx = canvas.getContext("2d");
-      canvas.width = 200;
-      canvas.height = 60;
-      myChart = new Chart(ctx, {
-        type: "bar",
-        data: {
-          labels: Object.keys(slyders),
-          datasets: [
-            {
-              label: "Slyders Blocks",
-              data: Object.values(slyders),
-              backgroundColor: [
-                "rgba(255, 99, 132, 0.2)",
-                "rgba(54, 162, 235, 0.2)",
-                "rgba(255, 206, 86, 0.2)",
-                "rgba(75, 192, 192, 0.2)",
-                "rgba(153, 102, 255, 0.2)",
-                "rgba(255, 159, 64, 0.2)",
-                "rgba(255, 99, 132, 0.2)",
-                "rgba(54, 162, 235, 0.2)",
-              ],
-              borderColor: [
-                "rgba(255, 99, 132, 1)",
-                "rgba(54, 162, 235, 1)",
-                "rgba(255, 206, 86, 1)",
-                "rgba(75, 192, 192, 1)",
-                "rgba(153, 102, 255, 1)",
-                "rgba(255, 159, 64, 1)",
-                "rgba(255, 99, 132, 1)",
-                "rgba(54, 162, 235, 1)",
-              ],
-              borderWidth: 1.7,
-            },
-            {
-              label: "Slyders Line",
-              data: Object.values(slyders),
-              type: "line",
-              borderColor: "#a7c750",
-              borderWidth: 2,
-              fill: false,
-            },
-          ],
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true,
-            },
-          },
-        },
-      });
-    }
 
     window.addEventListener("resize", handleResize);
 
     return () => {
-      myChart?.destroy();
       window.removeEventListener("resize", handleResize);
     };
   }, [slyders]);
@@ -117,12 +60,12 @@ const Slyders = (props) => {
         </div>
         <div className="slyder-info slyder-show">
           <h1>
-            We're thrilled to unveil our new feature: interactive sliders! These
             sliders empower you to directly influence our recommendation
             algorithm. Each slider corresponds to a specific parameter
             considered by the algorithm. By adjusting them, you can tailor the
-            recommendations to your preferences. For instance, increase the
-            "Sport" slider to receive more sports-related posts.
+            recommendations to your preferences. For instance, decrease or
+            increase the "Sport" slider to receive more or less sports-related
+            posts.
           </h1>
           <div className="trending-slyder-btns">
             <button className="algo-save-btn">
@@ -145,15 +88,6 @@ const Slyders = (props) => {
             </button>
           </div>
         </div>
-      </div>
-
-      <div className="slyder-stats">
-        <canvas
-          ref={canvasRef}
-          className={
-            width >= 1805 ? "slyder-canvas" : "slyder-canvas slyder-stat-hide"
-          }
-        ></canvas>
       </div>
     </>
   );

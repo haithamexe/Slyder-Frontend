@@ -45,7 +45,7 @@ const PostPreveiw = ({ postId, setFetchPostId, origin, originUsername }) => {
     data: postData,
     isSuccess: postSuccess,
     refetch: refetchPost,
-  } = useGetPostByIdQuery(postId);
+  } = useGetPostByIdQuery({ postId });
 
   const {
     data: userData,

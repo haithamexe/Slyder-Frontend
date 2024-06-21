@@ -26,7 +26,7 @@ const postApiSlice = apiSlice.injectEndpoints({
       providesTags: ["Post"],
     }),
     getPost: builder.query({
-      query: (postId) => `api/post/${postId}`,
+      query: ({ postId }) => `api/post/${postId}`,
     }),
     updatePost: builder.mutation({
       query: ({ postId, ...postData }) => ({
@@ -145,7 +145,7 @@ const postApiSlice = apiSlice.injectEndpoints({
     }),
 
     getPostById: builder.query({
-      query: (postId) => `api/post/${postId}`,
+      query: ({ postId }) => `api/post/${postId}`,
     }),
     getPostCommentById: builder.query({
       query: ({ commentId }) => ({

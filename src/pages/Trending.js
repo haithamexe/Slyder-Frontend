@@ -5,8 +5,9 @@ import TrendingList from "../components/TrendingList";
 import TrendNotes from "../components/TrendNotes";
 import TrendChat from "../components/TrendChat";
 import "../styles/trending.css";
+import Timer from "../components/Timer";
 
-const Trending = () => {
+const Trending = ({ redirectionPage }) => {
   const [elementShow, setElementShow] = useState("notes");
   const [width, setWidth] = useState(window.innerWidth);
   const [pos, setPos] = useState({ x: 650, y: 200 });
@@ -35,17 +36,42 @@ const Trending = () => {
   return (
     <div onMouseMove={handleMouseMove} className="trending">
       {/* <Blob x={pos.x} y={pos.y} /> */}
-      <TrendingList />
-
-      <div className="trend-windows">
-        {/* {width > 950 ? (
-          <TrendNotes
-            currentTime={currentTime}
-            setElementShow={setElementShow}
-          />
-        ) : null} */}
-        {width > 580 ? <TrendChat /> : null}
-      </div>
+      <TrendingList postId={redirectionPage} />
+      {width >= 1450 && (
+        <div className="trend-windows">
+          <div className="trend-windows-selections">
+            <div className="trend-windows-selection">
+              <button
+                onClick={() => setElementShow("notes")}
+                className={elementShow === "notes" ? "notes-button-active" : ""}
+              >
+                Notes
+              </button>
+            </div>
+            <div className="trend-windows-selection">
+              <button
+                onClick={() => setElementShow("Slyders")}
+                className={
+                  elementShow === "Slyders" ? "notes-button-active" : ""
+                }
+              >
+                Recommendations
+              </button>
+            </div>
+            <div className="trend-windows-selections-timer">
+              <Timer />
+            </div>
+          </div>
+          {elementShow === "notes" ? (
+            <TrendNotes
+              currentTime={currentTime}
+              setElementShow={setElementShow}
+            />
+          ) : (
+            <TrendChat />
+          )}
+        </div>
+      )}
     </div>
   );
 };

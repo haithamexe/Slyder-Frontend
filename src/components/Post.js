@@ -54,8 +54,9 @@ const Post = ({ postId, setFetchPostId }) => {
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
   const [postIsLoading, setPostIsLoading] = useState(true);
-  const { data: fetchedPost, isSuccess: isPostSuccess } =
-    useGetPostByIdQuery(postId);
+  const { data: fetchedPost, isSuccess: isPostSuccess } = useGetPostByIdQuery({
+    postId,
+  });
   const { data: userData, isSuccess: isUserSuccess } = useGetUserWithIdApiQuery(
     { userId: post?.user }
   );
