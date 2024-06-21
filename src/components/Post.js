@@ -6,7 +6,7 @@ import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import ChatRoundedIcon from "@mui/icons-material/ChatRounded";
-import TurnedInRoundIcon from "@mui/icons-material/TurnedInRounded";
+
 import ShortcutRoundIcon from "@mui/icons-material/ShortcutRounded";
 import ArrowDropUpRoundedIcon from "@mui/icons-material/ArrowDropUpRounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
@@ -17,6 +17,7 @@ import InsertLinkRoundedIcon from "@mui/icons-material/InsertLinkRounded";
 import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
 import ChatBubbleOutlineRoundedIcon from "@mui/icons-material/ChatBubbleOutlineRounded";
 import TurnedInNotRoundedIcon from "@mui/icons-material/TurnedInNotRounded";
+import BookmarkRoundedIcon from "@mui/icons-material/BookmarkRounded";
 import Loader from "./Loader";
 import { useGetUserWithIdApiQuery } from "../features/user/userApiSlice";
 import {
@@ -27,6 +28,9 @@ import {
   useLikePostMutation,
   useUnlikePostMutation,
   useCommentPostMutation,
+  useGetPostSavedQuery,
+  useSavePostMutation,
+  useUnsavePostMutation,
 } from "../features/post/postApiSlice";
 import { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -36,6 +40,7 @@ import { formatTimeAgo } from "../utils/formatTimeAgo";
 
 const Post = ({ postId, setFetchPostId }) => {
   const navigate = useNavigate();
+  const [isSaved, setIsSaved] = useState(false);
   const [isCommenting, setIsCommenting] = useState(false);
   const [dropDownMenu, setDropDownMenu] = useState(false);
   const [isAuther, setIsAuther] = useState(false);
@@ -52,7 +57,7 @@ const Post = ({ postId, setFetchPostId }) => {
   const { data: fetchedPost, isSuccess: isPostSuccess } =
     useGetPostByIdQuery(postId);
   const { data: userData, isSuccess: isUserSuccess } = useGetUserWithIdApiQuery(
-    post?.user
+    { userId: post?.user }
   );
   const { data: getLikeData, isSuccess: isGetPostLikesSuccess } =
     useGetPostLikesQuery({ postId, userId: currentUser.id });
@@ -62,10 +67,17 @@ const Post = ({ postId, setFetchPostId }) => {
   const { data: getCommentData, isSuccess: isGetPostCommentsSuccess } =
     useGetPostCommentsQuery({ postId: post?._id });
 
+  const { data: isSavedPost, isSuccess: isGetPostSavedSuccess } =
+    useGetPostSavedQuery({ postId: post?._id, userId: currentUser.id });
+
   const [likePost, { isSuccess: isLikeSuccess }] = useLikePostMutation();
   const [unlikePost, { isSuccess: isUnlikeSuccess }] = useUnlikePostMutation();
   const [commentPost, { isSuccess: isCommentSuccess }] =
     useCommentPostMutation();
+
+  const [savePost, { isSuccess: isSaveSuccess }] = useSavePostMutation();
+
+  const [unsavePost, { isSuccess: isUnsaveSuccess }] = useUnsavePostMutation();
 
   const menuRef = useRef();
   const [following, setFollowing] = useState([]);
@@ -101,6 +113,14 @@ const Post = ({ postId, setFetchPostId }) => {
     }
   };
 
+  const handleSavePost = () => {
+    savePost({ postId: post._id, userId: currentUser.id });
+  };
+
+  const handleUnsavePost = () => {
+    unsavePost({ postId: post._id, userId: currentUser.id });
+  };
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     if (isPostSuccess && !isUserSuccess) {
@@ -126,6 +146,10 @@ const Post = ({ postId, setFetchPostId }) => {
       }
       setPostIsLoading(false);
     }
+    if (isGetPostSavedSuccess) {
+      setIsSaved(isSavedPost.saved);
+      console.log(isSavedPost, "isSavedPost");
+    }
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -142,6 +166,8 @@ const Post = ({ postId, setFetchPostId }) => {
     isGetPostCommentsSuccess,
     isCommentSuccess,
     getCommentData,
+    isGetPostSavedSuccess,
+    isSavedPost,
   ]);
 
   const content = (
@@ -345,18 +371,31 @@ const Post = ({ postId, setFetchPostId }) => {
               cursor: "pointer",
             }}
           />
-          <TurnedInNotRoundedIcon
-            className="post-save"
-            sx={{
-              fontSize: 27,
-              color: "#a7c750;",
-              cursor: "pointer",
-            }}
-          />
+          {isSaved ? (
+            <BookmarkRoundedIcon
+              className="post-save"
+              sx={{
+                fontSize: 27,
+                color: "#a7c750;",
+                cursor: "pointer",
+              }}
+              onClick={handleUnsavePost}
+            />
+          ) : (
+            <TurnedInNotRoundedIcon
+              className="post-save"
+              sx={{
+                fontSize: 27,
+                color: "#a7c750;",
+                cursor: "pointer",
+              }}
+              onClick={handleSavePost}
+            />
+          )}
         </div>
         {isCommenting && (
           <div className="feed-post-comments">
-            <img src={user?.picture} alt="post" />
+            <img src={currentUser?.picture} alt="post" />
             <input
               type="text"
               placeholder="Write a comment"

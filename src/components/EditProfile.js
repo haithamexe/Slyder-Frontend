@@ -96,15 +96,27 @@ const EditProfile = ({ setEditing, user }) => {
   const handleSkillChange = (e) => {
     const skill = userUpdates.skill;
     const skills = userUpdates.skills;
+    console.log(skill, "skill");
+    console.log(skills, "skills");
     if (skills.includes(skill)) {
       return;
     }
+    if (skill.length > 20) {
+      return;
+    }
 
-    setUserUpdates({
-      ...userUpdates,
-      skills: [...userUpdates.skills, userUpdates.skill],
-      skill: "",
-    });
+    if (!skill) {
+      return;
+    }
+    if (skills.length >= 7) {
+      return;
+    } else {
+      setUserUpdates({
+        ...userUpdates,
+        skills: [...userUpdates.skills, userUpdates.skill],
+        skill: "",
+      });
+    }
   };
 
   useEffect(() => {
@@ -273,7 +285,10 @@ const EditProfile = ({ setEditing, user }) => {
                     </h1>
                   ))}
                 </div>
-                <p className="edit-skill-remove">click on skill to remove</p>
+                <p className="edit-skill-remove">
+                  click on skill to remove, you can only have up to 7 skills to
+                  display
+                </p>
               </div>
             </div>
           </div>

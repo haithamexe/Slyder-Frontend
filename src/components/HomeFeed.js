@@ -17,11 +17,13 @@ import { useGetHomePostsQuery } from "../features/post/postApiSlice";
 import { homePosts, postActions } from "../features/post/postSlice";
 import { useDispatch, useSelector } from "react-redux";
 import PostPreveiw from "./PostPreveiw";
+import { useParams } from "react-router-dom";
 
-const HomeFeed = ({ setNewPost, user }) => {
+const HomeFeed = ({ setNewPost, user, redirectionPage }) => {
   const dispatch = useDispatch();
   const [postId, setFetchPostId] = useState("");
   const [posts, setPosts] = useState([]);
+  const { postId: postInIdParam } = useParams();
 
   const {
     data: homePosts,
@@ -49,8 +51,12 @@ const HomeFeed = ({ setNewPost, user }) => {
     if (isSuccess || homePosts || user) {
       setPosts(homePosts);
     }
+    if (postInIdParam) {
+      setFetchPostId(postInIdParam);
+      console.log("postInIdParam", postInIdParam);
+    }
     console.log(homePosts);
-  }, [isSuccess, homePosts, user]);
+  }, [isSuccess, homePosts, user, postInIdParam]);
 
   const handleScroll = () => {
     //very cool code for checking if the user has scrolled to the bottom of the feed
@@ -63,7 +69,9 @@ const HomeFeed = ({ setNewPost, user }) => {
     <>
       <div className="post">
         <div className="post-input-img">
-          <img src={user.picture} alt="post" />
+          <div className="post-input-img-wrapper">
+            <img src={user.picture} alt="post" />
+          </div>
           <button
             type="button"
             className="post-new-button"
@@ -86,7 +94,11 @@ const HomeFeed = ({ setNewPost, user }) => {
         {/* <Post /> */}
       </div>
       {postId && (
-        <PostPreveiw postId={postId} setFetchPostId={setFetchPostId} />
+        <PostPreveiw
+          postId={redirectionPage || postId}
+          setFetchPostId={setFetchPostId}
+          origin="feed"
+        />
       )}
     </>
   );

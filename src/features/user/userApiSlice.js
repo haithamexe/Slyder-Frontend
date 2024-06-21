@@ -63,8 +63,10 @@ const userApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     getUserWithIdApi: builder.query({
-      query: (userId) => `api/user/${userId}`,
-      providesTags: ["UserWithId"],
+      query: ({ userId }) => `api/user/${userId}`,
+      providesTags: (result, error, { userId }) => [
+        { type: "UserWithId", id: userId },
+      ],
     }),
 
     getUserWithUsernameApi: builder.query({
@@ -76,14 +78,38 @@ const userApiSlice = apiSlice.injectEndpoints({
         method: "PUT",
         body: userData,
       }),
-      invalidatesTags: [
-        "User",
-        "Post",
-        "HomePost",
-        "UserPost",
-        "TrendPost",
-        "UserWithId",
+      invalidatesTags: (result, error, { userId }) => [
+        { type: "UserWithId", id: userId },
+        { type: ["User, HomePost", "UserPost", "TrendPost", "Post"] },
       ],
+    }),
+    getFollowersApi: builder.query({
+      query: ({ userId }) => `api/user/followers/${userId}`,
+      providesTags: ["Followers"],
+    }),
+    getFollowingApi: builder.query({
+      query: ({ userId }) => `api/user/following/${userId}`,
+      providesTags: ["Following"],
+    }),
+    followUserApi: builder.mutation({
+      query: ({ userId, followId }) => ({
+        url: `api/user/follow/${userId}`,
+        method: "PUT",
+        body: { followId },
+      }),
+      invalidatesTags: ["Followers", "Following", "HomePost", "Contacts"],
+    }),
+    unFollowUserApi: builder.mutation({
+      query: ({ userId, unFollowId }) => ({
+        url: `api/user/unfollow/${userId}`,
+        method: "PUT",
+        body: { unFollowId },
+      }),
+      invalidatesTags: ["Following", "Followers", "HomePost", "Contacts"],
+    }),
+    getUserContactsApi: builder.query({
+      query: ({ userId }) => `api/user/contacts/${userId}`,
+      providesTags: ["Contacts"],
     }),
   }),
 });
@@ -100,6 +126,11 @@ export const {
   useGetUserWithIdApiQuery,
   useGetUserWithUsernameApiQuery,
   useUpdateUserApiMutation,
+  useGetFollowersApiQuery,
+  useGetFollowingApiQuery,
+  useFollowUserApiMutation,
+  useUnFollowUserApiMutation,
+  useGetUserContactsApiQuery,
 } = userApiSlice;
 
 export default userApiSlice;

@@ -11,7 +11,7 @@ import UserCol from "../components/UserCol";
 import HomeFeed from "../components/HomeFeed";
 import MsgCol from "../components/MsgCol";
 
-const Home = () => {
+const Home = ({ redirectionPage }) => {
   const user = useSelector(userAuthed);
   const [width, setWidth] = useState(window.innerWidth);
   const [newPost, setNewPost] = useState(false); // [new]
@@ -61,7 +61,11 @@ const Home = () => {
         )}
 
         <Panel className="center" defaultSize={35} minSize={35} maxSize={50}>
-          <HomeFeed user={user} setNewPost={setNewPost} />
+          <HomeFeed
+            user={user}
+            setNewPost={setNewPost}
+            redirectionPage={redirectionPage}
+          />
         </Panel>
 
         {width >= 900 && (

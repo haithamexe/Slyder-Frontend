@@ -17,6 +17,7 @@ import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
 import PersonRemoveRoundedIcon from "@mui/icons-material/PersonRemoveRounded";
 import InsertLinkRoundedIcon from "@mui/icons-material/InsertLinkRounded";
 import TurnedInNotRoundedIcon from "@mui/icons-material/TurnedInNotRounded";
+import BookmarkRoundedIcon from "@mui/icons-material/BookmarkRounded";
 
 import { useGetUserWithIdApiQuery } from "../features/user/userApiSlice";
 import { useEffect, useState, useRef } from "react";
@@ -31,12 +32,15 @@ import {
   useUnlikePostMutation,
   useCommentPostMutation,
   useUncommentPostMutation,
+  useGetPostSavedQuery,
+  useSavePostMutation,
+  useUnsavePostMutation,
 } from "../features/post/postApiSlice";
 import CloseRounded from "@mui/icons-material/CloseRounded";
 import { formatTimeAgo } from "../utils/formatTimeAgo";
 import CommentsList from "./CommentsList";
 
-const PostPreveiw = ({ postId, setFetchPostId }) => {
+const PostPreveiw = ({ postId, setFetchPostId, origin, originUsername }) => {
   const {
     data: postData,
     isSuccess: postSuccess,
@@ -47,7 +51,7 @@ const PostPreveiw = ({ postId, setFetchPostId }) => {
     data: userData,
     isSuccess: userSuccess,
     refetch: refetchUser,
-  } = useGetUserWithIdApiQuery(postData?.user);
+  } = useGetUserWithIdApiQuery({ userId: postData?.user });
 
   const [user, setUser] = useState(null);
   const { data: getLikeData, isSuccess: isGetPostLikesSuccess } =
@@ -70,6 +74,8 @@ const PostPreveiw = ({ postId, setFetchPostId }) => {
   const [animateUnLike, setAnimatUnLike] = useState(false);
   const [likes, setLikes] = useState([]);
   const [commentsCount, setCommentsCount] = useState(0);
+  const [isSaved, setIsSaved] = useState(false);
+  const imageRef = useRef(null);
   const [likePost, { data: likeData, error: likeError }] =
     useLikePostMutation();
   const [unlikePost, { data: unlikeData, error: unlikeError }] =
@@ -79,12 +85,21 @@ const PostPreveiw = ({ postId, setFetchPostId }) => {
   const [uncommentPost, { data: uncommentData, error: uncommentError }] =
     useUncommentPostMutation();
 
+  const { data: getSavedData, isSuccess: isGetPostSavedSuccess } =
+    useGetPostSavedQuery({ postId: post?._id, userId: user?.id });
+
+  const [savePost, { data: saveData, error: saveError }] =
+    useSavePostMutation();
+  const [unsavePost, { data: unsaveData, error: unsaveError }] =
+    useUnsavePostMutation();
+
   const handleLikePost = () => {
-    likePost({ postId: post?._id, userId: user?.id });
+    likePost({ postId: post?._id, userId: currentUser?.id });
   };
 
   const handleUnlikePost = () => {
-    unlikePost({ postId: post?._id, userId: user?.id });
+    unlikePost({ postId: post?._id, userId: currentUser?.id });
+    // setAnimateLike(false);
   };
 
   const handleCommentPost = () => {
@@ -92,7 +107,7 @@ const PostPreveiw = ({ postId, setFetchPostId }) => {
     commentPost({
       postId: post?._id,
       comment: onFlyComment,
-      userId: user?.id,
+      userId: currentUser?.id,
     });
     setOnFlyComment("");
   };
@@ -101,16 +116,62 @@ const PostPreveiw = ({ postId, setFetchPostId }) => {
     uncommentPost({ commentId });
   };
 
+  const handleSavePost = () => {
+    savePost({ postId: post?._id, userId: currentUser?.id });
+  };
+
+  const handleUnsavePost = () => {
+    unsavePost({ postId: post?._id, userId: currentUser?.id });
+  };
+
   const handleClickOutside = (e) => {
     if (previewRef.current && !previewRef.current.contains(e.target)) {
+      if (pageRootUrl.includes("/feed")) {
+        window.history.pushState(null, "", "/");
+        setFetchPostId("");
+      } else if (pageRootUrl.includes("/trending")) {
+        window.history.pushState(null, "", "/trending");
+        setFetchPostId("");
+      } else if (pageRootUrl.includes("/profile")) {
+        window.history.pushState(null, "", `/${originUsername}`);
+        setFetchPostId("");
+      } else {
+        window.history.pushState(null, "", `${pageRootUrl}`);
+        setFetchPostId("");
+      }
+      // else {
+      //   window.history.pushState(null, "", `${pageRootUrl}`);
+      //   setFetchPostId("");
+      // }
+    }
+  };
+
+  const closePostPreveiw = () => {
+    if (pageRootUrl.includes("/feed")) {
+      window.history.pushState(null, "", "/");
+      setFetchPostId("");
+    } else if (pageRootUrl.includes("/trending")) {
+      window.history.pushState(null, "", "/trending");
+      setFetchPostId("");
+    } else if (pageRootUrl.includes("/profile")) {
+      window.history.pushState(null, "", `/${originUsername}`);
+      setFetchPostId("");
+    } else {
       window.history.pushState(null, "", `${pageRootUrl}`);
       setFetchPostId("");
     }
   };
 
   useEffect(() => {
+    console.log(postData);
+    console.log(postId, "postId");
     document.addEventListener("mousedown", handleClickOutside);
-    window.history.pushState(null, "", `/post/${postId}`);
+    window.history.pushState(
+      null,
+      "",
+      `/post/${postId}/${origin}/${originUsername}`
+    );
+    setPageRootUrl(window.location.pathname);
     if (currentUser.id === post?.user) {
       setIsAuther(true);
       setUser(currentUser);
@@ -127,13 +188,20 @@ const PostPreveiw = ({ postId, setFetchPostId }) => {
       setPost(postData);
     }
 
+    if (isGetPostSavedSuccess) {
+      setIsSaved(getSavedData.saved);
+    }
+
     if (isGetPostLikesSuccess) {
       setLikes(getLikeData.likes);
-      setIsLiked(getLikeData.userHasLiked);
-      if (getLikeData.userHasLiked) {
+      if (getLikeData.likes.includes(currentUser.id)) {
+        setIsLiked(true);
         setAnimateLike(true);
+      } else {
+        setIsLiked(false);
       }
     }
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -147,6 +215,8 @@ const PostPreveiw = ({ postId, setFetchPostId }) => {
     userSuccess,
     getLikeData,
     isGetPostLikesSuccess,
+    isGetPostSavedSuccess,
+    getSavedData,
   ]);
 
   console.log(post);
@@ -160,14 +230,25 @@ const PostPreveiw = ({ postId, setFetchPostId }) => {
             color: "#a7c750;",
             cursor: "pointer",
           }}
-          onClick={() => {
-            window.history.pushState(null, "", `${pageRootUrl}`);
-            setFetchPostId("");
-          }}
+          onClick={closePostPreveiw}
         />
         {post?.image && (
-          <div className="post-preveiw-img-container">
-            <img src={post?.image} alt="post" />
+          <div
+            className="post-preveiw-img-container"
+            style={
+              imageRef.current?.width >= imageRef.current?.height
+                ? { width: imageRef.current?.width }
+                : {}
+            }
+            // style={
+            //   imageRef.current?.width < 1200
+            //     ? imageRef.current?.width >= imageRef.current?.height
+            //       ? { width: imageRef.current?.width }
+            //       : {}
+            //     : { width: "950px" }
+            // }
+          >
+            <img src={post?.image} alt="post" ref={imageRef} />
           </div>
         )}
         <div className="post-preveiw-info-container">
@@ -188,12 +269,6 @@ const PostPreveiw = ({ postId, setFetchPostId }) => {
             </div>
           )}
           <div className="post-preveiw-comments-container">
-            {/* {post?.comments?.map((comment) => (
-              <div className="post-preveiw-post-comment">
-                <img src={comment.user.image} alt="user" />
-                <h1>{comment.content}</h1>
-              </div>
-            ))} */}
             <CommentsList
               postId={post?._id}
               setCommentsCount={setCommentsCount}
@@ -283,17 +358,30 @@ const PostPreveiw = ({ postId, setFetchPostId }) => {
                   cursor: "pointer",
                 }}
               />
-              <TurnedInNotRoundedIcon
-                className="post-save"
-                sx={{
-                  fontSize: 27,
-                  color: "#a7c750;",
-                  cursor: "pointer",
-                }}
-              />
+              {isSaved ? (
+                <BookmarkRoundedIcon
+                  className="post-save-veiw"
+                  sx={{
+                    fontSize: 27,
+                    color: "#a7c750;",
+                    cursor: "pointer",
+                  }}
+                  onClick={handleUnsavePost}
+                />
+              ) : (
+                <TurnedInNotRoundedIcon
+                  className="post-save-veiw"
+                  sx={{
+                    fontSize: 27,
+                    color: "#a7c750;",
+                    cursor: "pointer",
+                  }}
+                  onClick={handleSavePost}
+                />
+              )}
             </div>
             <div className="post-preveiw-post-footer-comment">
-              <img src={user?.picture} alt="user" />
+              <img src={currentUser?.picture} alt="user" />
               <input
                 type="text"
                 placeholder="Write a comment"
@@ -301,7 +389,7 @@ const PostPreveiw = ({ postId, setFetchPostId }) => {
                 onChange={(e) => setOnFlyComment(e.target.value)}
               />
               <SendRoundedIcon
-                className="comment-send-icon"
+                className="comment-send-icon-veiw"
                 sx={{
                   fontSize: 27,
                   color: "#a7c750;",

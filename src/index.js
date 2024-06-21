@@ -5,6 +5,7 @@ import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./app/store";
+import { SocketContextProvider } from "./context/SocketContext";
 
 // import createStore from "react-auth-kit/createStore";
 // import AuthProvider from "react-auth-kit";
@@ -22,7 +23,9 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Provider store={store}>
-        <App />
+        <SocketContextProvider>
+          <App />
+        </SocketContextProvider>
       </Provider>
     </BrowserRouter>
   </React.StrictMode>

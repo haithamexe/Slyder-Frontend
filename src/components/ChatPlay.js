@@ -8,29 +8,29 @@ const ChatPlay = () => {
   const [radiusChanged, setRadiusChanged] = useState(25);
 
   const priColors = [
-    "#5976ff",
-    "#ff5959",
-    "#59ff59",
-    "#ff59ff",
-    "#59ffff",
-    "#ff5959",
-    "#59ff59",
-    "#ff59ff",
-    "#59ffff",
-    "#ff5959",
+    "#FF6F61", // Red
+    "#6B5B95", // Purple
+    "#88B04B", // Green
+    "#F7CAC9", // Pink
+    "#92A8D1", // Blue
+    "#F7786B", // Coral
+    "#FFD700", // Gold
+    "#FF7F50", // Salmon
+    "#40E0D0", // Turquoise
+    "#FFC0CB", // Light Pink
   ];
 
   const secColors = [
-    "#5976ff",
-    "#ff5959",
-    "#59ff59",
-    "#ff59ff",
-    "#59ffff",
-    "#ff5959",
-    "#59ff59",
-    "#ff59ff",
-    "#59ffff",
-    "#ff5959",
+    "#6F61FF", // Complementary to Red
+    "#5B956B", // Complementary to Purple
+    "#B04B88", // Complementary to Green
+    "#CAC9F7", // Complementary to Pink
+    "#A8D192", // Complementary to Blue
+    "#786BF7", // Complementary to Coral
+    "#D700FF", // Complementary to Gold
+    "#7F50FF", // Complementary to Salmon
+    "#E0D040", // Complementary to Turquoise
+    "#C0CBFF", // Complementary to Light Pink
   ];
 
   return (

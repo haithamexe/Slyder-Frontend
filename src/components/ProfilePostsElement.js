@@ -8,27 +8,34 @@ import PhotoLibraryRoundedIcon from "@mui/icons-material/PhotoLibraryRounded";
 import { useState } from "react";
 import Post from "./Post";
 import PostPreveiw from "./PostPreveiw";
+import { userAuthed } from "../features/user/userSlice";
+import { useSelector } from "react-redux";
 
 const ProfilePostsElement = ({ user, posts, setNewPost }) => {
+  const curUser = useSelector(userAuthed);
   const [postId, setFetchPostId] = useState("");
   return (
     <>
       <div className="feed-in-profile-container">
-        <div className="post">
-          <div className="post-input-img">
-            <img src={user?.picture} alt="post" />
-            <button
-              type="button"
-              className="post-new-button"
-              onClick={() => {
-                console.log("clicked");
-                setNewPost(true);
-              }}
-            >
-              What's on your mind?
-            </button>
+        {curUser?.username === user?.username && (
+          <div className="post">
+            <div className="post-input-img">
+              <div className="post-input-img-wrapper">
+                <img src={curUser?.picture} alt="post" />
+              </div>
+              <button
+                type="button"
+                className="post-new-button"
+                onClick={() => {
+                  console.log("clicked");
+                  setNewPost(true);
+                }}
+              >
+                What's on your mind?
+              </button>
+            </div>
           </div>
-        </div>
+        )}
         <div className="feed-in-profile">
           {posts?.map((post) => (
             <Post
@@ -40,7 +47,12 @@ const ProfilePostsElement = ({ user, posts, setNewPost }) => {
         </div>
       </div>
       {postId && (
-        <PostPreveiw postId={postId} setFetchPostId={setFetchPostId} />
+        <PostPreveiw
+          postId={postId}
+          setFetchPostId={setFetchPostId}
+          origin="profile"
+          originUsername={user?.username}
+        />
       )}
     </>
   );

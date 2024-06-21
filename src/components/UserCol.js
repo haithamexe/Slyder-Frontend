@@ -1,12 +1,27 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PicDisplay from "./PicDisplay";
-
+import {
+  useGetFollowersApiQuery,
+  useGetFollowingApiQuery,
+} from "../features/user/userApiSlice";
+import { userAuthed } from "../features/user/userSlice";
+import { useSelector } from "react-redux";
 const UserCol = ({ user }) => {
   const [communityScrolled, setCommunityScrolled] = useState(false);
   const [picDisplay, setPicDisplay] = useState("");
+  const [followers, setFollwoers] = useState([]);
+  const [following, setFollowing] = useState([]);
+  const curUser = useSelector(userAuthed);
   const navigate = useNavigate();
+
+  const { data: followersData } = useGetFollowersApiQuery({
+    userId: curUser?.id,
+  });
+  const { data: followingData } = useGetFollowingApiQuery({
+    userId: curUser?.id,
+  });
 
   const handleScrollEnter = () => {
     setCommunityScrolled(true);
@@ -15,6 +30,15 @@ const UserCol = ({ user }) => {
   const handleScrollExit = () => {
     setCommunityScrolled(false);
   };
+
+  useEffect(() => {
+    if (followersData) {
+      setFollwoers(followersData);
+    }
+    if (followingData) {
+      setFollowing(followingData);
+    }
+  }, [followersData, followingData]);
 
   return (
     <>
@@ -38,13 +62,13 @@ const UserCol = ({ user }) => {
         <div className="user-head">
           <div className="followers-container">
             <div className="followers">
-              <h2>{user?.followersNum}</h2>
+              <h2>{followers?.length}</h2>
               <p>Followers</p>
             </div>
           </div>
           <div className="following-container">
             <div className="following">
-              <h2>{user?.followingNum}</h2>
+              <h2>{following?.length}</h2>
               <p>Following</p>
             </div>
           </div>

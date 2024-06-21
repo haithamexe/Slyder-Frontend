@@ -8,7 +8,8 @@ import Register from "./pages/Register";
 import AuthRoutes from "./components/AuthRoutes";
 import Trending from "./pages/Trending";
 import Chat from "./pages/Chat";
-import Profile from "./components/Profile";
+import Profile from "./pages/Profile";
+import PostPage from "./pages/PostPage";
 
 const App = () => {
   return (
@@ -20,6 +21,18 @@ const App = () => {
           <Route path="/:username" element={<Profile />} />
           <Route path="/trending" element={<Trending />} />
           <Route path="/chat" element={<Chat />} />
+          <Route
+            path="/post/:postId/feed/:username"
+            element={<PostPage option="feed" />}
+          />
+          <Route
+            path="/post/:postId/profile/:username"
+            element={<PostPage option="profile" />}
+          />
+          <Route
+            path="/post/:postId/trending/:username"
+            element={<PostPage option="trending" />}
+          />
         </Route>
       </Route>
 
