@@ -6,7 +6,7 @@ const apiSlice = createApi({
     baseUrl: process.env.REACT_APP_BACKEND_URL,
     credentials: "include",
   }),
-  tagTypes: ["User", "Post", "Message", "Note"],
+  tagTypes: ["User", "Post", "Message", "Note", "Conversation", "Contacts"],
   endpoints: (builder) => ({}),
 });
 

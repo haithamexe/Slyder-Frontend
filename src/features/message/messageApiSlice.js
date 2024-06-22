@@ -3,32 +3,31 @@ import apiSlice from "../api/apiSlice";
 const messageApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     createMessage: builder.mutation({
-      query: (messageData) => ({
-        url: "api/message/create",
+      query: ({ receiverId, message }) => ({
+        url: `api/message/create/${receiverId}`,
         method: "POST",
         body: {
-          message: messageData.content,
-          senderId: messageData.senderId,
+          message,
         },
       }),
-      invalidatesTags: ["Message"],
+      // invalidatesTags: ["Message", "Conversation"],
+      invalidatesTags: ["Conversation"],
     }),
     getMessages: builder.query({
-      query: (receiverId) => `api/message/${receiverId}`,
-      providesTags: ["Message"],
+      query: ({ receiverId }) => `api/message/${receiverId}`,
+      providesTags: ["Message", "Conversation"],
     }),
     deleteMessage: builder.mutation({
       query: (messageId) => ({
         url: `api/message/${messageId}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Message"],
+      // invalidatesTags: ["Message", "Conversation"],
+      invalidatesTags: ["Conversation"],
     }),
     getConversation: builder.query({
       query: ({ receiverId }) => `api/message/conversation/${receiverId}`,
-      providesTags: (result, error, { receiverId }) => [
-        { type: "Conversation", id: receiverId },
-      ],
+      providesTags: ["Conversation"],
     }),
     createConversation: builder.mutation({
       query: ({ receiverId }) => ({

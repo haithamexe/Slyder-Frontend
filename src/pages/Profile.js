@@ -50,6 +50,7 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
     data: postsData,
     isSuccess: fetchedPosts,
     refetch: refetchPosts,
+    isError,
   } = useGetPostsByUserNameQuery(user?.username);
 
   const { data: followersData, isSuccess: fetchedFollowers } =
@@ -82,7 +83,6 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
     if (redirectionPage) {
       setFetchPostId(redirectionPage);
     }
-
     if (followersData && followersData?.includes(currentUser?.id)) {
       setIsFollowed(true);
     } else {
@@ -100,6 +100,7 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
     followingData,
     fetchedFollowers,
     fetchedFollowing,
+    isError,
   ]);
 
   return (

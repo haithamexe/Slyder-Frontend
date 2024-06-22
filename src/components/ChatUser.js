@@ -2,8 +2,11 @@ import React from "react";
 import { useGetConversationQuery } from "../features/message/messageApiSlice";
 import { useEffect, useState } from "react";
 import { formatTimeAgo } from "../utils/formatTimeAgo";
+import { clearMessages } from "../features/message/messageSlice";
+import { useDispatch } from "react-redux";
 
 const ChatUser = ({ chatUser, setCurrentChat }) => {
+  const dispatch = useDispatch();
   const [conversation, setConversation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [lastMessage, setLastMessage] = useState(null);
@@ -30,7 +33,14 @@ const ChatUser = ({ chatUser, setCurrentChat }) => {
   }, [conversationData, isSuccess]);
 
   return (
-    <div className="chat-user" onClick={() => setCurrentChat(conversation)}>
+    <div
+      className="chat-user"
+      onClick={() => {
+        dispatch(clearMessages());
+
+        setCurrentChat(conversation);
+      }}
+    >
       <div className="chat-user-img">
         <img src={conversation?.user?.picture} alt="user" />
       </div>
@@ -40,7 +50,7 @@ const ChatUser = ({ chatUser, setCurrentChat }) => {
         </h1>
         <p>
           {lastMessageTurnicated}
-          <span>{lastMessageTime && formatTimeAgo(lastMessageTime)}</span>
+          <span> {lastMessageTime && formatTimeAgo(lastMessageTime)}</span>
         </p>
       </div>
     </div>
