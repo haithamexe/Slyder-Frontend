@@ -32,6 +32,9 @@ const ChatUser = ({ chatUser, setCurrentChat }) => {
       }
       setLastMessageTime(conversationData?.lastMessage?.createdAt);
       setLoading(false);
+
+      console.log("conversationData", conversationData);
+      console.log("lastMessage", lastMessage);
     }
   }, [conversationData, isSuccess]);
 

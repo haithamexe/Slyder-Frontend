@@ -8,19 +8,12 @@ import {
   useGetMessagesQuery,
   useCreateMessageMutation,
 } from "../features/message/messageApiSlice";
-import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import io from "socket.io-client";
 import Message from "./Message";
 import axios from "axios";
 import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
 import apiSlice from "../features/api/apiSlice";
-// import {
-//   addMessage,
-//   setMessages,
-//   clearMessages,
-//   selectMessages,
-// } from "../features/message/messageSlice";
-// import { useDispatch, useSelector } from "react-redux";
+import { decrypt } from "../utils/encryptionUtils";
 
 const socket = io(process.env.REACT_APP_BACKEND_URL);
 
@@ -64,28 +57,28 @@ const ChatWindow = ({ currentChat }) => {
 
     // Listen for new messages
     socket.on("newMessage", (message) => {
-      // const messagesArray = messages;
-      // messagesArray.unshift(message);
-      // setMessages(messagesArray);
-      // setMessages((prevMessages) => [...prevMessages, message]);
+      const decryptedMessage = {
+        ...message,
+        message: decrypt(message.message),
+      };
 
-      setMessages((prevMessages) => [message, ...prevMessages]);
+      setMessages((prevMessages) => [decryptedMessage, ...prevMessages]);
       handleScroll();
     });
 
-    socket.on("messageStatusUpdated", (updatedMessage) => {
-      setMessages((prevMessages) =>
-        prevMessages.map((message) =>
-          message._id === updatedMessage._id ? updatedMessage : message
-        )
-      );
-    });
+    // socket.on("messageStatusUpdated", (updatedMessage) => {
+    //   setMessages((prevMessages) =>
+    //     prevMessages.map((message) =>
+    //       message._id === updatedMessage._id ? updatedMessage : message
+    //     )
+    //   );
+    // });
 
     // Cleanup on component unmount
     return () => {
       socket.emit("leaveRoom", currentChat._id);
       socket.off("newMessage");
-      socket.off("messageStatusUpdated");
+      // socket.off("messageStatusUpdated");
     };
   }, [currentChat]);
 
