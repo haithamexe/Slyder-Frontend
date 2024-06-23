@@ -21,19 +21,17 @@ export const SocketContextProvider = ({ children }) => {
           userId: user.id,
         },
       });
-      setSocket(newSocket);
+      newSocket?.on("getOnlineUsers", (users) => {
+        setOnlineUsers(users);
+      });
+
+      return () => {
+        newSocket?.close();
+      };
     } else {
-      socket?.close();
       setSocket(null);
+      setOnlineUsers([]);
     }
-
-    socket?.on("onlineUsers", (users) => {
-      setOnlineUsers(users);
-    });
-
-    return () => {
-      socket?.close();
-    };
   }, [user]);
 
   return (

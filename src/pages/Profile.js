@@ -33,6 +33,7 @@ import { useGetPostsByUserNameQuery } from "../features/post/postApiSlice";
 import Post from "../components/Post";
 import NewPost from "../components/NewPost";
 import PostPreveiw from "../components/PostPreveiw";
+import PicDisplay from "../components/PicDisplay";
 
 const Profile = ({ redirectionPage, redirectionUsername }) => {
   const [newPost, setNewPost] = useState(false);
@@ -44,6 +45,7 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
   const [editing, setEditing] = useState(false);
   const navigate = useNavigate();
   const [user, setUser] = useState("");
+  const [picDisplay, setPicDisplay] = useState("");
   const [isFollowed, setIsFollowed] = useState(null);
   const { username } = useParams();
   const {
@@ -51,7 +53,7 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
     isSuccess: fetchedPosts,
     refetch: refetchPosts,
     isError,
-  } = useGetPostsByUserNameQuery(user?.username);
+  } = useGetPostsByUserNameQuery(username);
 
   const { data: followersData, isSuccess: fetchedFollowers } =
     useGetFollowersApiQuery({ userId: user?.id });
@@ -88,7 +90,7 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
     } else {
       setIsFollowed(false);
     }
-    console.log(postsData);
+    refetchPosts();
   }, [
     currentUser,
     username,
@@ -122,11 +124,21 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
           <div className="profile-head-container">
             <div className="profile-head-container-inner">
               <div className="user-profile-cover">
-                {user?.cover && <img src={user?.cover} alt="cover" />}
+                {user?.cover && (
+                  <img
+                    src={user?.cover}
+                    alt="cover"
+                    onClick={() => setPicDisplay(user?.cover)}
+                  />
+                )}
               </div>
               <div className="user-header-body">
                 <div className="user-profile-header-body-img">
-                  <img src={user?.picture} alt="user-picture" />
+                  <img
+                    src={user?.picture}
+                    alt="user-picture"
+                    onClick={() => setPicDisplay(user?.picture)}
+                  />
                 </div>
                 <div className="user-header-info">
                   <div className="user-header-info-left">
@@ -169,6 +181,9 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
                         <span>Unfollow</span>
                       </button>
                     ))}
+                  {/* <button className="user-header-info-btn">
+                    <span>Message</span>
+                  </button> */}
                 </div>
               </div>
               <div className="user-profile-options">
@@ -212,7 +227,7 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
                 >
                   Photos
                 </p>
-                <p
+                {/* <p
                   className={
                     clickedItem === "Communities"
                       ? "user-profile-options-clicked"
@@ -221,7 +236,7 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
                   onClick={() => setClickedItem("Communities")}
                 >
                   Communities
-                </p>
+                </p> */}
                 <MoreVertRoundedIcon
                   className="user-profile-options-icon"
                   sx={{
@@ -300,17 +315,17 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
             )}
 
             {clickedItem === "Followers" && (
-              <ProfilePeopleElement user={user} type="Followers" />
+              <ProfilePeopleElement users={followersData} type="Followers" />
             )}
             {clickedItem === "Following" && (
-              <ProfilePeopleElement user={user} type="Following" />
+              <ProfilePeopleElement users={followingData} type="Following" />
             )}
             {clickedItem === "Photos" && (
               <ProfilePhotosElement posts={posts} user={user} />
             )}
-            {clickedItem === "Communities" && (
+            {/* {clickedItem === "Communities" && (
               <ProfileCommunitiesElement user={user} />
-            )}
+            )} */}
           </div>
         </div>
       )}
@@ -322,6 +337,9 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
           origin="profile"
           originUsername={user?.username}
         />
+      )}
+      {picDisplay && (
+        <PicDisplay picDisplay={picDisplay} setPicDisplay={setPicDisplay} />
       )}
     </div>
   );

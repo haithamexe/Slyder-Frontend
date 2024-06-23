@@ -1,29 +1,44 @@
 import { useNavigate } from "react-router-dom";
+import {
+  useGetFollowersApiQuery,
+  useGetFollowingApiQuery,
+  useGetUserWithIdApiQuery,
+} from "../features/user/userApiSlice";
+import { useEffect, useState } from "react";
+import PeopleRender from "./PeopleRender";
 
-const ProfilePeopleElement = ({ user, type }) => {
-  const navigate = useNavigate();
+const ProfilePeopleElement = ({ users, type }) => {
+  const [people, setPeople] = useState([]);
 
-  const people = type === "followers" ? user.followers : user.following;
+  // const { data: followersData } = useGetFollowersApiQuery({
+  //   userId: user?._id,
+  // });
+
+  // const { data: followingData } = useGetFollowingApiQuery({
+  //   userId: user?._id,
+  // });
+
+  // useEffect(() => {
+  //   if (type === "Followers") {
+  //     if (followersData) {
+  //       setPeople(followersData);
+  //     }
+  //   } else {
+  //     if (followingData) {
+  //       setPeople(followingData);
+  //     }
+  //   }
+  //   console.log(followersData, followingData, people, user);
+  // }, [followersData, followingData]);
+
   return (
     <div>
       <div className="profile-people-element">
-        {people?.length > 0 ? (
-          people?.map((person) => (
-            <div
-              key={person._id}
-              className="user-profile-block"
-              onClick={() => navigate("/" + person.username)}
-            >
-              <div className="user-profile-image-container">
-                <img src={person?.profilePicture} alt="profile" />
-              </div>
-              <h1>{person.username}</h1>
-            </div>
-          ))
+        {users?.length > 0 ? (
+          users.map((person) => <PeopleRender key={person} personId={person} />)
         ) : (
           <div className="no-people">No {type}</div>
         )}
-        {}
       </div>
     </div>
   );

@@ -254,10 +254,20 @@ const PostPreveiw = ({ postId, setFetchPostId, origin, originUsername }) => {
         <div className="post-preveiw-info-container">
           <div className="post-preveiw-user-info">
             <div className="post-preveiw-user-img">
-              <img src={user?.picture} alt="user" />
+              <img
+                src={user?.picture}
+                alt="user"
+                onClick={() => navigate("/" + user?.username)}
+                style={{ cursor: "pointer" }}
+              />
             </div>
             <div className="post-preveiw-user-name">
-              <h1>{user?.firstName + " " + user?.surName}</h1>
+              <h1
+                onClick={() => navigate("/" + user?.username)}
+                style={{ cursor: "pointer" }}
+              >
+                {user?.firstName + " " + user?.surName}
+              </h1>
               <p title={post?.createdAt}>
                 {post?.createdAt && formatTimeAgo(post?.createdAt)}
               </p>

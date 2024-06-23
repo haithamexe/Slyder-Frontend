@@ -1674,3 +1674,59 @@
   margin-right: 25px;
   cursor: pointer;
 }
+
+.active-person {
+  display: flex;
+  /* flex-direction: column; */
+  gap: 5px;
+  align-items: center;
+  padding: 15px;
+  border-radius: 15px;
+  background-color: var(--bg-s-secondary);
+}
+
+.active-person-header {
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  gap: 0 15px;
+}
+
+.active-person-header h1 {
+  color: var(--text-pri);
+  font-size: 1.1rem;
+}
+
+.active-person-header img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 30%;
+  background-color: var(--bg-s-fourth);
+  border: 3px var(--bg-s-fourth) solid;
+}
+
+.active-person-status {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* padding: 5px 0; */
+  /* height: 100px; */
+  gap: 10px;
+}
+
+.active-person-status p {
+  color: var(--text-s-secondary);
+  font-size: 0.7rem;
+  font-weight: 400;
+}
+
+.active-people-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 15px;
+}

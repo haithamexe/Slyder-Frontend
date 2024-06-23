@@ -797,3 +797,57 @@
   }
   /* margin-bottom: 20px; */
 }
+
+.profile-people-element {
+  display: flex;
+  /* justify-content: space-evenly; */
+  /* align-items: center; */
+  align-items: flex-start;
+  gap: 10px;
+  width: 500px;
+  height: 100%;
+  border: 5px solid var(--bg-s-secondary);
+  padding: 15px;
+  border-radius: 15px;
+  flex-wrap: wrap;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.person {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  /* justify-content: center; */
+  background-color: var(--bg-s-secondary);
+  padding: 10px;
+  border-radius: 15px;
+  width: 220px;
+  overflow: hidden;
+  /* width: 50%; */
+}
+
+.person img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 15px;
+}
+
+.person-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.person-info h1 {
+  font-size: 0.7rem;
+  font-weight: 900;
+  color: var(--text-pri);
+}
+
+.person-info p {
+  font-size: 0.6rem;
+  font-weight: 100;
+  color: var(--text-s-secondary);
+}

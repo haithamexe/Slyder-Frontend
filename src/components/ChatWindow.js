@@ -114,8 +114,8 @@ const ChatWindow = ({ currentChat }) => {
         }
       );
       await apiSlice.util.invalidateTags(["Contacts", "Conversation"]);
-      navigate("/chat");
-      // window.location.reload();
+      // navigate("/chat");
+      window.location.reload();
     } catch (error) {
       console.log(error);
     }
@@ -161,6 +161,7 @@ const ChatWindow = ({ currentChat }) => {
           placeholder="Type a message"
           value={sendMessage}
           onChange={(e) => setSendMessage(e.target.value)}
+          onKeyDown={handleKeyDown}
         />
         <SendRoundedIcon
           onClick={handleSendMessage}

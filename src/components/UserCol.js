@@ -8,6 +8,8 @@ import {
 } from "../features/user/userApiSlice";
 import { userAuthed } from "../features/user/userSlice";
 import { useSelector } from "react-redux";
+import FollowersDisplay from "./FollowersDisplay";
+
 const UserCol = ({ user }) => {
   const [communityScrolled, setCommunityScrolled] = useState(false);
   const [picDisplay, setPicDisplay] = useState("");
@@ -19,7 +21,7 @@ const UserCol = ({ user }) => {
   const { data: followersData } = useGetFollowersApiQuery({
     userId: curUser?.id,
   });
-  const { data: followingData } = useGetFollowingApiQuery({
+  const { data: followingData, isSuccess } = useGetFollowingApiQuery({
     userId: curUser?.id,
   });
 
@@ -38,7 +40,7 @@ const UserCol = ({ user }) => {
     if (followingData) {
       setFollowing(followingData);
     }
-  }, [followersData, followingData]);
+  }, [followersData, followingData, isSuccess]);
 
   return (
     <>
@@ -92,7 +94,7 @@ const UserCol = ({ user }) => {
         </div>
       </div>
       <div className="communities-container">
-        <p>Communities</p>
+        <p>Friends</p>
         <div
           className={
             communityScrolled ? "communities communites-scroll" : "communities"
@@ -104,6 +106,13 @@ const UserCol = ({ user }) => {
             <img src="/images/demo/post.jpg" alt="community" />
             <h1>Managers</h1>
           </div> */}
+          <div className="active-people">
+            <div className="active-people-list">
+              {following?.map((person) => (
+                <FollowersDisplay key={person} person={person} />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
       {picDisplay && (

@@ -163,6 +163,7 @@
 .chat-user img {
   width: 50px;
   height: 50px;
+  object-fit: cover;
   border-radius: 30%;
   background-color: var(--bg-s-fourth);
   border: 5px var(--bg-s-third) solid;
@@ -247,6 +248,8 @@
 .messages-header-user img {
   width: 45px;
   height: 45px;
+  object-fit: cover;
+
   border-radius: 30%;
   background-color: var(--bg-s-fourth);
   border: 5px var(--bg-s-third) solid;
@@ -347,4 +350,38 @@
   gap: 0 10px;
   margin-right: auto;
   background-color: #1f2c37;
+}
+
+.user-header-info {
+  /* display: flex; */
+  /* align-items: center; */
+  gap: 0 10px;
+  padding: 0 15px;
+  /* cursor: pointer; */
+}
+
+.user-header-info-btn {
+  padding: 10px 0px !important;
+
+  @media screen and (max-width: 500px) {
+    display: none !important;
+  }
+}
+
+.user-header-info-btn span {
+  color: var(--color-secondary);
+  font-size: 0.9rem;
+  font-weight: 900;
+  /* padding: 5px; */
+}
+
+.chat-user {
+  position: relative;
+}
+
+.chat-user-status-icon {
+  position: absolute;
+  top: 4px;
+  left: 45px;
+  border: 2px solid var(--bg-s-third);
 }

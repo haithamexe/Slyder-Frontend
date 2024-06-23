@@ -22,7 +22,7 @@ const Home = ({ redirectionPage }) => {
   };
 
   const refreshPage = () => {
-    window.location.reload();
+    // window.location.reload();
   };
 
   useEffect(() => {
