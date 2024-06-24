@@ -96,3 +96,14 @@
   margin-top: 15px;
   color: var(--color-secondary);
 }
+
+.form-box input:focus {
+  outline: none;
+}
+
+.err-login {
+  .form-box,
+  input {
+    border: 3px solid rgb(189, 55, 55) !important;
+  }
+}

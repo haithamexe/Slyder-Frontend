@@ -1,7 +1,8 @@
 import LoginRegisterButtons from "./LoginRegisterButtons";
 import LoginFormBoxes from "./LoginFormBoxes";
 const LoginForm = (props) => {
-  const { register, error, handleSubmit, onSubmit, ...rest } = props;
+  const { register, error, handleSubmit, loginIsError, onSubmit, ...rest } =
+    props;
   return (
     <div className="login-form">
       <div className="logo-login">
@@ -12,7 +13,7 @@ const LoginForm = (props) => {
       </div>
       <LoginRegisterButtons />
       <form onSubmit={handleSubmit(onSubmit)}>
-        <LoginFormBoxes register={register} />
+        <LoginFormBoxes register={register} loginIsError={loginIsError} />
         <button type="submit" className="login-button-1">
           Login
         </button>

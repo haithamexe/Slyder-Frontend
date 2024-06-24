@@ -61,9 +61,9 @@
 
 .chat-play-buttons h1 {
   color: var(--color-primary);
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 900;
-  margin: 0 7px;
+  margin: 0 4px;
 }
 
 .chat-play-buttons input {
@@ -81,8 +81,8 @@
 .chat-play-buttons span {
   text-align: center;
   color: var(--color-secondary);
-  width: 40px;
-  font-size: 0.9rem;
+  width: 30px;
+  font-size: 0.7rem;
   font-weight: 900;
   margin: 0 7px;
 }

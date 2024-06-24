@@ -1,0 +1,36 @@
+.terms-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  color: #e3d9d9;
+  width: 100%;
+  overflow: hidden;
+  height: 100vh;
+}
+
+.terms-container h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  /* background-color: #0056b3; */
+  color: #9ec33a;
+}
+
+.terms-container h2 {
+  margin-top: 20px;
+  color: #9ec33a;
+}
+
+.terms-container p {
+  margin-bottom: 10px;
+}
+
+.terms-container ul {
+  list-style-type: disc;
+  margin-left: 20px;
+}
+
+.terms-container ul li {
+  margin-bottom: 5px;
+}

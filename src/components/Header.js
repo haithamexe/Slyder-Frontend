@@ -11,6 +11,7 @@ import NotificationsRoundedIcon from "@mui/icons-material/NotificationsRounded";
 import { userActions, userAuthed } from "../features/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useLogoutUserApiMutation } from "../features/user/userApiSlice";
+import CircleRoundedIcon from "@mui/icons-material/CircleRounded";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -75,6 +76,12 @@ const Header = () => {
             cursor: "pointer",
           }}
         />
+        {
+          <CircleRoundedIcon
+            className="chat-icon-status-icon"
+            sx={{ fontSize: 15, color: "red" }}
+          />
+        }
         <WhatshotRoundedIcon
           onClick={() => navigate("/trending")}
           sx={{

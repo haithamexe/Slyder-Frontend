@@ -201,9 +201,9 @@ const Post = ({ postId, setFetchPostId }) => {
               }}
             />
             <div className="post-menu-options-container">
-              {dropDownMenu && (
+              {dropDownMenu && isAuther && (
                 <div className="post-menu-options" ref={menuRef}>
-                  <div className="post-menu-option">
+                  {/* <div className="post-menu-option">
                     <InsertLinkRoundedIcon
                       sx={{
                         fontSize: 27,
@@ -212,8 +212,8 @@ const Post = ({ postId, setFetchPostId }) => {
                       }}
                     />
                     <p>Copy Link</p>
-                  </div>
-                  {!isAuther && (
+                  </div> */}
+                  {/* {!isAuther && (
                     <>
                       {following?.includes(post?.user) && (
                         <div className="post-menu-option">
@@ -226,8 +226,8 @@ const Post = ({ postId, setFetchPostId }) => {
                           />
                           <p>Unfolllow</p>
                         </div>
-                      )}
-                      {/* <div className="post-menu-option">
+                      )} */}
+                  {/* <div className="post-menu-option">
                         <PersonAddAltRoundedIcon
                           sx={{
                             fontSize: 27,
@@ -237,11 +237,11 @@ const Post = ({ postId, setFetchPostId }) => {
                         />
                         <p>Folllow</p>
                       </div> */}
-                    </>
-                  )}
+                  {/* </> */}
+                  {/* )} */}
                   {isAuther && (
                     <>
-                      <div className="post-menu-option">
+                      {/* <div className="post-menu-option">
                         <EditRoundedIcon
                           sx={{
                             fontSize: 27,
@@ -250,7 +250,7 @@ const Post = ({ postId, setFetchPostId }) => {
                           }}
                         />
                         <p>Edit</p>
-                      </div>
+                      </div> */}
                       <div
                         className="post-menu-option"
                         onClick={handleDeletePost}
@@ -365,13 +365,13 @@ const Post = ({ postId, setFetchPostId }) => {
             )}
             <p>{comments?.length}</p>
           </div>
-          <ShortcutRoundIcon
+          {/* <ShortcutRoundIcon
             sx={{
               fontSize: 27,
               color: "#a7c750;",
               cursor: "pointer",
             }}
-          />
+          /> */}
           {isSaved ? (
             <BookmarkRoundedIcon
               className="post-save"

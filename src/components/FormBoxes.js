@@ -1,5 +1,6 @@
 const FormBoxes = (props) => {
-  const { errors, register, isTouched } = props;
+  const { errors, register, isTouched, touched, isDirty } = props;
+
   return (
     <>
       <div className="half">
@@ -9,7 +10,11 @@ const FormBoxes = (props) => {
           type="text"
           name="firstName"
           placeholder="First Name"
-          className="register-input half"
+          className={
+            errors.firstName
+              ? "register-input half reg-error"
+              : "register-input half"
+          }
           {...register("firstName")}
         />
         <input
@@ -18,7 +23,11 @@ const FormBoxes = (props) => {
           type="text"
           name="surName"
           placeholder="Sur Name"
-          className="register-input half"
+          className={
+            errors?.surName
+              ? "register-input half reg-error"
+              : "register-input half"
+          }
           {...register("surName")}
         />
       </div>
@@ -28,7 +37,9 @@ const FormBoxes = (props) => {
         type="text"
         name="email"
         placeholder="email"
-        className="register-input "
+        className={
+          errors?.email ? "register-input reg-error" : "register-input"
+        }
         {...register("email")}
       />
       <input
@@ -37,7 +48,9 @@ const FormBoxes = (props) => {
         type="password"
         name="password"
         placeholder="password"
-        className="register-input"
+        className={
+          errors?.password ? "register-input reg-error" : "register-input"
+        }
         {...register("password")}
       />
       <input
@@ -46,7 +59,11 @@ const FormBoxes = (props) => {
         type="password"
         name="passwordConfirm"
         placeholder="Confirm Password"
-        className="register-input"
+        className={
+          errors?.passwordConfirm
+            ? "register-input reg-error"
+            : "register-input"
+        }
         {...register("passwordConfirm")}
       />
     </>

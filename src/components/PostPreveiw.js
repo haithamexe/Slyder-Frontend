@@ -194,11 +194,14 @@ const PostPreveiw = ({ postId, setFetchPostId, origin, originUsername }) => {
 
     if (isGetPostLikesSuccess) {
       setLikes(getLikeData.likes);
-      if (getLikeData.likes.includes(currentUser.id)) {
+      // setIsLiked(getLikeData.userHasLiked);
+      if (likes.includes(currentUser.id)) {
         setIsLiked(true);
-        setAnimateLike(true);
       } else {
         setIsLiked(false);
+      }
+      if (getLikeData.userHasLiked) {
+        setAnimateLike(true);
       }
     }
 
@@ -360,14 +363,14 @@ const PostPreveiw = ({ postId, setFetchPostId, origin, originUsername }) => {
                 <p className="post-like-text-icon">{commentsCount || 0}</p>
               </div>
 
-              <ShortcutRoundIcon
+              {/* <ShortcutRoundIcon
                 onClick={() => console.log("share")}
                 sx={{
                   fontSize: 27,
                   color: "#a7c750;",
                   cursor: "pointer",
                 }}
-              />
+              /> */}
               {isSaved ? (
                 <BookmarkRoundedIcon
                   className="post-save-veiw"

@@ -237,14 +237,14 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
                 >
                   Communities
                 </p> */}
-                <MoreVertRoundedIcon
+                {/* <MoreVertRoundedIcon
                   className="user-profile-options-icon"
                   sx={{
                     fontSize: 24,
                     color: "#a7c750;",
                     cursor: "pointer",
                   }}
-                />
+                /> */}
               </div>
             </div>
 

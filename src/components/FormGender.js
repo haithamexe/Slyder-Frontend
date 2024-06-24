@@ -6,7 +6,7 @@ const FormGender = (props) => {
       <label>Gender</label>
       <div className="radio-container">
         <label className="radio-select">
-          <div>
+          <div className={errors?.gender ? "register-error-gender" : ""}>
             Male
             <input
               type="radio"
@@ -18,7 +18,7 @@ const FormGender = (props) => {
           </div>
         </label>
         <label className="radio-select">
-          <div>
+          <div className={errors?.gender ? "register-error-gender" : ""}>
             Female
             <input
               type="radio"
@@ -30,7 +30,7 @@ const FormGender = (props) => {
           </div>
         </label>
         <label className="radio-select">
-          <div>
+          <div className={errors?.gender ? "register-error-gender" : ""}>
             Other
             <input
               type="radio"

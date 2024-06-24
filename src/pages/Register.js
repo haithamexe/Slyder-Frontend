@@ -52,16 +52,15 @@ const Register = (props) => {
       .required("Year is required"),
     month: yup.number().min(1).max(12).required("Month is required"),
     day: yup.number().min(1).max(31).required("Day is required"),
-    gender: yup.string(),
+    gender: yup.string().required("gender is required"),
     Prounon: yup.string(),
   });
 
   const {
     register,
     handleSubmit,
-    errors,
     watch,
-    formState: { isTouched },
+    formState: { isTouched, errors, touched, isDirty },
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -120,7 +119,9 @@ const Register = (props) => {
           handleSubmit={handleSubmit}
           onSubmit={onSubmit}
           isTouched={isTouched}
+          touched={touched}
           watched={watched}
+          isDirty={isDirty}
           {...props}
         />
         <Canvas />

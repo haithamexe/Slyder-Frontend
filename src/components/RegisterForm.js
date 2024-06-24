@@ -10,7 +10,9 @@ const RegisterForm = (props) => {
     isTouched,
     handleSubmit,
     onSubmit,
+    touched,
     watched,
+    isDirty,
     ...rest
   } = props;
   return (
@@ -29,6 +31,8 @@ const RegisterForm = (props) => {
           errors={errors}
           register={register}
           isTouched={isTouched}
+          isDirty={isDirty}
+          touched={touched}
         />
         <FormDate
           // userForm={userForm}

@@ -1730,3 +1730,48 @@
   padding: 10px;
   border-radius: 15px;
 }
+
+.chat-icon-status-icon {
+  position: absolute;
+  transform: translate(50%);
+  right: 70px;
+  top: 2px;
+  border-radius: 50%;
+  background-color: var(--bg-s-primary);
+  /* cursor: pointer; */
+  border: 4px solid var(--bg-s-primary);
+}
+
+.canvas-container-in-home {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 15px;
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-s-primary);
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.home-no-posts {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 15px;
+  width: 100%;
+  height: 100%;
+  /* background-color: var(--bg-s-primary); */
+  overflow-x: hidden;
+  overflow-y: hidden;
+  border: 5px solid var(--bg-s-secondary);
+}
+
+.home-no-posts h1 {
+  color: var(--color-secondary);
+  font-size: 1.5rem;
+}

@@ -47,6 +47,7 @@ const FormDate = (props) => {
           ))}
         </select>
         <select
+          className={errors?.year ? "register-error-date" : ""}
           name="year"
           //  value={year}
           //  onChange={(e) => handleChange(e)}

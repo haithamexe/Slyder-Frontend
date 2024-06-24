@@ -14,7 +14,8 @@ import { useSelector } from "react-redux";
 const ProfilePostsElement = ({ user, posts, setNewPost }) => {
   const curUser = useSelector(userAuthed);
   const [postId, setFetchPostId] = useState("");
-  return (
+
+  const content = (
     <>
       <div className="feed-in-profile-container">
         {curUser?.username === user?.username && (
@@ -55,6 +56,14 @@ const ProfilePostsElement = ({ user, posts, setNewPost }) => {
         />
       )}
     </>
+  );
+
+  return posts?.length > 0 ? (
+    content
+  ) : (
+    <div className="no-posts">
+      <h1>No posts yet</h1>
+    </div>
   );
 };
 

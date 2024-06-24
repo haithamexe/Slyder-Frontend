@@ -1,8 +1,8 @@
 const LoginFormBoxes = (props) => {
-  const { register } = props;
+  const { register, loginIsError } = props;
   return (
     <div className="form-boxes">
-      <div className="form-box">
+      <div className={loginIsError ? "form-box err-login" : "form-box"}>
         <input
           type="email"
           name="email"
@@ -10,7 +10,7 @@ const LoginFormBoxes = (props) => {
           placeholder="Email"
         />
       </div>
-      <div className="form-box">
+      <div className={loginIsError ? "form-box err-login" : "form-box"}>
         <input
           type="password"
           name="password"

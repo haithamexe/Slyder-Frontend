@@ -54,6 +54,8 @@ const HomeFeed = ({ setNewPost, user, redirectionPage }) => {
     if (postInIdParam) {
       setFetchPostId(postInIdParam);
       console.log("postInIdParam", postInIdParam);
+    } else {
+      setFetchPostId(redirectionPage);
     }
     console.log(homePosts);
   }, [isSuccess, homePosts, user, postInIdParam]);
@@ -82,20 +84,25 @@ const HomeFeed = ({ setNewPost, user, redirectionPage }) => {
         </div>
       </div>
 
-      <div
-        className={feedScrollable ? "feed feed-scrollable" : "feed"}
-        onMouseEnter={handleScrollEnter}
-        onMouseLeave={handleScrollExit}
-        ref={feedRef}
-      >
-        {posts?.map((post) => (
-          <Post key={post} postId={post} setFetchPostId={setFetchPostId} />
-        ))}
-        {/* <Post /> */}
-      </div>
+      {posts?.length > 0 ? (
+        <div
+          className={feedScrollable ? "feed feed-scrollable" : "feed"}
+          onMouseEnter={handleScrollEnter}
+          onMouseLeave={handleScrollExit}
+          ref={feedRef}
+        >
+          {posts?.map((post) => (
+            <Post key={post} postId={post} setFetchPostId={setFetchPostId} />
+          ))}
+        </div>
+      ) : (
+        <div className="home-no-posts">
+          <h1>No posts</h1>
+        </div>
+      )}
       {postId && (
         <PostPreveiw
-          postId={redirectionPage || postId}
+          postId={postId}
           setFetchPostId={setFetchPostId}
           origin="feed"
         />

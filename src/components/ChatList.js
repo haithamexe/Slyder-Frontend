@@ -14,13 +14,13 @@ const ChatList = () => {
         <div className="list">
           <div className="Messages-header">
             <h1>Messages</h1>
-            <MoreVertRoundedIcon
+            {/* <MoreVertRoundedIcon
               sx={{
                 fontSize: 30,
                 color: "#a7c750;",
                 cursor: "pointer",
               }}
-            />
+            /> */}
           </div>
           <div className="chat-body">
             {/* <div className="chat-user">

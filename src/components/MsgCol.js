@@ -3,6 +3,7 @@ import TurnedInRoundIcon from "@mui/icons-material/TurnedInRounded";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
 import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
 import EditNoteRoundedIcon from "@mui/icons-material/EditNoteRounded";
+import CanvasInHom from "../components/CanvasInHom";
 const MsgCol = (props) => {
   const { Panel, PanelGroup, PanelResizeHandle } = props;
   const [activityScrollable, setActivityScrollable] = useState(false);
@@ -26,7 +27,7 @@ const MsgCol = (props) => {
   return (
     <>
       <div className="home-activity">
-        <div className="activity-header">
+        {/* <div className="activity-header">
           <h1>Activity</h1>
           <button>notif</button>
         </div>
@@ -38,8 +39,8 @@ const MsgCol = (props) => {
           }
           onMouseEnter={handleActivtyScrollEnter}
           onMouseLeave={handleActivtyScrollExit}
-        >
-          {/* <div className="activity-card">
+        > */}
+        {/* <div className="activity-card">
             <div className="activity-card-img">
               <img src="/images/demo/user1.png" alt="activity" />
             </div>
@@ -48,9 +49,12 @@ const MsgCol = (props) => {
               <p>followed you</p>
             </div>
           </div> */}
-        </div>
+        {/* </div>
         <div className="activity-footer">
           <button>See All</button>
+        </div> */}
+        <div className="canvas-container-in-home">
+          <CanvasInHom />
         </div>
       </div>
       {/* <div className="home-messages">

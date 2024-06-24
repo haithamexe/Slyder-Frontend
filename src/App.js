@@ -10,6 +10,8 @@ import Trending from "./pages/Trending";
 import Chat from "./pages/Chat";
 import Profile from "./pages/Profile";
 import PostPage from "./pages/PostPage";
+import TermsOfService from "./pages/Terms";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 const App = () => {
   return (
@@ -37,11 +39,12 @@ const App = () => {
       </Route>
 
       {/* public routes  */}
-      <Route path="/profile/:username" element={<Profile />} />
+      {/* <Route path="/profile/:username" element={<Profile />} /> */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/activate/:token" element={<Activate />} />
-
+      <Route path="/terms" element={<TermsOfService />} />
+      <Route path="/privacy" element={<PrivacyPolicy />} />
       {/* 404 route  */}
       <Route path="*" element={<NotFound404 />} />
     </Routes>

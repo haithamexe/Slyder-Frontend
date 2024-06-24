@@ -26,6 +26,7 @@ const Login = (props) => {
       error: loginError,
       isLoading: logingLoading,
       isSuccess: loginSuccess,
+      isError: loginIsError,
     },
   ] = useLoginUserApiMutation();
   const [
@@ -103,6 +104,7 @@ const Login = (props) => {
           errorMsg={errorMsg}
           handleSubmit={handleSubmit}
           onSubmit={onSubmit}
+          loginIsError={loginIsError}
           {...props}
         />
         <Canvas2 />
