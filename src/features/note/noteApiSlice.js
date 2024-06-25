@@ -16,6 +16,13 @@ const noteApiSlice = apiSlice.injectEndpoints({
     getNotes: builder.query({
       query: ({ userId }) => `api/note/${userId}`,
       providesTags: ["Note"],
+      transformResponse: (response) => {
+        const notsReversed = [];
+        response.forEach((note) => {
+          notsReversed.unshift(note);
+        });
+        return notsReversed;
+      },
     }),
     deleteNote: builder.mutation({
       query: ({ noteId }) => ({

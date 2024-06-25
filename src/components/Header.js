@@ -13,7 +13,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLogoutUserApiMutation } from "../features/user/userApiSlice";
 import CircleRoundedIcon from "@mui/icons-material/CircleRounded";
 
+import UsersSearch from "./UsersSearch";
+
 const Header = () => {
+  const [query, setQuery] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [curWidth, setCurWidth] = useState(window.innerWidth);
@@ -51,7 +54,12 @@ const Header = () => {
             alt="logo"
             onClick={() => navigate("/")}
           />
-          <input type="text" placeholder="Search" />
+          <input
+            type="text"
+            placeholder="Search"
+            onChange={(e) => setQuery(e.target.value)}
+            value={query}
+          />
         </div>
       )}
       <div className="header-center">
@@ -148,6 +156,7 @@ const Header = () => {
           </div>
         </div>
       )}
+      {query && <UsersSearch query={query} setQuery={setQuery} />}
     </div>
   );
 };

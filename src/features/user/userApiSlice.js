@@ -111,6 +111,9 @@ const userApiSlice = apiSlice.injectEndpoints({
       query: ({ userId }) => `api/user/contacts/${userId}`,
       providesTags: ["Contacts"],
     }),
+    getUserSearchedApi: builder.query({
+      query: ({ query }) => `api/user/search/${query}`,
+    }),
   }),
 });
 
@@ -131,6 +134,7 @@ export const {
   useFollowUserApiMutation,
   useUnFollowUserApiMutation,
   useGetUserContactsApiQuery,
+  useGetUserSearchedApiQuery,
 } = userApiSlice;
 
 export default userApiSlice;
