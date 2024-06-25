@@ -59,6 +59,7 @@ const postApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: (result, error, postId) => [
         { type: ["PostLike"], id: postId },
+        "LikedPosts",
       ],
     }),
     unlikePost: builder.mutation({
@@ -69,6 +70,7 @@ const postApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: (result, error, postId) => [
         { type: ["PostLike"], id: postId },
+        "LikedPosts",
       ],
     }),
     commentPost: builder.mutation({
@@ -140,7 +142,7 @@ const postApiSlice = apiSlice.injectEndpoints({
       providesTags: ["TrendPost"],
     }),
     getSavedPosts: builder.query({
-      query: () => "api/post/saved",
+      query: ({ userId }) => `api/post/saved/user/${userId}`,
       providesTags: ["SavedPosts"],
     }),
 
@@ -161,6 +163,10 @@ const postApiSlice = apiSlice.injectEndpoints({
         { type: "SavedPost", id: postId },
       ],
     }),
+    getLikedPosts: builder.query({
+      query: ({ userId }) => `api/post/userLiked/${userId}`,
+      providesTags: ["LikedPosts"],
+    }),
   }),
 });
 
@@ -179,7 +185,6 @@ export const {
   useUnsavePostMutation,
   useGetPostLikesQuery,
   useGetPostCommentsQuery,
-  useGetSavedPostsByUserQuery,
   useGetHomePostsQuery,
   useGetTrendPostsQuery,
   useGetSavedPostsQuery,
@@ -187,6 +192,7 @@ export const {
   useGetPostsByUserNameQuery,
   useGetPostCommentByIdQuery,
   useGetPostSavedQuery,
+  useGetLikedPostsQuery,
 } = postApiSlice;
 
 export default postApiSlice;

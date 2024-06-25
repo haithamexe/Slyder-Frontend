@@ -1,10 +1,35 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { userAuthed } from "../features/user/userSlice";
+import PostPreveiw from "./PostPreveiw";
+import {
+  useGetSavedPostsQuery,
+  useGetLikedPostsQuery,
+} from "../features/post/postApiSlice";
 import TurnedInRoundIcon from "@mui/icons-material/TurnedInRounded";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
 import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
 import EditNoteRoundedIcon from "@mui/icons-material/EditNoteRounded";
 import CanvasInHom from "../components/CanvasInHom";
+import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 const MsgCol = (props) => {
+  const [postId, setFetchPostId] = useState("");
+  const user = useSelector(userAuthed);
+  const { data: savedPostsData, isSuccess } = useGetSavedPostsQuery({
+    userId: user?.id,
+  });
+
+  const { data: likedPostsData, isSuccess: likedSuccess } =
+    useGetLikedPostsQuery({
+      userId: user?.id,
+    });
+
+  const [savedPosts, setSavedPosts] = useState([]);
+  const [likedPosts, setLikedPosts] = useState([]);
+  const [showSaved, setShowSaved] = useState(false);
+  const [showLiked, setShowLiked] = useState(false);
+  const navigate = useNavigate();
   const { Panel, PanelGroup, PanelResizeHandle } = props;
   const [activityScrollable, setActivityScrollable] = useState(false);
 
@@ -24,6 +49,18 @@ const MsgCol = (props) => {
   const handleMessagesScrollExit = () => {
     setMessagesScrollable(false);
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      setSavedPosts(savedPostsData);
+    }
+    if (likedSuccess) {
+      setLikedPosts(likedPostsData);
+    }
+
+    console.log(savedPostsData, isSuccess, "savedPostsData");
+  }, [savedPostsData, isSuccess, likedPostsData, likedSuccess]);
+
   return (
     <>
       <div className="home-activity">
@@ -127,7 +164,13 @@ const MsgCol = (props) => {
           <h1>Quick Access</h1>
         </div>
         <div className="quick-access-body">
-          <div className="quick-access-card">
+          <div
+            className="quick-access-card"
+            onClick={() => {
+              setShowSaved(true);
+              setShowLiked(false);
+            }}
+          >
             <h1>Saved</h1>
             <TurnedInRoundIcon
               sx={{
@@ -137,7 +180,13 @@ const MsgCol = (props) => {
               }}
             />
           </div>
-          <div className="quick-access-card">
+          <div
+            className="quick-access-card"
+            onClick={() => {
+              setShowLiked(true);
+              setShowSaved(false);
+            }}
+          >
             <h1>Likes</h1>
             <FavoriteRoundedIcon
               sx={{
@@ -147,7 +196,10 @@ const MsgCol = (props) => {
               }}
             />
           </div>
-          <div className="quick-access-card">
+          <div
+            className="quick-access-card"
+            onClick={() => navigate("/trending")}
+          >
             <h1>Notes</h1>
             <EditNoteRoundedIcon
               sx={{
@@ -157,18 +209,61 @@ const MsgCol = (props) => {
               }}
             />
           </div>
-          <div className="quick-access-card">
-            <h1>Report A Problem</h1>
-            <ErrorOutlineRoundedIcon
+        </div>
+        {(showLiked || showSaved) && (
+          <div className="more-container">
+            <ArrowBackRoundedIcon
+              className="saved-likes-back"
               sx={{
-                fontSize: 27,
+                fontSize: 35,
                 color: "#a7c750;",
                 cursor: "pointer",
               }}
+              onClick={() => {
+                setShowLiked(false);
+                setShowSaved(false);
+              }}
             />
+            {showSaved && (
+              <div className="more-saved">
+                {savedPosts.map((post) => {
+                  return (
+                    <div className="more-saved-card">
+                      <img
+                        src={post.image}
+                        alt="saved"
+                        onClick={() => setFetchPostId(post?._id)}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+            {showLiked && (
+              <div className="more-saved">
+                {likedPosts.map((post) => {
+                  return (
+                    <div className="more-saved-card">
+                      <img
+                        src={post.image}
+                        alt="saved"
+                        onClick={() => setFetchPostId(post?._id)}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
-        </div>
+        )}
       </div>
+      {postId && (
+        <PostPreveiw
+          postId={postId}
+          setFetchPostId={setFetchPostId}
+          origin="feed"
+        />
+      )}
     </>
   );
 };
