@@ -66,24 +66,24 @@ const AuthRoutes = () => {
       dispatch(userActions.refreshToken(accessToken));
     }, timer);
 
-    console.log(
-      "User: ",
-      user,
-      "Token: ",
-      userToken,
-      "Auth: ",
-      auth,
-      "Refresh Success: ",
-      refreshSuccess,
-      "Access Token: ",
-      accessToken,
-      "Auth Success: ",
-      authSuccess,
-      "Refresh Error: ",
-      refreshError,
-      "Auth Error: ",
-      authError
-    );
+    // console.log(
+    //   "User: ",
+    //   user,
+    //   "Token: ",
+    //   userToken,
+    //   "Auth: ",
+    //   auth,
+    //   "Refresh Success: ",
+    //   refreshSuccess,
+    //   "Access Token: ",
+    //   accessToken,
+    //   "Auth Success: ",
+    //   authSuccess,
+    //   "Refresh Error: ",
+    //   refreshError,
+    //   "Auth Error: ",
+    //   authError
+    // );
 
     return () => clearTimeout(refreshTimer);
   }, [

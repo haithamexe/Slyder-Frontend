@@ -6,6 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./app/store";
 import { SocketContextProvider } from "./context/SocketContext";
+// import { NotificationProvider } from "./context/NotificationContext";
 
 // import createStore from "react-auth-kit/createStore";
 // import AuthProvider from "react-auth-kit";

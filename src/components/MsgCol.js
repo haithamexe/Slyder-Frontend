@@ -58,7 +58,7 @@ const MsgCol = (props) => {
       setLikedPosts(likedPostsData);
     }
 
-    console.log(savedPostsData, isSuccess, "savedPostsData");
+    // console.log(savedPostsData, isSuccess, "savedPostsData");
   }, [savedPostsData, isSuccess, likedPostsData, likedSuccess]);
 
   return (

@@ -53,11 +53,11 @@ const HomeFeed = ({ setNewPost, user, redirectionPage }) => {
     }
     if (postInIdParam) {
       setFetchPostId(postInIdParam);
-      console.log("postInIdParam", postInIdParam);
+      // console.log("postInIdParam", postInIdParam);
     } else {
       setFetchPostId(redirectionPage);
     }
-    console.log(homePosts);
+    // console.log(homePosts);
   }, [isSuccess, homePosts, user, postInIdParam]);
 
   const handleScroll = () => {

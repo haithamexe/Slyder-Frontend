@@ -15,6 +15,7 @@ import {
   useRefreshTokenApiMutation,
 } from "../features/user/userApiSlice";
 import { userAuthed } from "../features/user/userSlice";
+import { alertTitleClasses } from "@mui/material";
 
 const Register = (props) => {
   const [registerUserApi, { data: regData, error, isLoading, isSuccess }] =
@@ -104,7 +105,9 @@ const Register = (props) => {
       navigate("/login");
     } else if (error) {
       setRegError(true);
-      setRegErrorMsg(error.data.message);
+      console.log(error);
+      setRegErrorMsg(error?.data?.message);
+      alert("Error", error?.message);
     }
 
     refreshTokenApi();

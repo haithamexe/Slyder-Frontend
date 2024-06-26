@@ -1432,7 +1432,7 @@
   width: 26px;
 }
 
-@keyframes heart-animation-left-preveiw {
+/* @keyframes heart-animation-left-preveiw {
   0% {
     transform: scale(0.8) translateY(0px) translateX(0px) rotate(-5deg);
     opacity: 1;
@@ -1592,7 +1592,7 @@
     display: none;
     filter: blur(4px);
   }
-}
+} */
 
 @keyframes like-animation {
   0% {
@@ -1824,4 +1824,64 @@
   z-index: 10;
   background-color: var(--bg-s-secondary);
   border-radius: 15px;
+}
+
+.notifications-container {
+  position: absolute;
+  top: 100%;
+  width: 400px;
+  max-height: 40vh;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 15px;
+  background-color: var(--bg-s-secondary);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.notification {
+  display: flex;
+  /* justify-content: start; */
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 15px;
+  width: 100%;
+  background-color: var(--bg-s-fourth);
+  cursor: pointer;
+}
+
+.notification-img {
+  width: 50px;
+  height: 50px;
+}
+
+.notification-info h1 {
+  /* display: flex; */
+  gap: 5px;
+  font-size: 1.3rem;
+  flex-wrap: wrap;
+  width: 100%;
+  color: var(--text-s-secondary);
+  font-weight: 300;
+}
+.notification-info span {
+  font-weight: 500;
+  color: var(--text-s-secondary);
+}
+
+.notification img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 30%;
+  background-color: var(--bg-s-fourth);
+  border: 3px var(--bg-s-secondary) solid;
+}
+
+.time-for-noty {
+  color: var(--text-s-secondary);
+  font-size: 0.8rem;
 }

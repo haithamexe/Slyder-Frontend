@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/header.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import ReviewsRoundedIcon from "@mui/icons-material/ReviewsRounded";
@@ -12,10 +12,14 @@ import { userActions, userAuthed } from "../features/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useLogoutUserApiMutation } from "../features/user/userApiSlice";
 import CircleRoundedIcon from "@mui/icons-material/CircleRounded";
-
+import { useSocketContext } from "../context/SocketContext";
+import Notification from "./Notification";
 import UsersSearch from "./UsersSearch";
 
 const Header = () => {
+  const notifyRef = useRef(null);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const { notifications } = useSocketContext();
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -29,7 +33,13 @@ const Header = () => {
     logoutUserApi();
   };
 
+  const handleClickOutside = (e) => {
+    if (notifyRef.current && !notifyRef.current.contains(e.target)) {
+      setShowNotifications(false);
+    }
+  };
   useEffect(() => {
+    window.addEventListener("click", handleClickOutside);
     window.addEventListener("resize", () => {
       setCurWidth(window.innerWidth);
     });
@@ -39,11 +49,12 @@ const Header = () => {
     }
 
     return () => {
+      window.removeEventListener("click", handleClickOutside);
       window.removeEventListener("resize", () => {
         setCurWidth(window.innerWidth);
       });
     };
-  }, [logoutSuccess]);
+  }, [logoutSuccess, notifications]);
 
   return (
     <div className="header">
@@ -74,8 +85,20 @@ const Header = () => {
             color: "#a7c750;",
             cursor: "pointer",
           }}
+          ref={notifyRef}
+          onClick={() => setShowNotifications(!showNotifications)}
         />
-
+        <div className="notifications-count">
+          {notifications?.length > 0 && (
+            <>
+              {/* <CircleRoundedIcon
+                className="notification-status"
+                sx={{ fontSize: 15, color: "red" }}
+              /> */}
+              <p>{notifications?.length}</p>
+            </>
+          )}
+        </div>
         <ReviewsRoundedIcon
           onClick={() => navigate("/chat")}
           sx={{
@@ -84,12 +107,12 @@ const Header = () => {
             cursor: "pointer",
           }}
         />
-        {
+        {/* {
           <CircleRoundedIcon
             className="chat-icon-status-icon"
             sx={{ fontSize: 15, color: "red" }}
           />
-        }
+        } */}
         <WhatshotRoundedIcon
           onClick={() => navigate("/trending")}
           sx={{
@@ -98,6 +121,16 @@ const Header = () => {
             cursor: "pointer",
           }}
         />
+        {showNotifications && notifications.length > 0 && (
+          <div className="notifications-container">
+            {notifications?.map((notification) => (
+              <Notification
+                key={notification._id}
+                notification={notification}
+              />
+            ))}
+          </div>
+        )}
       </div>
       {curWidth > 900 && (
         <div className="header-right">

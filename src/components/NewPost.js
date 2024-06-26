@@ -161,7 +161,8 @@ const NewPost = ({ newPost, setNewPost }) => {
               <option value="news">News</option>
               <option value="sport">Sport</option>
               <option value="entertanment">Entertainment</option>
-              <option value="politics">Politics</option>
+              {/* <option value="politics">Politics</option> */}
+              <option value="Art">Food</option>
               <option value="technology">Technology</option>
               <option value="fashion">Fashion</option>
               <option value="travel">Travel</option>
@@ -178,6 +179,7 @@ const NewPost = ({ newPost, setNewPost }) => {
             type="button"
             className="new-post-button"
             onClick={handlePost}
+            disabled={isLoading}
           >
             Post
           </button>
