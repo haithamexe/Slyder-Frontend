@@ -183,6 +183,8 @@
 
 .users-search-container {
   position: absolute;
+  flex-direction: column;
+  justify-content: flex-start;
   top: 64px;
   left: 55px;
   width: 250px;
@@ -196,10 +198,8 @@
   background-color: var(--bg-s-secondary);
   z-index: 5;
   overflow-x: hidden;
-  overflow-y: auto;
   display: flex;
-  justify-content: center;
-  flex-direction: column;
+  overflow-y: auto;
   /* align-items: center; */
 }
 
@@ -227,7 +227,7 @@
 
 .users-search-info p {
   color: var(--text-s-secondary);
-  font-size: 1rem;
+  font-size: 0.7rem;
 }
 
 .users-search-img {
@@ -252,6 +252,7 @@
   left: 80px;
   /* padding: 3px 5px; */
 }
+
 .notifications-count p {
   /* display: flex; */
   /* justify-content: center; */
@@ -268,14 +269,15 @@
   position: absolute;
   transform: translate(50%);
   /* top: 0; */
-  background-color: red;
+  background-color: rgb(210, 0, 0);
   /* padding: 5px; */
-  width: 17px;
-  height: 17px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
-  font-size: 1rem;
+  font-size: 0.85rem;
   color: var(--text-pri);
-  font-weight: 900;
+  font-weight: 600;
+  /* padding: 10px; */
 }
 
 .notification-status {

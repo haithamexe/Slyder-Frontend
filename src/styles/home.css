@@ -1883,5 +1883,6 @@
 
 .time-for-noty {
   color: var(--text-s-secondary);
-  font-size: 0.8rem;
+  font-size: 0.9rem;
+  font-weight: 900 !important;
 }

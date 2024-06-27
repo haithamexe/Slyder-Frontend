@@ -15,11 +15,14 @@ import CircleRoundedIcon from "@mui/icons-material/CircleRounded";
 import { useSocketContext } from "../context/SocketContext";
 import Notification from "./Notification";
 import UsersSearch from "./UsersSearch";
+import PostPreveiw from "./PostPreveiw";
 
 const Header = () => {
+  const [pathname, setPath] = useState("feed");
+  const [postId, setFetchPostId] = useState("");
   const notifyRef = useRef(null);
   const [showNotifications, setShowNotifications] = useState(false);
-  const { notifications } = useSocketContext();
+  const { notifications, unreadCount, markAllRead } = useSocketContext();
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -48,13 +51,21 @@ const Header = () => {
       navigate("/login", { replace: true });
     }
 
+    if (window.location.pathname === "/profile") {
+      setPath("feed");
+    } else if (window.location.pathname === "/trending") {
+      setPath("trending");
+    } else {
+      setPath("feed");
+    }
+
     return () => {
       window.removeEventListener("click", handleClickOutside);
       window.removeEventListener("resize", () => {
         setCurWidth(window.innerWidth);
       });
     };
-  }, [logoutSuccess, notifications]);
+  }, [logoutSuccess, notifications, postId]);
 
   return (
     <div className="header">
@@ -86,16 +97,19 @@ const Header = () => {
             cursor: "pointer",
           }}
           ref={notifyRef}
-          onClick={() => setShowNotifications(!showNotifications)}
+          onClick={() => {
+            setShowNotifications(!showNotifications);
+            markAllRead();
+          }}
         />
         <div className="notifications-count">
-          {notifications?.length > 0 && (
+          {unreadCount > 0 && (
             <>
               {/* <CircleRoundedIcon
                 className="notification-status"
                 sx={{ fontSize: 15, color: "red" }}
               /> */}
-              <p>{notifications?.length}</p>
+              {unreadCount > 0 && <p>{unreadCount}</p>}
             </>
           )}
         </div>
@@ -127,6 +141,7 @@ const Header = () => {
               <Notification
                 key={notification._id}
                 notification={notification}
+                setFetchPostId={setFetchPostId}
               />
             ))}
           </div>
@@ -190,6 +205,13 @@ const Header = () => {
         </div>
       )}
       {query && <UsersSearch query={query} setQuery={setQuery} />}
+      {postId && (
+        <PostPreveiw
+          postId={postId}
+          setFetchPostId={setFetchPostId}
+          origin={pathname}
+        />
+      )}
     </div>
   );
 };

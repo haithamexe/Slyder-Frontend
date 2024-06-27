@@ -42,7 +42,7 @@ export const NotificationProvider = ({ children }) => {
   const fetchNotifications = async () => {
     try {
       const res = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}api/notification/${user.id}`
+        `${process.env.REACT_APP_BACKEND_URL}api/notification/`
       );
       const data = res.data;
       const tryarr = ["yes", "no"];

@@ -14,15 +14,32 @@ export const SocketContextProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [notifications, setNotification] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
   const user = useSelector(userAuthed);
 
   const fetchNotifications = async () => {
     try {
-      const res = await axios.get(
-        process.env.REACT_APP_BACKEND_URL + "api/notification/" + user.id
-      );
+      const res = await axios({
+        method: "GET",
+        url: `${process.env.REACT_APP_BACKEND_URL}api/notification/`,
+        withCredentials: true,
+      });
       console.log(res.data, "notifications");
       setNotification(res.data);
+      setUnreadCount(res.data.filter((n) => !n.read).length);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const markAllRead = async () => {
+    try {
+      const res = await axios({
+        method: "PUT",
+        url: `${process.env.REACT_APP_BACKEND_URL}api/notification/mark-read`,
+        withCredentials: true,
+      });
+      setUnreadCount(0);
     } catch (err) {
       console.log(err);
     }
@@ -36,14 +53,19 @@ export const SocketContextProvider = ({ children }) => {
         },
       });
 
-      // newSocket?.on("getOnlineUsers", (users) => {
-      //   setOnlineUsers(users);
-      // });
+      newSocket?.on("getOnlineUsers", (users) => {
+        setOnlineUsers(users);
+      });
 
-      // newSocket?.emit("joinNotificationRoom", user.id);
+      newSocket?.emit("joinNotificationRoom", user.id);
 
       newSocket?.on("newNotification", (notification) => {
         setNotification((prev) => [notification, ...prev]);
+        setUnreadCount((prev) => prev + 1);
+      });
+
+      newSocket?.on("clearNotifications", () => {
+        setUnreadCount(0);
       });
 
       fetchNotifications();
@@ -60,7 +82,9 @@ export const SocketContextProvider = ({ children }) => {
   }, [user]);
 
   return (
-    <SocketContext.Provider value={{ socket, onlineUsers, notifications }}>
+    <SocketContext.Provider
+      value={{ socket, onlineUsers, notifications, unreadCount, markAllRead }}
+    >
       {children}
     </SocketContext.Provider>
   );

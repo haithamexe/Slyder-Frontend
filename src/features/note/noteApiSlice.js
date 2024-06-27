@@ -14,7 +14,7 @@ const noteApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Note"],
     }),
     getNotes: builder.query({
-      query: ({ userId }) => `api/note/${userId}`,
+      query: ({ userId }) => `api/note/`,
       providesTags: ["Note"],
       transformResponse: (response) => {
         const notsReversed = [];
