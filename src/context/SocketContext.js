@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { userAuthed } from "../features/user/userSlice";
 import io from "socket.io-client";
 import axios from "axios";
+import apiSlice from "../features/api/apiSlice";
 
 const SocketContext = createContext();
 
@@ -62,6 +63,7 @@ export const SocketContextProvider = ({ children }) => {
       newSocket?.on("newNotification", (notification) => {
         setNotification((prev) => [notification, ...prev]);
         setUnreadCount((prev) => prev + 1);
+        apiSlice.util.invalidateTags(["Conversation"]);
       });
 
       newSocket?.on("clearNotifications", () => {

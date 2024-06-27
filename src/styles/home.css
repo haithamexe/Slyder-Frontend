@@ -1850,7 +1850,7 @@
   border-radius: 15px;
   width: 100%;
   background-color: var(--bg-s-fourth);
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 
 .notification-img {
@@ -1870,6 +1870,7 @@
 .notification-info span {
   font-weight: 500;
   color: var(--text-s-secondary);
+  cursor: pointer;
 }
 
 .notification img {
@@ -1879,6 +1880,7 @@
   border-radius: 30%;
   background-color: var(--bg-s-fourth);
   border: 3px var(--bg-s-secondary) solid;
+  cursor: pointer;
 }
 
 .time-for-noty {

@@ -187,7 +187,7 @@ const Header = () => {
                   }}
                 />
               </div>
-              <div className="menu-item">
+              {/* <div className="menu-item">
                 <h3>Settings</h3>
                 <SettingsRoundedIcon
                   sx={{
@@ -196,7 +196,7 @@ const Header = () => {
                     marginRight: "10px",
                   }}
                 />
-              </div>
+              </div> */}
               <h1 className="logout-btn-header" onClick={handleLogout}>
                 Logout
               </h1>

@@ -49,17 +49,10 @@ const Notification = ({ notification, setFetchPostId }) => {
       {loading ? (
         <Loader />
       ) : (
-        <div
-          className="notification"
-          onClick={() =>
-            notification?.type !== "follow"
-              ? setFetchPostId(notification?.post?._id)
-              : navigate(notification?.sender?.username)
-          }
-        >
+        <div className="notification">
           <div className="notification-info">
             <h1>
-              <span>
+              <span onClick={() => navigate(notification?.sender?.username)}>
                 {notification?.sender?.firstName +
                   " " +
                   notification?.sender?.surName}
@@ -76,6 +69,11 @@ const Notification = ({ notification, setFetchPostId }) => {
                 type !== " followed you"
                   ? notification?.post?.image
                   : notification?.sender?.picture
+              }
+              onClick={() =>
+                notification?.type !== "follow"
+                  ? setFetchPostId(notification?.post?._id)
+                  : navigate(notification?.sender?.username)
               }
               alt="notification"
             />

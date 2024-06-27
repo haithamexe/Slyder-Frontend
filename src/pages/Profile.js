@@ -60,8 +60,11 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
   const { data: followingData, isSuccess: fetchedFollowing } =
     useGetFollowingApiQuery({ userId: user?.id });
 
-  const { data: userData, isSuccess: fetchedUser } =
-    useGetUserWithUsernameApiQuery(redirectionUsername || username);
+  const {
+    data: userData,
+    isSuccess: fetchedUser,
+    refetch: userRefetch,
+  } = useGetUserWithUsernameApiQuery(redirectionUsername || username);
 
   const [followUser] = useFollowUserApiMutation();
   const [unFollowUser] = useUnFollowUserApiMutation();
@@ -81,6 +84,8 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
     } else if (fetchedUser) {
       setAbleToEdit(false);
       setUser(userData);
+    } else {
+      userRefetch();
     }
     if (redirectionPage) {
       setFetchPostId(redirectionPage);
@@ -103,6 +108,8 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
     fetchedFollowers,
     fetchedFollowing,
     isError,
+    userData,
+    userRefetch,
   ]);
 
   return (
