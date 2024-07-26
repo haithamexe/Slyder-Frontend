@@ -13,28 +13,35 @@ import ChatRoundedIcon from "@mui/icons-material/ChatRounded";
 import TurnedInRoundIcon from "@mui/icons-material/TurnedInRounded";
 import ShortcutRoundIcon from "@mui/icons-material/ShortcutRounded";
 import ArrowDropUpRoundedIcon from "@mui/icons-material/ArrowDropUpRounded";
-import { useGetHomePostsQuery } from "../features/post/postApiSlice";
+import {
+  useGetHomePostsQuery,
+  useGetPostsQuery,
+} from "../features/post/postApiSlice";
 import { homePosts, postActions } from "../features/post/postSlice";
 import { useDispatch, useSelector } from "react-redux";
 import PostPreveiw from "./PostPreveiw";
 import { useParams } from "react-router-dom";
+import { userAuthed } from "../features/user/userSlice";
 
 const HomeFeed = ({ setNewPost, user, redirectionPage }) => {
   const dispatch = useDispatch();
   const [postId, setFetchPostId] = useState("");
   const [posts, setPosts] = useState([]);
   const { postId: postInIdParam } = useParams();
+  const userAuth = useSelector(userAuthed);
 
-  const {
-    data: homePosts,
-    isSuccess,
-    refetch,
-    status,
-    error,
-    isFetching,
-    isUninitialized,
-    isFetchingError,
-  } = useGetHomePostsQuery(user?.id);
+  // const {
+  //   data: homePosts,
+  //   isSuccess,
+  //   refetch,
+  //   status,
+  //   error,
+  //   isFetching,
+  //   isUninitialized,
+  //   isFetchingError,
+  // } = useGetHomePostsQuery(user?.id);
+
+  const { data: postsData } = useGetPostsQuery();
 
   const [feedScrollable, setFeedScrollable] = useState(false);
   const feedRef = useRef(null);
@@ -48,9 +55,6 @@ const HomeFeed = ({ setNewPost, user, redirectionPage }) => {
   };
 
   useEffect(() => {
-    if (isSuccess || homePosts || user) {
-      setPosts(homePosts);
-    }
     if (postInIdParam) {
       setFetchPostId(postInIdParam);
       // console.log("postInIdParam", postInIdParam);
@@ -58,7 +62,7 @@ const HomeFeed = ({ setNewPost, user, redirectionPage }) => {
       setFetchPostId(redirectionPage);
     }
     // console.log(homePosts);
-  }, [isSuccess, homePosts, user, postInIdParam]);
+  }, [homePosts, user, postInIdParam]);
 
   const handleScroll = () => {
     //very cool code for checking if the user has scrolled to the bottom of the feed
@@ -67,12 +71,14 @@ const HomeFeed = ({ setNewPost, user, redirectionPage }) => {
     // setScrolledAmount(scrollPercentage);
   };
 
+  console.log("HomeFeed User", userAuth);
+
   return (
     <>
       <div className="post">
         <div className="post-input-img">
           <div className="post-input-img-wrapper">
-            <img src={user.picture} alt="post" />
+            <img src={user?.picture} alt="post" />
           </div>
           <button
             type="button"
@@ -84,14 +90,14 @@ const HomeFeed = ({ setNewPost, user, redirectionPage }) => {
         </div>
       </div>
 
-      {posts?.length > 0 ? (
+      {postsData?.length > 0 ? (
         <div
           className={feedScrollable ? "feed feed-scrollable" : "feed"}
           onMouseEnter={handleScrollEnter}
           onMouseLeave={handleScrollExit}
           ref={feedRef}
         >
-          {posts?.map((post) => (
+          {postsData?.map((post) => (
             <Post key={post} postId={post} setFetchPostId={setFetchPostId} />
           ))}
         </div>

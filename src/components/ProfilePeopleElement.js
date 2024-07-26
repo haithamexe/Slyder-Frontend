@@ -35,7 +35,9 @@ const ProfilePeopleElement = ({ users, type }) => {
     <div>
       <div className="profile-people-element">
         {users?.length > 0 ? (
-          users.map((person) => <PeopleRender key={person} personId={person} />)
+          users.map((person) => (
+            <PeopleRender key={person._id} person={person} />
+          ))
         ) : (
           <div className="no-people">No {type}</div>
         )}

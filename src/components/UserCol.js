@@ -11,19 +11,19 @@ import { useSelector } from "react-redux";
 import FollowersDisplay from "./FollowersDisplay";
 
 const UserCol = ({ user }) => {
-  const [communityScrolled, setCommunityScrolled] = useState(false);
-  const [picDisplay, setPicDisplay] = useState("");
-  const [followers, setFollwoers] = useState([]);
-  const [following, setFollowing] = useState([]);
   const curUser = useSelector(userAuthed);
-  const navigate = useNavigate();
-
   const { data: followersData } = useGetFollowersApiQuery({
     userId: curUser?.id,
   });
   const { data: followingData, isSuccess } = useGetFollowingApiQuery({
     userId: curUser?.id,
   });
+
+  const [communityScrolled, setCommunityScrolled] = useState(false);
+  const [picDisplay, setPicDisplay] = useState("");
+  const [followers, setFollwoers] = useState([]);
+  const [following, setFollowing] = useState([]);
+  const navigate = useNavigate();
 
   const handleScrollEnter = () => {
     setCommunityScrolled(true);
@@ -64,13 +64,13 @@ const UserCol = ({ user }) => {
         <div className="user-head">
           <div className="followers-container">
             <div className="followers">
-              <h2>{followers?.length}</h2>
+              <h2>{followersData?.length ?? 0}</h2>
               <p>Followers</p>
             </div>
           </div>
           <div className="following-container">
             <div className="following">
-              <h2>{following?.length}</h2>
+              <h2>{followingData?.length ?? 0}</h2>
               <p>Following</p>
             </div>
           </div>
@@ -102,10 +102,6 @@ const UserCol = ({ user }) => {
           onMouseEnter={handleScrollEnter}
           onMouseLeave={handleScrollExit}
         >
-          {/* <div className="community">
-            <img src="/images/demo/post.jpg" alt="community" />
-            <h1>Managers</h1>
-          </div> */}
           <div className="active-people">
             <div className="active-people-list">
               {following?.map((person) => (

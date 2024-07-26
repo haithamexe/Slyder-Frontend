@@ -51,15 +51,15 @@ const MsgCol = (props) => {
   };
 
   useEffect(() => {
-    if (isSuccess) {
+    if (savedPostsData) {
       setSavedPosts(savedPostsData);
     }
-    if (likedSuccess) {
+    if (likedPostsData) {
       setLikedPosts(likedPostsData);
     }
 
     // console.log(savedPostsData, isSuccess, "savedPostsData");
-  }, [savedPostsData, isSuccess, likedPostsData, likedSuccess]);
+  }, [savedPostsData, likedPostsData]);
 
   return (
     <>
@@ -226,32 +226,36 @@ const MsgCol = (props) => {
             />
             {showSaved && (
               <div className="more-saved">
-                {savedPosts.map((post) => {
-                  return (
-                    <div className="more-saved-card">
-                      <img
-                        src={post.image}
-                        alt="saved"
-                        onClick={() => setFetchPostId(post?._id)}
-                      />
-                    </div>
-                  );
-                })}
+                {savedPosts
+                  .filter((post) => post.image)
+                  .map((post) => {
+                    return (
+                      <div className="more-saved-card">
+                        <img
+                          src={post.image}
+                          alt="saved"
+                          onClick={() => setFetchPostId(post?._id)}
+                        />
+                      </div>
+                    );
+                  })}
               </div>
             )}
             {showLiked && (
               <div className="more-saved">
-                {likedPosts.map((post) => {
-                  return (
-                    <div className="more-saved-card">
-                      <img
-                        src={post.image}
-                        alt="saved"
-                        onClick={() => setFetchPostId(post?._id)}
-                      />
-                    </div>
-                  );
-                })}
+                {likedPosts
+                  .filter((post) => post.image)
+                  .map((post) => {
+                    return (
+                      <div className="more-saved-card">
+                        <img
+                          src={post.image}
+                          alt="saved"
+                          onClick={() => setFetchPostId(post?._id)}
+                        />
+                      </div>
+                    );
+                  })}
               </div>
             )}
           </div>

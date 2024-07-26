@@ -64,19 +64,21 @@ const Notification = ({ notification, setFetchPostId }) => {
             </h1>
           </div>
           <div className="notification-img">
-            <img
-              src={
-                type !== " followed you"
-                  ? notification?.post?.image
-                  : notification?.sender?.picture
-              }
-              onClick={() =>
-                notification?.type !== "follow"
-                  ? setFetchPostId(notification?.post?._id)
-                  : navigate(notification?.sender?.username)
-              }
-              alt="notification"
-            />
+            {notification?.post?.image && (
+              <img
+                src={
+                  type !== " followed you"
+                    ? notification?.post?.image
+                    : notification?.sender?.picture
+                }
+                onClick={() =>
+                  notification?.type !== "follow"
+                    ? setFetchPostId(notification?.post?._id)
+                    : navigate(notification?.sender?.username)
+                }
+                alt="notification"
+              />
+            )}
           </div>
         </div>
       )}

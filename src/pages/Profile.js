@@ -34,40 +34,47 @@ import Post from "../components/Post";
 import NewPost from "../components/NewPost";
 import PostPreveiw from "../components/PostPreveiw";
 import PicDisplay from "../components/PicDisplay";
+import axios from "axios";
 
 const Profile = ({ redirectionPage, redirectionUsername }) => {
   const [newPost, setNewPost] = useState(false);
   const [postId, setFetchPostId] = useState("");
-  const posts = useSelector(userPosts);
+  // const posts = useSelector(userPosts);
+  const [posts, setPosts] = useState([]);
   const currentUser = useSelector(userAuthed);
   const [clickedItem, setClickedItem] = useState("Posts");
   const [ableToEdit, setAbleToEdit] = useState(false);
   const [editing, setEditing] = useState(false);
   const navigate = useNavigate();
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState(null);
   const [picDisplay, setPicDisplay] = useState("");
   const [isFollowed, setIsFollowed] = useState(null);
   const { username } = useParams();
-  const {
-    data: postsData,
-    isSuccess: fetchedPosts,
-    refetch: refetchPosts,
-    isError,
-  } = useGetPostsByUserNameQuery(username);
+  const [fetchedPosts, setFetchPosts] = useState([]);
+  const dispatch = useDispatch();
+  const [followers, setFollowers] = useState([]);
+  const [following, setFollowing] = useState([]);
+  // const {
+  //   data: postsData,
+  //   isSuccess: fetchedPosts,
+  //   refetch: refetchPosts,
+  //   isError,
+  // } = useGetPostsByUserNameQuery(username);
 
   const { data: followersData, isSuccess: fetchedFollowers } =
     useGetFollowersApiQuery({ userId: user?.id });
   const { data: followingData, isSuccess: fetchedFollowing } =
     useGetFollowingApiQuery({ userId: user?.id });
 
-  const {
-    data: userData,
-    isSuccess: fetchedUser,
-    refetch: userRefetch,
-  } = useGetUserWithUsernameApiQuery(redirectionUsername || username);
+  // const {
+  //   data: userData,
+  //   isSuccess: fetchedUser,
+  //   refetch: userRefetch,
+  // } = useGetUserWithUsernameApiQuery(redirectionUsername || username);
 
-  const [followUser] = useFollowUserApiMutation();
-  const [unFollowUser] = useUnFollowUserApiMutation();
+  const [followUser, { isSuccess: followSuccess }] = useFollowUserApiMutation();
+  const [unFollowUser, { isSuccess: unFollowSuccess }] =
+    useUnFollowUserApiMutation();
 
   const handleFollowUser = () => {
     followUser({ userId: currentUser.id, followId: user.id });
@@ -77,40 +84,76 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
     unFollowUser({ userId: currentUser.id, unFollowId: user.id });
   };
 
+  const fetchUser = async () => {
+    try {
+      const data = await axios({
+        method: "GET",
+        url:
+          process.env.REACT_APP_BACKEND_URL + "api/user/username/" + username,
+      });
+      setUser(data?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchUserPosts = async () => {
+    try {
+      const data = await axios({
+        method: "GET",
+        url:
+          process.env.REACT_APP_BACKEND_URL + "api/post/user/" + user?.username,
+      });
+      // setFetchPosts(data?.data);
+      setPosts(data?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     if (currentUser?.username === username) {
-      setUser(currentUser);
       setAbleToEdit(true);
-    } else if (fetchedUser) {
-      setAbleToEdit(false);
-      setUser(userData);
+      setUser(currentUser);
     } else {
-      userRefetch();
+      setAbleToEdit(false);
+      fetchUser();
     }
     if (redirectionPage) {
       setFetchPostId(redirectionPage);
     }
-    if (followersData && followersData?.includes(currentUser?.id)) {
-      setIsFollowed(true);
-    } else {
-      setIsFollowed(false);
-    }
-    refetchPosts();
+
+    // if (redirectionPage || redirectionUsername) {
+    //   setFetchPostId("");
+    // }
   }, [
     currentUser,
     username,
-    fetchedUser,
     fetchedPosts,
     redirectionUsername,
     redirectionPage,
     followersData,
-    followingData,
     fetchedFollowers,
     fetchedFollowing,
-    isError,
-    userData,
-    userRefetch,
+    followSuccess,
+    unFollowSuccess,
+    // user,
   ]);
+
+  useEffect(() => {
+    fetchUserPosts();
+
+    if (user) {
+      let isFollowed = false;
+      user.followers?.map((follower) => {
+        if (follower._id === currentUser.id) {
+          isFollowed = true;
+          return;
+        }
+      });
+      setIsFollowed(isFollowed);
+    }
+  }, [user, newPost]);
 
   return (
     <div className="profile">
@@ -152,8 +195,8 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
                     <h1>{user?.firstName + " " + user?.surName}</h1>
                     <p>@{user?.username}</p>
                     <div className="user-header-info-numbers">
-                      <p>{followersData?.length} Followers</p>
-                      <p>{followingData?.length} Following</p>
+                      <p>{user?.followers?.length ?? 0} Followers</p>
+                      <p>{user?.following?.length ?? 0} Following</p>
                     </div>
                   </div>
                   {user?.username === currentUser?.username && (
@@ -322,10 +365,10 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
             )}
 
             {clickedItem === "Followers" && (
-              <ProfilePeopleElement users={followersData} type="Followers" />
+              <ProfilePeopleElement users={user?.followers} type="Followers" />
             )}
             {clickedItem === "Following" && (
-              <ProfilePeopleElement users={followingData} type="Following" />
+              <ProfilePeopleElement users={user?.following} type="Following" />
             )}
             {clickedItem === "Photos" && (
               <ProfilePhotosElement posts={posts} user={user} />

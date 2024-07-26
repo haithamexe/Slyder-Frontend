@@ -21,13 +21,7 @@ const postApiSlice = apiSlice.injectEndpoints({
         "UserPost",
       ],
     }),
-    getPosts: builder.query({
-      query: () => "api/post",
-      providesTags: ["Post"],
-    }),
-    getPost: builder.query({
-      query: ({ postId }) => `api/post/${postId}`,
-    }),
+
     updatePost: builder.mutation({
       query: ({ postId, ...postData }) => ({
         url: `api/post/${postId}`,
@@ -51,15 +45,46 @@ const postApiSlice = apiSlice.injectEndpoints({
         "UserPost",
       ],
     }),
+
+    getPosts: builder.query({
+      query: () => "api/post/posts",
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: "Post", id })),
+              { type: "Post", id: "LIST" },
+            ]
+          : [{ type: "Post", id: "LIST" }],
+    }),
+    getPost: builder.query({
+      query: (postId) => `api/post/${postId}`,
+      providesTags: (result, error, id) => [{ type: "Post", id }],
+    }),
     likePost: builder.mutation({
       query: ({ postId, userId }) => ({
         url: `api/post/${postId}/like`,
         method: "PUT",
         body: { userId },
       }),
-      invalidatesTags: (result, error, postId) => [
-        { type: ["PostLike"], id: postId },
-        "LikedPosts",
+      async onQueryStarted({ postId, userId }, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          postApiSlice.util.updateQueryData("getPost", postId, (draft) => {
+            const like = { id: "temp-id", user: userId };
+            if (!draft.likes.some((l) => l.user === userId)) {
+              draft.likes.push(like);
+            }
+            console.log(draft, like);
+          })
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
+      invalidatesTags: (result, error, { postId }) => [
+        { type: "Post", id: postId },
+        { type: "LikedPosts" },
       ],
     }),
     unlikePost: builder.mutation({
@@ -68,43 +93,46 @@ const postApiSlice = apiSlice.injectEndpoints({
         method: "PUT",
         body: { userId },
       }),
-      invalidatesTags: (result, error, postId) => [
-        { type: ["PostLike"], id: postId },
-        "LikedPosts",
+      async onQueryStarted({ postId, userId }, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          postApiSlice.util.updateQueryData("getPost", postId, (draft) => {
+            draft.likes = draft.likes.filter((like) => like.user !== userId);
+          })
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
+      invalidatesTags: (result, error, { postId }) => [
+        { type: "Post", id: postId },
+        { type: "LikedPosts" },
       ],
-    }),
-    commentPost: builder.mutation({
-      query: ({ postId, comment, userId }) => ({
-        url: `api/post/${postId}/comment`,
-        method: "PUT",
-        body: { userId, comment },
-      }),
-      invalidatesTags: (result, error, postId) => [
-        { type: ["PostComment"], id: postId },
-      ],
-    }),
-    uncommentPost: builder.mutation({
-      query: ({ postId, commentId }) => ({
-        url: `api/post/${postId}/uncomment`,
-        method: "PUT",
-        body: { commentId },
-      }),
-      invalidatesTags: (result, error, postId) => [
-        { type: ["PostComment"], id: postId },
-      ],
-    }),
-    getPostsByUserName: builder.query({
-      query: (userName) => `api/post/user/${userName}`,
-      providesTags: ["UserPost"],
-      invalidatesTags: ["UserPost"],
     }),
     savePost: builder.mutation({
       query: ({ postId, userId }) => ({
         url: `api/post/save/${postId}/${userId}`,
         method: "PUT",
       }),
-      invalidatesTags: (result, error, postId) => [
-        { type: "SavedPost", id: postId },
+      async onQueryStarted({ postId, userId }, { dispatch, queryFulfilled }) {
+        console.log("running saved");
+        const patchResult = dispatch(
+          postApiSlice.util.updateQueryData("getPost", postId, (draft) => {
+            const saved = { id: "temp-id", user: userId, postId };
+            if (!draft.savedBy.some((s) => s.user === userId)) {
+              draft.savedBy.push(saved);
+            }
+          })
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
+      invalidatesTags: (result, error, { postId }) => [
+        { type: ["Post"], id: postId },
         { type: "SavedPosts" },
       ],
     }),
@@ -113,16 +141,49 @@ const postApiSlice = apiSlice.injectEndpoints({
         url: `api/post/save/${postId}/${userId}`,
         method: "DELETE",
       }),
-      invalidatesTags: (result, error, postId) => [
-        { type: "SavedPost", id: postId },
+      async onQueryStarted({ postId, userId }, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          postApiSlice.util.updateQueryData("getPost", postId, (draft) => {
+            draft.savedBy = draft.savedBy.filter(
+              (saved) => saved.user !== userId
+            );
+          })
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
+      invalidatesTags: (result, error, { postId }) => [
+        { type: "Post", id: postId },
         { type: "SavedPosts" },
       ],
     }),
-    getPostLikes: builder.query({
-      query: ({ postId, userId }) => `api/post/${postId}/likes/${userId}`,
-      providesTags: (result, error, postId) => [
-        { type: "PostLike", id: postId },
+    commentPost: builder.mutation({
+      query: ({ postId, comment, userId }) => ({
+        url: `api/post/${postId}/comment`,
+        method: "PUT",
+        body: { userId, comment },
+      }),
+      invalidatesTags: (result, error, { postId }) => [
+        { type: "Post", id: postId },
       ],
+    }),
+    uncommentPost: builder.mutation({
+      query: ({ postId, commentId }) => ({
+        url: `api/post/${postId}/uncomment`,
+        method: "PUT",
+        body: { commentId },
+      }),
+      invalidatesTags: (result, error, { postId }) => [
+        { type: "Post", id: postId },
+      ],
+    }),
+    getPostsByUserName: builder.query({
+      query: (userName) => `api/post/user/${userName}`,
+      providesTags: ["UserPost"],
+      invalidatesTags: ["UserPost"],
     }),
     getPostComments: builder.query({
       query: ({ postId }) => `api/post/${postId}/comments`,
@@ -132,6 +193,7 @@ const postApiSlice = apiSlice.injectEndpoints({
     }),
     getSavedPostsByUser: builder.query({
       query: (userId) => `api/post/saved/${userId}`,
+      providesTags: ["SavedPosts"],
     }),
     getHomePosts: builder.query({
       query: (userId) => `api/post/home/${userId}`,
@@ -145,7 +207,6 @@ const postApiSlice = apiSlice.injectEndpoints({
       query: ({ userId }) => `api/post/saved/user/${userId}`,
       providesTags: ["SavedPosts"],
     }),
-
     getPostById: builder.query({
       query: ({ postId }) => `api/post/${postId}`,
     }),

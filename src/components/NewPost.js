@@ -61,12 +61,22 @@ const NewPost = ({ newPost, setNewPost }) => {
     }
   };
 
+  const handleClickOutside = (e) => {
+    if (e.target.classList.contains("new-post")) {
+      setNewPost(false);
+    }
+  };
+
   useEffect(() => {
+    document.addEventListener("click", handleClickOutside);
     if (isSuccess) {
       console.log(data, "data");
       setNewPostData({ content: "", image: "", type: "" });
       setNewPost(false);
     }
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
   }, [isSuccess]);
 
   return (
@@ -129,24 +139,6 @@ const NewPost = ({ newPost, setNewPost }) => {
 
               <h1>Photo</h1>
             </div>
-            {/* <button className="post-option">
-              <PollRoundedIcon
-                sx={{
-                  fontSize: 20,
-                  color: "#a7c750;",
-                }}
-              />
-              <h1>Poll</h1>
-            </button> */}
-            {/* <button className="post-option">
-              <LibraryMusicRoundedIcon
-                sx={{
-                  fontSize: 20,
-                  color: "#a7c750;",
-                }}
-              />
-              <h1>Music</h1>
-            </button> */}
           </div>
           <div className="new-post-footer-type">
             <h1>Type</h1>

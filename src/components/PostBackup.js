@@ -40,24 +40,54 @@ import { useNavigate } from "react-router-dom";
 import { formatTimeAgo } from "../utils/formatTimeAgo";
 
 const Post = ({ postId, setFetchPostId }) => {
-  const [deletePost] = useDeletePostMutation();
-  const [likePost] = useLikePostMutation();
-  const [unlikePost] = useUnlikePostMutation();
-  const [commentPost] = useCommentPostMutation();
-  const [savePost] = useSavePostMutation();
-  const [unsavePost] = useUnsavePostMutation();
-  const { data: fetchedPost } = useGetPostQuery(postId);
-
   const [isSaved, setIsSaved] = useState(false);
   const [isCommenting, setIsCommenting] = useState(false);
   const [dropDownMenu, setDropDownMenu] = useState(false);
   const [isAuther, setIsAuther] = useState(false);
+  // const [animateLike, setAnimateLike] = useState(false);
+  // const [animateUnLike, setAnimatUnLike] = useState(false);
+  // const [likes, setLikes] = useState([]);
   const [isLiked, setIsLiked] = useState(false);
+  // const currentUser = useSelector(userAuthed);
   const [onFlyComment, setOnFlyComment] = useState("");
+  // const [user, setUser] = useState(null);
+  // const [post, setPost] = useState(null);
+  // const [comments, setComments] = useState([]);
   const [postIsLoading, setPostIsLoading] = useState(false);
+  // const { data: userData, isSuccess: isUserSuccess } = useGetUserWithIdApiQuery(
+  //   { userId: post?._id }
+  // );
+  // const { data: getLikeData, isSuccess: isGetPostLikesSuccess } =
+  //   useGetPostLikesQuery({ postId, userId: currentUser.id });
+  // const { data: getCommentData, isSuccess: isGetPostCommentsSuccess } =
+  //   useGetPostCommentsQuery({ postId: post?._id });
+
+  // const { data: isSavedPost, isSuccess: isGetPostSavedSuccess } =
+  //   useGetPostSavedQuery({ postId: post?._id, userId: currentUser.id });
   const menuRef = useRef();
   const navigate = useNavigate();
   const currentUser = useSelector(userAuthed);
+  const [deletePost, { isSuccess: isDeleteSuccess }] = useDeletePostMutation();
+
+  const [likePost, { isSuccess: isLikeSuccess, isLoading: isLikingLoading }] =
+    useLikePostMutation();
+  const [
+    unlikePost,
+    { isSuccess: isUnlikeSuccess, isLoading: isUnlikeLoading },
+  ] = useUnlikePostMutation();
+  const [commentPost, { isSuccess: isCommentSuccess }] =
+    useCommentPostMutation();
+
+  const { data: fetchedPost, isSuccess: isPostSuccess } = useGetPostByIdQuery({
+    postId,
+  });
+  const [savePost, { isSuccess: isSaveSuccess }] = useSavePostMutation();
+
+  const [unsavePost, { isSuccess: isUnsaveSuccess }] = useUnsavePostMutation();
+
+  const { data: getPostData } = useGetPostQuery(postId);
+
+  // const [following, setFollowing] = useState([]);
 
   const handleClickOutside = (e) => {
     if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -69,6 +99,18 @@ const Post = ({ postId, setFetchPostId }) => {
     console.log("deleting post");
     deletePost(fetchedPost._id);
     setDropDownMenu(false);
+  };
+
+  const handleLikePost = () => {
+    if (!isLikingLoading && !isUnlikeLoading) {
+      likePost({ postId: fetchedPost._id, userId: currentUser.id });
+    }
+  };
+
+  const handleUnlikePost = () => {
+    if (!isLikingLoading && !isUnlikeLoading) {
+      unlikePost({ postId: fetchedPost._id, userId: currentUser.id });
+    }
   };
 
   const handleCommentPost = () => {
@@ -90,66 +132,64 @@ const Post = ({ postId, setFetchPostId }) => {
     unsavePost({ postId: fetchedPost._id, userId: currentUser.id });
   };
 
-  const handleReaction = () => {
-    if (isLiked) {
-      unlikePost({ postId: fetchedPost._id, userId: currentUser.id });
-      setIsLiked(false);
-    } else {
-      likePost({ postId: fetchedPost._id, userId: currentUser.id });
-      // setIsLiked(true);
-    }
-  };
-
-  const handleSaveState = () => {
-    if (isSaved) {
-      unsavePost({ postId: fetchedPost._id, userId: currentUser.id });
-      setIsSaved(false);
-    } else {
-      savePost({ postId: fetchedPost._id, userId: currentUser.id });
-    }
-  };
-
-  useEffect(() => {
-    if (fetchedPost) {
-      setPostIsLoading(false);
-      if (fetchedPost?.user?._id === currentUser.id) {
-        setIsAuther(true);
-      }
-      fetchedPost?.likes?.forEach((like) => {
-        if (like.user === currentUser.id) {
-          setIsLiked(true);
-          return;
-        } else {
-          setIsLiked(false);
-        }
-      });
-
-      fetchedPost?.savedBy?.forEach((saved) => {
-        if (saved.user === currentUser.id) {
-          setIsSaved(true);
-          return;
-        } else {
-          setIsSaved(false);
-        }
-      });
-
-      console.log("fetchedPost", fetchedPost);
-    }
-  }, [fetchedPost, postId]);
+  // useEffect(() => {
+  //   document.addEventListener("mousedown", handleClickOutside);
+  //   if (isPostSuccess) {
+  //     setPost(fetchedPost);
+  //     setPostIsLoading(false);
+  //   }
+  //   if (isGetPostLikesSuccess) {
+  //     setLikes(getLikeData.likes);
+  //     setIsLiked(getLikeData.userHasLiked);
+  //   }
+  //   if (isGetPostCommentsSuccess) {
+  //     setComments(getCommentData);
+  //   }
+  // if (isUserSuccess) {
+  //   setUser(userData);
+  //   if (currentUser.id === post?.user) {
+  //     setIsAuther(true);
+  //     setFollowing(currentUser.following);
+  //   } else {
+  //     setIsAuther(false);
+  //   }
+  //   setPostIsLoading(false);
+  // }
+  //   if (isGetPostSavedSuccess) {
+  //     setIsSaved(isSavedPost.saved);
+  //     // console.log(isSavedPost, "isSavedPost");
+  //   }
+  //   return () => {
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //   };
+  // }, [
+  //   isPostSuccess,
+  //   postId,
+  //   fetchedPost,
+  //   currentUser,
+  //   isGetPostLikesSuccess,
+  //   getLikeData,
+  //   isDeleteSuccess,
+  //   isGetPostCommentsSuccess,
+  //   isCommentSuccess,
+  //   getCommentData,
+  //   isGetPostSavedSuccess,
+  //   isSavedPost,
+  // ]);
 
   const content = (
     <>
       <div className="feed-post">
         <div className="feed-post-header">
           <div className="feed-post-header-img">
-            <img src={fetchedPost?.user?.picture} alt="post" />
+            <img src={getPostData?.user?.picture} alt="post" />
           </div>
           <div className="feed-post-header-info">
             <div className="feed-post-header-info-name">
-              <h1 onClick={() => navigate("/" + fetchedPost?.user?.username)}>
-                {fetchedPost?.user?.firstName +
+              <h1 onClick={() => navigate("/" + getPostData?.user?.username)}>
+                {getPostData?.user?.firstName +
                   " " +
-                  fetchedPost?.user?.surName}
+                  getPostData?.user?.surName}
               </h1>
               {fetchedPost && (
                 <p title={fetchedPost?.createdAt}>
@@ -173,7 +213,54 @@ const Post = ({ postId, setFetchPostId }) => {
             <div className="post-menu-options-container">
               {dropDownMenu && isAuther && (
                 <div className="post-menu-options" ref={menuRef}>
+                  {/* <div className="post-menu-option">
+                    <InsertLinkRoundedIcon
+                      sx={{
+                        fontSize: 27,
+                        color: "#a7c750;",
+                        cursor: "pointer",
+                      }}
+                    />
+                    <p>Copy Link</p>
+                  </div> */}
+                  {/* {!isAuther && (
+                    <>
+                      {following?.includes(post?.user) && (
+                        <div className="post-menu-option">
+                          <PersonRemoveRoundedIcon
+                            sx={{
+                              fontSize: 27,
+                              color: "#a7c750;",
+                              cursor: "pointer",
+                            }}
+                          />
+                          <p>Unfolllow</p>
+                        </div>
+                      )} */}
+                  {/* <div className="post-menu-option">
+                        <PersonAddAltRoundedIcon
+                          sx={{
+                            fontSize: 27,
+                            color: "#a7c750;",
+                            cursor: "pointer",
+                          }}
+                        />
+                        <p>Folllow</p>
+                      </div> */}
+                  {/* </> */}
+                  {/* )} */}
+                  {/* {isAuther && ( */}
                   <>
+                    {/* <div className="post-menu-option">
+                        <EditRoundedIcon
+                          sx={{
+                            fontSize: 27,
+                            color: "#a7c750;",
+                            cursor: "pointer",
+                          }}
+                        />
+                        <p>Edit</p>
+                      </div> */}
                     <div
                       className="post-menu-option"
                       onClick={handleDeletePost}
@@ -188,6 +275,7 @@ const Post = ({ postId, setFetchPostId }) => {
                       <p>Delete</p>
                     </div>
                   </>
+                  {/* )} */}
                 </div>
               )}
             </div>
@@ -209,18 +297,59 @@ const Post = ({ postId, setFetchPostId }) => {
         )}
         <div className="feed-post-footer">
           <div className="post-icon-with-numbers">
-            {/* <h1
-              style={{
-                color: isLiked ? "#a7c750" : "black",
+            {/* <FavoriteRoundedIcon
+              onClick={() => {
+                setAnimateLike(!animateLike);
+                setAnimatUnLike(true);
+                handleUnlikePost();
+              }}
+              className={
+                animateLike
+                  ? "post-like-under-icon post-like-animate"
+                  : "post-like-under-icon "
+              }
+              sx={{
+                fontSize: 27,
+                color: "#b51d24",
                 cursor: "pointer",
               }}
-              onClick={handleReaction}
-            >
-              {isLiked ? "Unlike" : "Like"}
-            </h1> */}
+            /> */}
+
+            {/* <FavoriteRoundedIcon
+              onClick={() => {
+                setAnimateLike(!animateLike);
+                setAnimatUnLike(true);
+                handleUnlikePost();
+              }}
+              className={
+                animateLike
+                  ? "post-like-under-icon post-like-animate"
+                  : "post-like-under-icon "
+              }
+              sx={{
+                fontSize: 27,
+                color: "#b51d24",
+                cursor: "pointer",
+              }}
+            />
+            <FavoriteBorderRoundedIcon
+              className="post-like-upper-icon"
+              onClick={() => {
+                setAnimatUnLike(false);
+                setAnimateLike(!animateLike);
+                handleLikePost();
+              }}
+              sx={{
+                fontSize: 27,
+                color: "#a7c750;",
+                cursor: "pointer",
+              }}
+            /> */}
             {isLiked ? (
               <FavoriteRoundedIcon
-                onClick={handleReaction}
+                onClick={() => {
+                  handleUnlikePost();
+                }}
                 className={
                   isLiked ? "post-like-new post-like-animate" : "post-like-new "
                 }
@@ -232,13 +361,13 @@ const Post = ({ postId, setFetchPostId }) => {
               />
             ) : (
               <FavoriteBorderRoundedIcon
-                onClick={handleReaction}
-                className={
-                  isLiked ? "post-like-new post-like-animate" : "post-like-new "
-                }
+                className="post-like-new"
+                onClick={() => {
+                  handleLikePost();
+                }}
                 sx={{
                   fontSize: 27,
-                  color: "#a7c750",
+                  color: "#a7c750;",
                   cursor: "pointer",
                 }}
               />
@@ -272,6 +401,13 @@ const Post = ({ postId, setFetchPostId }) => {
             )}
             <p>{fetchedPost?.comments?.length}</p>
           </div>
+          {/* <ShortcutRoundIcon
+            sx={{
+              fontSize: 27,
+              color: "#a7c750;",
+              cursor: "pointer",
+            }}
+          /> */}
           {isSaved ? (
             <BookmarkRoundedIcon
               className="post-save"
@@ -280,7 +416,7 @@ const Post = ({ postId, setFetchPostId }) => {
                 color: "#a7c750;",
                 cursor: "pointer",
               }}
-              onClick={handleSaveState}
+              onClick={handleUnsavePost}
             />
           ) : (
             <TurnedInNotRoundedIcon
@@ -290,7 +426,7 @@ const Post = ({ postId, setFetchPostId }) => {
                 color: "#a7c750;",
                 cursor: "pointer",
               }}
-              onClick={handleSaveState}
+              onClick={handleSavePost}
             />
           )}
         </div>

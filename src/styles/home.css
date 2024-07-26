@@ -1888,3 +1888,17 @@
   font-size: 0.9rem;
   font-weight: 900 !important;
 }
+
+.user-container {
+  height: 440px;
+}
+
+.communities-container {
+  /* height: 20%; */
+  height: 400px;
+  flex-grow: 1;
+}
+
+.saved-likes-back {
+  z-index: 2;
+}

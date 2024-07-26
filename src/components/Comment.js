@@ -4,19 +4,10 @@ import { formatTimeAgo } from "../utils/formatTimeAgo";
 import { useNavigate } from "react-router-dom";
 import Loader from "./Loader";
 
-const Comment = ({ commentId }) => {
+const Comment = ({ commentId, setFetchPostId }) => {
   const navigate = useNavigate();
-  const [comment, setComment] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const { data: commentFetched, isSuccess: isCommentFetchSuccess } =
+  const { data: comment, isSuccess: isCommentFetchSuccess } =
     useGetPostCommentByIdQuery({ commentId });
-
-  useEffect(() => {
-    if (isCommentFetchSuccess) {
-      setComment(commentFetched);
-      setLoading(false);
-    }
-  }, [commentId, isCommentFetchSuccess, commentFetched]);
 
   const content = (
     <div className="comment-individual">
@@ -24,7 +15,10 @@ const Comment = ({ commentId }) => {
         <img
           src={comment?.user.picture}
           alt="user"
-          onClick={() => navigate("/" + comment?.user.username)}
+          onClick={() => {
+            setFetchPostId("");
+            navigate("/" + comment?.user.username);
+          }}
           style={{ cursor: "pointer" }}
         />
       </div>
@@ -34,7 +28,10 @@ const Comment = ({ commentId }) => {
           <h1 className="post-comment-user-name">
             <span
               className="comment-username"
-              onClick={() => navigate("/" + comment?.user.username)}
+              onClick={() => {
+                setFetchPostId("");
+                navigate("/" + comment?.user.username);
+              }}
               style={{ cursor: "pointer" }}
             >
               {comment?.user.username}
@@ -55,7 +52,7 @@ const Comment = ({ commentId }) => {
     </div>
   );
 
-  return <>{loading ? <Loader /> : content}</>;
+  return <>{comment ? content : <Loader />}</>;
 };
 
 export default Comment;

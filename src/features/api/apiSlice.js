@@ -14,6 +14,7 @@ const apiSlice = createApi({
     "Conversation",
     "Contacts",
     "LikedPosts",
+    "SavedPosts",
   ],
   endpoints: (builder) => ({}),
 });

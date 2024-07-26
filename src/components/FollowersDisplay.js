@@ -17,24 +17,24 @@ const FollowersDisplay = ({ person }) => {
   const [online, setOnline] = useState(false);
   const navigate = useNavigate();
   const [user, setUser] = useState({});
-  const { data: personData, isSuccess } = useGetUserWithIdApiQuery({
-    userId: person,
-  });
+  // const { data: personData, isSuccess } = useGetUserWithIdApiQuery({
+  //   userId: person,
+  // });
 
-  useEffect(() => {
-    if (personData) {
-      setUser(personData);
-    }
-  }, [personData]);
+  // useEffect(() => {
+  //   if (personData) {
+  //     setUser(personData);
+  //   }
+  // }, [personData]);
 
   return (
     <div
       className="active-person"
-      onClick={() => navigate("/" + user?.username)}
+      onClick={() => navigate("/" + person?.username)}
     >
       <div className="active-person-header">
-        <img src={user?.picture} alt="person" />
-        <h1>{user?.firstName + " " + user?.surName}</h1>
+        <img src={person?.picture} alt="person" />
+        <h1>{person?.firstName + " " + person?.surName}</h1>
       </div>
       {onlineUsers.includes(person) ? (
         <div className="active-person-status">

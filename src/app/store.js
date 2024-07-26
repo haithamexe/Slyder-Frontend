@@ -9,7 +9,7 @@ import notificationReducer from "../features/notification/notificationSlice";
 const store = configureStore({
   reducer: {
     user: userSlice,
-    post: postSlice,
+    posts: postSlice,
     message: messageSlice,
     notifications: notificationReducer,
 

@@ -19,9 +19,10 @@ const userSlice = createSlice({
       state.accessToken = action.payload;
     },
     logoutUser: (state, action) => {
-      return initialState;
+      state.accessToken = null;
+      state.user = null;
     },
-    authUser: (state, action) => {
+    setUser: (state, action) => {
       state.user = action.payload;
     },
     loginUser: (state, action) => {

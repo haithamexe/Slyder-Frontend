@@ -2,18 +2,8 @@ import { useGetUserWithIdApiQuery } from "../features/user/userApiSlice";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const PeopleRender = ({ personId }) => {
+const PeopleRender = ({ person }) => {
   const navigate = useNavigate();
-  const [person, setPerson] = useState({});
-  const { data: userData, refetch } = useGetUserWithIdApiQuery({
-    userId: personId,
-  });
-
-  useEffect(() => {
-    if (userData) {
-      setPerson(userData);
-    }
-  }, [userData]);
 
   return (
     <div className="person" onClick={() => navigate("/" + person?.username)}>

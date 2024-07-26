@@ -25,26 +25,54 @@ import { useSelector } from "react-redux";
 import { userAuthed } from "../features/user/userSlice";
 import { useNavigate } from "react-router-dom";
 import {
+  useGetPostByIdQuery,
+  useGetPostLikesQuery,
+  useGetPostCommentsQuery,
   useLikePostMutation,
   useUnlikePostMutation,
   useCommentPostMutation,
   useUncommentPostMutation,
+  useGetPostSavedQuery,
   useSavePostMutation,
   useUnsavePostMutation,
-  useGetPostQuery,
 } from "../features/post/postApiSlice";
 import CloseRounded from "@mui/icons-material/CloseRounded";
 import { formatTimeAgo } from "../utils/formatTimeAgo";
 import CommentsList from "./CommentsList";
 
 const PostPreveiw = ({ postId, setFetchPostId, origin, originUsername }) => {
+  const {
+    data: postData,
+    isSuccess: postSuccess,
+    refetch: refetchPost,
+  } = useGetPostByIdQuery({ postId });
+
+  // const {
+  //   data: userData,
+  //   isSuccess: userSuccess,
+  //   refetch: refetchUser,
+  // } = useGetUserWithIdApiQuery({ userId: postData?.user });
+
+  const [user, setUser] = useState(null);
+  const { data: getLikeData, isSuccess: isGetPostLikesSuccess } =
+    useGetPostLikesQuery({
+      postId,
+      userId: user?.id,
+    });
+
   const navigate = useNavigate();
+  const [dropDownMenu, setDropDownMenu] = useState(false);
   const [isAuther, setIsAuther] = useState(false);
+  const [post, setPost] = useState(postData);
   const [isLiked, setIsLiked] = useState(false);
   const previewRef = useRef();
+  const [following, setFollowing] = useState([]);
   const currentUser = useSelector(userAuthed);
   const [onFlyComment, setOnFlyComment] = useState("");
   const [pageRootUrl, setPageRootUrl] = useState(window.location.pathname);
+  const [animateLike, setAnimateLike] = useState(false);
+  const [animateUnLike, setAnimatUnLike] = useState(false);
+  const [likes, setLikes] = useState([]);
   const [commentsCount, setCommentsCount] = useState(0);
   const [isSaved, setIsSaved] = useState(false);
   const imageRef = useRef(null);
@@ -61,30 +89,27 @@ const PostPreveiw = ({ postId, setFetchPostId, origin, originUsername }) => {
   const [uncommentPost, { data: uncommentData, error: uncommentError }] =
     useUncommentPostMutation();
 
+  const { data: getSavedData, isSuccess: isGetPostSavedSuccess } =
+    useGetPostSavedQuery({ postId: post?._id, userId: user?.id });
+
   const [savePost, { data: saveData, error: saveError }] =
     useSavePostMutation();
   const [unsavePost, { data: unsaveData, error: unsaveError }] =
     useUnsavePostMutation();
 
-  const { data: post } = useGetPostQuery(postId);
-
-  const handleReaction = () => {
-    if (isLiked) {
-      unlikePost({ postId: post._id, userId: currentUser.id });
-      setIsLiked(false);
-    } else {
-      likePost({ postId: post._id, userId: currentUser.id });
-      // setIsLiked(true);
+  const handleLikePost = () => {
+    if (!likeLoading && !unlikeLoading) {
+      likePost({ postId: post?._id, userId: currentUser?.id });
     }
+    // setAnimateUnLike(true);
+    // setAnimatUnLike(true);}
   };
 
-  const handleSaveState = () => {
-    if (isSaved) {
-      unsavePost({ postId: post._id, userId: currentUser.id });
-      setIsSaved(false);
-    } else {
-      savePost({ postId: post._id, userId: currentUser.id });
+  const handleUnlikePost = () => {
+    if (!likeLoading && !unlikeLoading) {
+      unlikePost({ postId: post?._id, userId: currentUser?.id });
     }
+    // setAnimateLike(true);
   };
 
   const handleCommentPost = () => {
@@ -148,6 +173,7 @@ const PostPreveiw = ({ postId, setFetchPostId, origin, originUsername }) => {
   };
 
   useEffect(() => {
+    console.log(postData);
     console.log(postId, "postId");
     document.addEventListener("mousedown", handleClickOutside);
     window.history.pushState(
@@ -156,31 +182,35 @@ const PostPreveiw = ({ postId, setFetchPostId, origin, originUsername }) => {
       `/post/${postId}/${origin}/${originUsername}`
     );
     setPageRootUrl(window.location.pathname);
-
-    if (post) {
-      post?.likes?.map((like) => {
+    if (postSuccess) {
+      setPost(postData);
+      postData?.likes?.map((like) => {
         if (like?.user === currentUser?.id) {
           setIsLiked(true);
-          return;
-        } else {
-          setIsLiked(false);
         }
       });
+    }
 
-      post?.savedBy?.map((save) => {
-        if (save?.user === currentUser?.id) {
-          setIsSaved(true);
-          return;
-        } else {
-          setIsSaved(false);
-        }
-      });
+    if (isGetPostSavedSuccess) {
+      setIsSaved(getSavedData.saved);
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [post, postId]);
+  }, [
+    postSuccess,
+    postData,
+    postId,
+    currentUser,
+    post,
+    getLikeData,
+    isGetPostLikesSuccess,
+    isGetPostSavedSuccess,
+    getSavedData,
+    origin,
+    originUsername,
+  ]);
 
   console.log(post);
   return (
@@ -203,6 +233,13 @@ const PostPreveiw = ({ postId, setFetchPostId, origin, originUsername }) => {
                 ? { width: imageRef.current?.width }
                 : {}
             }
+            // style={
+            //   imageRef.current?.width < 1200
+            //     ? imageRef.current?.width >= imageRef.current?.height
+            //       ? { width: imageRef.current?.width }
+            //       : {}
+            //     : { width: "950px" }
+            // }
           >
             <img src={post?.image} alt="post" ref={imageRef} />
           </div>
@@ -249,36 +286,89 @@ const PostPreveiw = ({ postId, setFetchPostId, origin, originUsername }) => {
           </div>
           <div className="post-preveiw-post-footer">
             <div className="post-preveiw-post-footer-icons">
+              {/* <FavoriteBorderRoundedIcon
+                onClick={() => console.log("like")}
+                sx={{
+                  fontSize: 27,
+                  color: "#a7c750;",
+                  cursor: "pointer",
+                }}
+              /> */}
               <div className="post-icon-with-numbers">
-                {isLiked ? (
-                  <FavoriteRoundedIcon
-                    onClick={handleReaction}
+                {/* <FavoriteRoundedIcon
+                  onClick={() => {
+                    setAnimateLike(!animateLike);
+                    setAnimatUnLike(true);
+                    handleUnlikePost();
+                  }}
+                  className={
+                    isLiked
+                      ? "post-like-under-icon post-like-animate"
+                      : "post-like-under-icon "
+                  }
+                  sx={{
+                    fontSize: 27,
+                    color: "#b51d24",
+                    cursor: "pointer",
+                  }}
+                /> */}
+
+                {/* <>
+                  <img
                     className={
                       isLiked
-                        ? "post-like-new post-like-animate"
-                        : "post-like-new "
+                        ? "post-like-heart-icon-left-preveiw animate-left-heart-preveiw"
+                        : "post-like-heart-icon-left-preveiw"
                     }
+                   
+                  />
+                </> */}
+
+                {/* <FavoriteBorderRoundedIcon
+                  className="post-like-upper-icon"
+                  onClick={() => {
+                    setAnimatUnLike(false);
+                    setAnimateLike(!animateLike);
+                    handleLikePost();
+                  }}
+                  sx={{
+                    fontSize: 27,
+                    color: "#a7c750;",
+                    cursor: "pointer",
+                  }}
+                /> */}
+
+                {isLiked ? (
+                  <FavoriteRoundedIcon
+                    className={
+                      isLiked
+                        ? "post-Unlike-new post-like-animate"
+                        : "post-Unlike-new "
+                    }
+                    onClick={() => {
+                      // handleLikePost();
+                      handleUnlikePost();
+                    }}
                     sx={{
                       fontSize: 27,
-                      color: "#b51d24",
+                      color: "#b51d24;",
                       cursor: "pointer",
                     }}
                   />
                 ) : (
                   <FavoriteBorderRoundedIcon
-                    onClick={handleReaction}
-                    className={
-                      isLiked
-                        ? "post-like-new post-like-animate"
-                        : "post-like-new "
-                    }
+                    className="post-like-new"
+                    onClick={() => {
+                      handleLikePost();
+                    }}
                     sx={{
                       fontSize: 27,
-                      color: "#a7c750",
+                      color: "#a7c750;",
                       cursor: "pointer",
                     }}
                   />
                 )}
+
                 <p className="post-like-text-icon">
                   {post?.likes?.length || 0}
                 </p>
@@ -295,6 +385,14 @@ const PostPreveiw = ({ postId, setFetchPostId, origin, originUsername }) => {
                 <p className="post-like-text-icon">{commentsCount || 0}</p>
               </div>
 
+              {/* <ShortcutRoundIcon
+                onClick={() => console.log("share")}
+                sx={{
+                  fontSize: 27,
+                  color: "#a7c750;",
+                  cursor: "pointer",
+                }}
+              /> */}
               {isSaved ? (
                 <BookmarkRoundedIcon
                   className="post-save-veiw"
@@ -303,7 +401,7 @@ const PostPreveiw = ({ postId, setFetchPostId, origin, originUsername }) => {
                     color: "#a7c750;",
                     cursor: "pointer",
                   }}
-                  onClick={handleSaveState}
+                  onClick={handleUnsavePost}
                 />
               ) : (
                 <TurnedInNotRoundedIcon
@@ -313,7 +411,7 @@ const PostPreveiw = ({ postId, setFetchPostId, origin, originUsername }) => {
                     color: "#a7c750;",
                     cursor: "pointer",
                   }}
-                  onClick={handleSaveState}
+                  onClick={handleSavePost}
                 />
               )}
             </div>

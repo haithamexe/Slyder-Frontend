@@ -77,11 +77,6 @@ const Login = (props) => {
       navigate("/");
     }
 
-    if (refSuccess && refreshToken) {
-      dispatch(userActions.refreshToken(refreshToken));
-      navigate("/");
-    }
-
     if (loginSuccess) {
       dispatch(userActions.loginUser(loginData));
       setError(false);
@@ -93,7 +88,7 @@ const Login = (props) => {
     }
 
     refreshTokenApi();
-  }, [user, loginError, loginSuccess, refSuccess]);
+  }, [user, loginError, loginSuccess]);
 
   return (
     <div className="loginRegister">

@@ -63,10 +63,7 @@ const userApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     getUserWithIdApi: builder.query({
-      query: ({ userId }) => `api/user/${userId}`,
-      providesTags: (result, error, { userId }) => [
-        { type: "UserWithId", id: userId },
-      ],
+      query: ({ userId }) => `api/user/get/${userId}`,
     }),
 
     getUserWithUsernameApi: builder.query({
