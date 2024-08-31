@@ -16,6 +16,7 @@ export const SocketContextProvider = ({ children }) => {
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [notifications, setNotification] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [conversations, setConversations] = useState([]);
   const user = useSelector(userAuthed);
 
   const fetchNotifications = async () => {
@@ -25,7 +26,6 @@ export const SocketContextProvider = ({ children }) => {
         url: `${process.env.REACT_APP_BACKEND_URL}api/notification/`,
         withCredentials: true,
       });
-      console.log(res.data, "notifications");
       setNotification(res.data);
       setUnreadCount(res.data.filter((n) => !n.read).length);
     } catch (err) {
@@ -33,6 +33,18 @@ export const SocketContextProvider = ({ children }) => {
     }
   };
 
+  const fetchConversations = async () => {
+    try {
+      const res = await axios({
+        method: "GET",
+        url: `${process.env.REACT_APP_BACKEND_URL}api/messages/`,
+        withCredentials: true,
+      });
+      setConversations(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const markAllRead = async () => {
     try {
       const res = await axios({
@@ -46,6 +58,10 @@ export const SocketContextProvider = ({ children }) => {
     }
   };
 
+  const deleteConversation = (conversationId) => {
+    setConversations((prev) => prev.filter((c) => c._id !== conversationId));
+  };
+
   useEffect(() => {
     if (user) {
       const newSocket = io(process.env.REACT_APP_BACKEND_URL, {
@@ -54,11 +70,12 @@ export const SocketContextProvider = ({ children }) => {
         },
       });
 
+      newSocket?.emit("joinNotificationRoom", user.id);
+      newSocket?.emit("joinConversationRoom", user.id);
+
       newSocket?.on("getOnlineUsers", (users) => {
         setOnlineUsers(users);
       });
-
-      newSocket?.emit("joinNotificationRoom", user.id);
 
       newSocket?.on("newNotification", (notification) => {
         setNotification((prev) => [notification, ...prev]);
@@ -70,7 +87,21 @@ export const SocketContextProvider = ({ children }) => {
         setUnreadCount(0);
       });
 
+      newSocket?.on("newConversation", (conversation) => {
+        setConversations((prev) => [conversation, ...prev]);
+      });
+
+      newSocket?.on("newMessage", (message, conversationId) => {
+        setConversations((prev) => {
+          const index = prev.findIndex((c) => c._id === conversationId);
+          const newConversations = [...prev];
+          newConversations[index].messages.push(message);
+          return newConversations;
+        });
+      });
+
       fetchNotifications();
+      fetchConversations();
 
       return () => {
         newSocket?.off("getOnlineUsers");
@@ -85,7 +116,15 @@ export const SocketContextProvider = ({ children }) => {
 
   return (
     <SocketContext.Provider
-      value={{ socket, onlineUsers, notifications, unreadCount, markAllRead }}
+      value={{
+        socket,
+        onlineUsers,
+        notifications,
+        unreadCount,
+        markAllRead,
+        deleteConversation,
+        conversations,
+      }}
     >
       {children}
     </SocketContext.Provider>

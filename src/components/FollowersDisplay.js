@@ -36,7 +36,7 @@ const FollowersDisplay = ({ person }) => {
         <img src={person?.picture} alt="person" />
         <h1>{person?.firstName + " " + person?.surName}</h1>
       </div>
-      {onlineUsers.includes(person) ? (
+      {onlineUsers.includes(person?._id) ? (
         <div className="active-person-status">
           <CircleRoundedIcon sx={{ fontSize: 10, color: "303030" }} />
           <p>Online</p>

@@ -51,7 +51,7 @@ const NewPost = ({ newPost, setNewPost }) => {
   };
 
   const handlePost = () => {
-    if (newPostData.content || newPostData.image) {
+    if (newPostData.image) {
       createPostApi({
         content: newPostData.content,
         image: newPostData.image,

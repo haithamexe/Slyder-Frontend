@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import CircleRoundedIcon from "@mui/icons-material/CircleRounded";
 import { useSocketContext } from "../context/SocketContext";
 
-const ChatUser = ({ chatUser, setCurrentChat }) => {
+const ChatUser = ({ contact, setCurrentChat }) => {
   const { onlineUsers } = useSocketContext();
   const dispatch = useDispatch();
   const [conversation, setConversation] = useState(null);
@@ -16,7 +16,7 @@ const ChatUser = ({ chatUser, setCurrentChat }) => {
   const [lastMessageTime, setLastMessageTime] = useState(null);
   const [lastMessageTurnicated, setLastMessageContent] = useState(null);
   const { data: conversationData, isSuccess } = useGetConversationQuery({
-    receiverId: chatUser,
+    receiverId: contact._id,
   });
 
   useEffect(() => {

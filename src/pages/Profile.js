@@ -20,6 +20,7 @@ import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
+import ForumRoundedIcon from "@mui/icons-material/ForumRounded";
 import { userPosts, postActions } from "../features/post/postSlice";
 import {
   useGetUserWithUsernameApiQuery,
@@ -214,26 +215,29 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
                       <span>Edit profile</span>
                     </button>
                   )}
-
-                  {user?.username !== currentUser?.username &&
-                    (!isFollowed ? (
-                      <button
-                        className="user-header-info-btn"
-                        onClick={handleFollowUser}
-                      >
-                        <span>Follow</span>
+                  <div className="user-header-info-btns">
+                    {user?.username !== currentUser?.username &&
+                      (!isFollowed ? (
+                        <button
+                          className="user-header-info-btn"
+                          onClick={handleFollowUser}
+                        >
+                          <span>Follow</span>
+                        </button>
+                      ) : (
+                        <button
+                          className="user-header-info-btn"
+                          onClick={handleUnFollowUser}
+                        >
+                          <span>Unfollow</span>
+                        </button>
+                      ))}
+                    {user?.username !== currentUser?.username && (
+                      <button className="user-header-info-btn">
+                        <span>Message</span>
                       </button>
-                    ) : (
-                      <button
-                        className="user-header-info-btn"
-                        onClick={handleUnFollowUser}
-                      >
-                        <span>Unfollow</span>
-                      </button>
-                    ))}
-                  {/* <button className="user-header-info-btn">
-                    <span>Message</span>
-                  </button> */}
+                    )}
+                  </div>
                 </div>
               </div>
               <div className="user-profile-options">

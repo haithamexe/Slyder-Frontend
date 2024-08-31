@@ -1,26 +1,47 @@
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
+import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import ChatUsers from "./ChatUsers";
 import ChatWindow from "./ChatWindow";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { userAuthed } from "../features/user/userSlice";
+import UsersSearchChat from "./UsersSearchChat";
 
 const ChatList = () => {
   const user = useSelector(userAuthed);
   const [currentChat, setCurrentChat] = useState("");
+  const [addConvo, setAddConvo] = useState(false);
+  const [query, setQuery] = useState("");
+
   return (
     <>
       <div className="chat-list">
         <div className="list">
           <div className="Messages-header">
-            <h1>Messages</h1>
-            {/* <MoreVertRoundedIcon
+            {addConvo ? (
+              <input
+                className="chat-search-bar"
+                type="text"
+                placeholder="Search for a user"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+            ) : (
+              <h1>Messages</h1>
+            )}
+            <AddCircleRoundedIcon
+              className={addConvo ? "add-convo" : " "}
               sx={{
                 fontSize: 30,
                 color: "#a7c750;",
                 cursor: "pointer",
               }}
-            /> */}
+              onClick={() => {
+                setQuery("");
+                setAddConvo(!addConvo);
+              }}
+            />
+            {query && <UsersSearchChat query={query} setQuery={setQuery} />}
           </div>
           <div className="chat-body">
             {/* <div className="chat-user">

@@ -877,3 +877,18 @@
   border: 5px solid var(--bg-s-secondary);
   border-radius: 15px;
 }
+
+.user-header-info-btns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+  /* padding: 20px; */
+}
+
+.user-header-info-btn {
+  width: 150px;
+  height: 35px;
+}
