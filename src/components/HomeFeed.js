@@ -28,6 +28,7 @@ const HomeFeed = ({ setNewPost, user, redirectionPage }) => {
   const [postId, setFetchPostId] = useState("");
   const [posts, setPosts] = useState([]);
   const { postId: postInIdParam } = useParams();
+  const [stateChanged, setStateChanged] = useState(false);
   const userAuth = useSelector(userAuthed);
 
   // const {
@@ -64,6 +65,12 @@ const HomeFeed = ({ setNewPost, user, redirectionPage }) => {
     // console.log(homePosts);
   }, [homePosts, user, postInIdParam]);
 
+  useEffect(() => {
+    if (postId) {
+      setStateChanged(!stateChanged);
+    }
+  }, [postId]);
+
   const handleScroll = () => {
     //very cool code for checking if the user has scrolled to the bottom of the feed
     // const { scrollTop, scrollHeight, clientHeight } = feedRef.current;
@@ -98,7 +105,12 @@ const HomeFeed = ({ setNewPost, user, redirectionPage }) => {
           ref={feedRef}
         >
           {postsData?.map((post) => (
-            <Post key={post} postId={post} setFetchPostId={setFetchPostId} />
+            <Post
+              key={post}
+              postId={post}
+              setFetchPostId={setFetchPostId}
+              stateChanged={stateChanged}
+            />
           ))}
         </div>
       ) : (

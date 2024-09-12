@@ -7,43 +7,41 @@ import { useDispatch } from "react-redux";
 import CircleRoundedIcon from "@mui/icons-material/CircleRounded";
 import { useSocketContext } from "../context/SocketContext";
 
-const ChatUser = ({ contact, setCurrentChat }) => {
+const ChatUser = ({ conversation, setCurrentChat }) => {
   const { onlineUsers } = useSocketContext();
-  const dispatch = useDispatch();
-  const [conversation, setConversation] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [lastMessage, setLastMessage] = useState(null);
-  const [lastMessageTime, setLastMessageTime] = useState(null);
-  const [lastMessageTurnicated, setLastMessageContent] = useState(null);
-  const { data: conversationData, isSuccess } = useGetConversationQuery({
-    receiverId: contact._id,
-  });
+  // const [loading, setLoading] = useState(true);
+  // const dispatch = useDispatch();
+  // const [lastMessage, setLastMessage] = useState(null);
+  // const [lastMessageTime, setLastMessageTime] = useState(null);
+  // const [lastMessageTurnicated, setLastMessageContent] = useState(null);
+  // const { data: conversationData, isSuccess } = useGetConversationQuery({
+  //   receiverId: contact._id,
+  // });
 
-  useEffect(() => {
-    if (isSuccess) {
-      setConversation(conversationData);
-      setLastMessage(conversationData?.lastMessage);
-      if (conversationData?.lastMessage?.message?.length >= 15) {
-        setLastMessageContent(
-          conversationData?.lastMessage?.message.substring(0, 13) + "..."
-        );
-      } else {
-        setLastMessageContent(conversationData?.lastMessage?.message);
-      }
-      setLastMessageTime(conversationData?.lastMessage?.createdAt);
-      setLoading(false);
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     setConversation(conversationData);
+  //     setLastMessage(conversationData?.lastMessage);
+  //     if (conversationData?.lastMessage?.message?.length >= 15) {
+  //       setLastMessageContent(
+  //         conversationData?.lastMessage?.message.substring(0, 13) + "..."
+  //       );
+  //     } else {
+  //       setLastMessageContent(conversationData?.lastMessage?.message);
+  //     }
+  //     setLastMessageTime(conversationData?.lastMessage?.createdAt);
+  //     setLoading(false);
 
-      console.log("conversationData", conversationData);
-      console.log("lastMessage", lastMessage);
-    }
-  }, [conversationData, isSuccess]);
+  //     console.log("conversationData", conversationData);
+  //     console.log("lastMessage", lastMessage);
+  //   }
+  // }, [conversationData, isSuccess]);
 
   return (
     <div
       className="chat-user"
       onClick={() => {
-        dispatch(clearMessages());
-
+        // dispatch(clearMessages());
         setCurrentChat(conversation);
       }}
     >
@@ -58,7 +56,7 @@ const ChatUser = ({ contact, setCurrentChat }) => {
       ) : (
         <CircleRoundedIcon
           className="chat-user-status-icon"
-          sx={{ fontSize: 15, color: "grey" }}
+          sx={{ fontSize: 14, color: "grey" }}
         />
       )}
       <div className="chat-user-info">
@@ -66,8 +64,11 @@ const ChatUser = ({ contact, setCurrentChat }) => {
           {conversation?.user?.firstName + " " + conversation?.user?.surName}
         </h1>
         <p>
-          {lastMessageTurnicated}
-          <span> {lastMessageTime && formatTimeAgo(lastMessageTime)}</span>
+          {conversation?.lastMessage?.message}
+          <span>
+            {conversation?.lastMessage?.createdAt &&
+              formatTimeAgo(conversation?.lastMessage?.createdAt)}
+          </span>
         </p>
       </div>
     </div>

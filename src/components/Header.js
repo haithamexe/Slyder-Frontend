@@ -41,6 +41,7 @@ const Header = () => {
       setShowNotifications(false);
     }
   };
+
   useEffect(() => {
     window.addEventListener("click", handleClickOutside);
     window.addEventListener("resize", () => {
@@ -98,21 +99,15 @@ const Header = () => {
           }}
           ref={notifyRef}
           onClick={() => {
-            setShowNotifications(!showNotifications);
             markAllRead();
+            setShowNotifications(!showNotifications);
           }}
         />
-        <div className="notifications-count">
-          {unreadCount > 0 && (
-            <>
-              {/* <CircleRoundedIcon
-                className="notification-status"
-                sx={{ fontSize: 15, color: "red" }}
-              /> */}
-              {unreadCount > 0 && <p>{unreadCount}</p>}
-            </>
-          )}
-        </div>
+        {unreadCount > 0 && (
+          <div className="notifications-count">
+            {unreadCount > 0 && <p>{unreadCount}</p>}
+          </div>
+        )}
         <ReviewsRoundedIcon
           onClick={() => navigate("/chat")}
           sx={{

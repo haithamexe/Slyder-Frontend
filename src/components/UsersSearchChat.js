@@ -1,10 +1,13 @@
 import { useGetUserSearchedApiQuery } from "../features/user/userApiSlice";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSocketContext } from "../context/SocketContext";
+import axios from "axios";
 
 const UsersSearchChat = ({ query, setQuery }) => {
   const navigate = useNavigate();
-  const [usersList, setUsers] = useState([]); // [new
+  const { newConversation } = useSocketContext();
+  const [usersList, setUsers] = useState([]);
   const { data: users, isSuccess } = useGetUserSearchedApiQuery({
     query: query,
   });
@@ -15,6 +18,10 @@ const UsersSearchChat = ({ query, setQuery }) => {
     }
   }, [users, isSuccess]);
 
+  const handleUserClick = (userId) => {
+    newConversation(userId);
+  };
+
   return (
     <>
       {usersList.length > 0 && (
@@ -24,8 +31,8 @@ const UsersSearchChat = ({ query, setQuery }) => {
               key={user?._id}
               className="users-search"
               onClick={() => {
+                handleUserClick(user?._id); //start a convo with this person
                 setQuery("");
-                //start a convo with this person
               }}
               style={{ cursor: "pointer" }}
             >

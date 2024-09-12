@@ -39,7 +39,7 @@ import { userAuthed } from "../features/user/userSlice";
 import { useNavigate } from "react-router-dom";
 import { formatTimeAgo } from "../utils/formatTimeAgo";
 
-const Post = ({ postId, setFetchPostId }) => {
+const Post = ({ postId, setFetchPostId, stateChanged }) => {
   const [deletePost] = useDeletePostMutation();
   const [likePost] = useLikePostMutation();
   const [unlikePost] = useUnlikePostMutation();
@@ -133,9 +133,24 @@ const Post = ({ postId, setFetchPostId }) => {
         }
       });
 
+      if (fetchedPost?.likes?.length === 0) {
+        setIsLiked(false);
+      }
+
       console.log("fetchedPost", fetchedPost);
     }
   }, [fetchedPost, postId]);
+
+  useEffect(() => {
+    fetchedPost?.likes?.forEach((like) => {
+      if (like.user === currentUser.id) {
+        setIsLiked(true);
+        return;
+      } else {
+        setIsLiked(false);
+      }
+    });
+  }, [stateChanged]);
 
   const content = (
     <>

@@ -37,6 +37,8 @@ import PostPreveiw from "../components/PostPreveiw";
 import PicDisplay from "../components/PicDisplay";
 import axios from "axios";
 
+import { useSocketContext } from "../context/SocketContext";
+
 const Profile = ({ redirectionPage, redirectionUsername }) => {
   const [newPost, setNewPost] = useState(false);
   const [postId, setFetchPostId] = useState("");
@@ -55,6 +57,7 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
   const dispatch = useDispatch();
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
+  const { newConversation } = useSocketContext();
   // const {
   //   data: postsData,
   //   isSuccess: fetchedPosts,
@@ -233,7 +236,13 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
                         </button>
                       ))}
                     {user?.username !== currentUser?.username && (
-                      <button className="user-header-info-btn">
+                      <button
+                        className="user-header-info-btn"
+                        onClick={() => {
+                          newConversation(user.id);
+                          navigate(`/chat`);
+                        }}
+                      >
                         <span>Message</span>
                       </button>
                     )}

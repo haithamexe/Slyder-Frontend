@@ -37,7 +37,7 @@ export const SocketContextProvider = ({ children }) => {
     try {
       const res = await axios({
         method: "GET",
-        url: `${process.env.REACT_APP_BACKEND_URL}api/messages/`,
+        url: `${process.env.REACT_APP_BACKEND_URL}api/message/conversations`,
         withCredentials: true,
       });
       setConversations(res.data);
@@ -47,12 +47,12 @@ export const SocketContextProvider = ({ children }) => {
   };
   const markAllRead = async () => {
     try {
+      setUnreadCount(0);
       const res = await axios({
         method: "PUT",
         url: `${process.env.REACT_APP_BACKEND_URL}api/notification/mark-read`,
         withCredentials: true,
       });
-      setUnreadCount(0);
     } catch (err) {
       console.log(err);
     }
@@ -60,6 +60,24 @@ export const SocketContextProvider = ({ children }) => {
 
   const deleteConversation = (conversationId) => {
     setConversations((prev) => prev.filter((c) => c._id !== conversationId));
+  };
+
+  const newConversation = async (userId) => {
+    try {
+      const convo = await axios({
+        method: "POST",
+        url: `${process.env.REACT_APP_BACKEND_URL}api/message/conversation`,
+        data: {
+          receiverId: userId,
+        },
+        withCredentials: true,
+      });
+      if (convo) {
+        setConversations((prev) => [convo.data, ...prev]);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {
@@ -124,6 +142,7 @@ export const SocketContextProvider = ({ children }) => {
         markAllRead,
         deleteConversation,
         conversations,
+        newConversation,
       }}
     >
       {children}
