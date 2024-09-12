@@ -14,6 +14,7 @@ import axios from "axios";
 import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
 import apiSlice from "../features/api/apiSlice";
 import { decrypt } from "../utils/encryptionUtils";
+import { useSocketContext } from "../context/SocketContext";
 
 const socket = io(process.env.REACT_APP_BACKEND_URL);
 
@@ -23,68 +24,119 @@ const ChatWindow = ({ currentChat }) => {
   const [sendMessage, setSendMessage] = useState("");
   const navigate = useNavigate();
   const user = useSelector(userAuthed);
-  const { data: messagesData, isSuccess: messagesIsSuccess } =
-    useGetMessagesQuery({ receiverId: currentChat?.user?._id });
+  const { newMessage } = useSocketContext();
+  const { conversations } = useSocketContext();
 
-  const [createMessage, { data, isSuccess, isError }] =
-    useCreateMessageMutation();
+  // const { data: messagesData, isSuccess: messagesIsSuccess } =
+  //   useGetMessagesQuery({ receiverId: currentChat?.user?._id });
+
+  // const [createMessage, { data, isSuccess, isError }] =
+  //   useCreateMessageMutation();
+
+  // useEffect(() => {
+  // Fetch initial messages
+  // if (messagesIsSuccess) {
+  //   setMessages(messagesData);
+  // }
+
+  // const fetchMessages = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       `${process.env.REACT_APP_BACKEND_URL}api/message/${currentChat?.user?._id}`,
+  //       {
+  //         withCredentials: true,
+  //       }
+  //     );
+  //     setMessages(response.data);
+  //     console.log(response.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  // fetchMessages();
+
+  // socket.emit("joinRoom", currentChat._id);
+
+  // socket.on("newMessage", (message) => {
+  //   const decryptedMessage = {
+  //     ...message,
+  //     message: decrypt(message.message),
+  //   };
+
+  //   setMessages((prevMessages) => [decryptedMessage, ...prevMessages]);
+  //   handleScroll();
+  // });
+
+  // socket.on("messageStatusUpdated", (updatedMessage) => {
+  //   setMessages((prevMessages) =>
+  //     prevMessages.map((message) =>
+  //       message._id === updatedMessage._id ? updatedMessage : message
+  //     )
+  //   );
+  // });
+
+  // Cleanup on component unmount
+  // return () => {
+  // socket.emit("leaveRoom", currentChat._id);
+  // socket.off("newMessage");
+  // socket.off("messageStatusUpdated");
+  // };
+  // }, [currentChat]);
+
+  // useEffect(() => {
+  // socket.on("messageStatusUpdated", (updatedMessage) => {
+  //   setMessages((prevMessages) =>
+  //     prevMessages.map((message) =>
+  //       message._id === updatedMessage._id ? updatedMessage : message
+  //     )
+  //   );
+  // });
 
   useEffect(() => {
-    // Fetch initial messages
-    // if (messagesIsSuccess) {
-    //   setMessages(messagesData);
-    // }
+    if (currentChat) {
+      setMessages(currentChat.messages);
+    }
+  }, [currentChat]);
 
-    const fetchMessages = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_BACKEND_URL}api/message/${currentChat?.user?._id}`,
-          {
-            withCredentials: true,
-          }
-        );
-        setMessages(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  useEffect(() => {
+    socket.emit("joinRoom", user.id);
 
-    fetchMessages();
-
-    // Join the conversation room
-    socket.emit("joinRoom", currentChat._id);
-
-    // Listen for new messages
-    socket.on("newMessage", (message) => {
+    socket.on("newMessage", ({ message }) => {
       const decryptedMessage = {
         ...message,
         message: decrypt(message.message),
       };
-
       setMessages((prevMessages) => [decryptedMessage, ...prevMessages]);
       handleScroll();
     });
 
-    // socket.on("messageStatusUpdated", (updatedMessage) => {
-    //   setMessages((prevMessages) =>
-    //     prevMessages.map((message) =>
-    //       message._id === updatedMessage._id ? updatedMessage : message
-    //     )
-    //   );
-    // });
+    handleScroll();
 
     // Cleanup on component unmount
     return () => {
       socket.emit("leaveRoom", currentChat._id);
       socket.off("newMessage");
-      // socket.off("messageStatusUpdated");
+      socket.off("messageStatusUpdated");
     };
-  }, [currentChat]);
+  }, []);
 
   const handleSendMessage = () => {
     if (sendMessage.trim() === "") return;
-    createMessage({ receiverId: currentChat.user._id, message: sendMessage });
+    newMessage({
+      message: sendMessage,
+      receiverId: currentChat.user._id,
+      conversationId: currentChat._id,
+    });
+    setMessages((prevMessages) => [
+      {
+        message: sendMessage,
+        sender: user.id,
+        receiver: currentChat.user._id,
+        createdAt: new Date().toISOString(),
+      },
+      ...prevMessages,
+    ]);
     setSendMessage("");
   };
 

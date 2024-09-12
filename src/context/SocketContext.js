@@ -4,6 +4,7 @@ import { userAuthed } from "../features/user/userSlice";
 import io from "socket.io-client";
 import axios from "axios";
 import apiSlice from "../features/api/apiSlice";
+import { encrypt, decrypt } from "../utils/encryptionUtils";
 
 const SocketContext = createContext();
 
@@ -14,20 +15,21 @@ export const useSocketContext = () => {
 export const SocketContextProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
-  const [notifications, setNotification] = useState([]);
+  const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [conversations, setConversations] = useState([]);
   const user = useSelector(userAuthed);
 
+  const api = axios.create({
+    baseURL: process.env.REACT_APP_BACKEND_URL,
+    withCredentials: true,
+  });
+
   const fetchNotifications = async () => {
     try {
-      const res = await axios({
-        method: "GET",
-        url: `${process.env.REACT_APP_BACKEND_URL}api/notification/`,
-        withCredentials: true,
-      });
-      setNotification(res.data);
-      setUnreadCount(res.data.filter((n) => !n.read).length);
+      const { data } = await api.get("api/notification/");
+      setNotifications(data);
+      setUnreadCount(data.filter((n) => !n.read).length);
     } catch (err) {
       console.log(err);
     }
@@ -35,24 +37,31 @@ export const SocketContextProvider = ({ children }) => {
 
   const fetchConversations = async () => {
     try {
-      const res = await axios({
-        method: "GET",
-        url: `${process.env.REACT_APP_BACKEND_URL}api/message/conversations`,
-        withCredentials: true,
+      const { data } = await api.get("api/message/conversations");
+      const converationsFormatted = data.map((c) => {
+        const decryptedMessages = c.messages.map((m) => {
+          const decryptedMessage = decrypt(m.message);
+          return { ...m, message: decryptedMessage };
+        });
+        const lastMessage = decryptedMessages[0];
+        return { ...c, messages: decryptedMessages, lastMessage };
       });
-      setConversations(res.data);
+      setConversations(converationsFormatted);
     } catch (err) {
       console.log(err);
     }
   };
+
   const markAllRead = async () => {
     try {
       setUnreadCount(0);
-      const res = await axios({
-        method: "PUT",
-        url: `${process.env.REACT_APP_BACKEND_URL}api/notification/mark-read`,
-        withCredentials: true,
-      });
+      await api.put("api/notification/mark-read");
+      setUnreadCount(0);
+      // const res = await axios({
+      //   method: "PUT",
+      //   url: `${process.env.REACT_APP_BACKEND_URL}api/notification/mark-read`,
+      //   withCredentials: true,
+      // });
     } catch (err) {
       console.log(err);
     }
@@ -64,16 +73,59 @@ export const SocketContextProvider = ({ children }) => {
 
   const newConversation = async (userId) => {
     try {
-      const convo = await axios({
-        method: "POST",
-        url: `${process.env.REACT_APP_BACKEND_URL}api/message/conversation`,
-        data: {
-          receiverId: userId,
-        },
-        withCredentials: true,
+      const { data } = api.post("api/message/conversation", {
+        receiverId: userId,
       });
-      if (convo) {
-        setConversations((prev) => [convo.data, ...prev]);
+
+      // await axios({
+      //   method: "POST",
+      //   url: `${process.env.REACT_APP_BACKEND_URL}api/message/conversation`,
+      //   data: {
+      //     receiverId: userId,
+      //   },
+      //   withCredentials: true,
+      // });
+
+      if (data) {
+        setConversations((prev) => [data, ...prev]);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const newMessage = async ({ message, receiverId, conversationId }) => {
+    try {
+      const encryptedMessage = encrypt(message);
+      const { data } = await api.post("api/message/create", {
+        message: encryptedMessage,
+        receiverId,
+      });
+
+      // await axios({
+      //   method: "POST",
+      //   url: `${process.env.REACT_APP_BACKEND_URL}api/message/create`,
+      //   data: {
+      //     message: encryptedMessage,
+      //     receiverId,
+      //   },
+      //   withCredentials: true,
+      // });
+
+      if (data) {
+        setConversations((prev) =>
+          prev.map((c) => {
+            if (c._id === conversationId) {
+              return {
+                ...c,
+                lastMessage: { ...data.message, message },
+                messages: [{ ...data.messages, message }, ...c.messages],
+              };
+            }
+            return c;
+          })
+        );
+        // return { ...res.data.message, message: message };
       }
     } catch (err) {
       console.log(err);
@@ -96,7 +148,7 @@ export const SocketContextProvider = ({ children }) => {
       });
 
       newSocket?.on("newNotification", (notification) => {
-        setNotification((prev) => [notification, ...prev]);
+        setNotifications((prev) => [notification, ...prev]);
         setUnreadCount((prev) => prev + 1);
         apiSlice.util.invalidateTags(["Conversation"]);
       });
@@ -109,13 +161,26 @@ export const SocketContextProvider = ({ children }) => {
         setConversations((prev) => [conversation, ...prev]);
       });
 
-      newSocket?.on("newMessage", (message, conversationId) => {
-        setConversations((prev) => {
-          const index = prev.findIndex((c) => c._id === conversationId);
-          const newConversations = [...prev];
-          newConversations[index].messages.push(message);
-          return newConversations;
-        });
+      newSocket?.on("newMessage", ({ message, conversationId }) => {
+        const decryptedMessage = decrypt(message.message);
+        setConversations((prev) =>
+          prev.map((c) => {
+            if (c._id === conversationId) {
+              return {
+                ...c,
+                lastMessage: { ...message, message: decryptedMessage },
+                messages: [
+                  {
+                    ...message,
+                    message: decryptedMessage,
+                  },
+                  ...c.messages,
+                ],
+              };
+            }
+            return c;
+          })
+        );
       });
 
       fetchNotifications();
@@ -143,6 +208,7 @@ export const SocketContextProvider = ({ children }) => {
         deleteConversation,
         conversations,
         newConversation,
+        newMessage,
       }}
     >
       {children}
