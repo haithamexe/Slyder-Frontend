@@ -25,7 +25,6 @@ const ChatWindow = ({ currentChat }) => {
   const navigate = useNavigate();
   const user = useSelector(userAuthed);
   const { newMessage } = useSocketContext();
-  const { conversations } = useSocketContext();
 
   // const { data: messagesData, isSuccess: messagesIsSuccess } =
   //   useGetMessagesQuery({ receiverId: currentChat?.user?._id });
@@ -195,8 +194,8 @@ const ChatWindow = ({ currentChat }) => {
             console.log("scrolling");
           }}
         >
-          {messages.map((message) => (
-            <Message key={message?._id} msg={message} curUser={user} />
+          {messages?.map((message, index) => (
+            <Message key={index} msg={message} curUser={user} />
           ))}
         </div>
       </div>

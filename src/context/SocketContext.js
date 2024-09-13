@@ -73,10 +73,9 @@ export const SocketContextProvider = ({ children }) => {
 
   const newConversation = async (userId) => {
     try {
-      const { data } = api.post("api/message/conversation", {
+      await api.post("api/message/conversation", {
         receiverId: userId,
       });
-
       // await axios({
       //   method: "POST",
       //   url: `${process.env.REACT_APP_BACKEND_URL}api/message/conversation`,
@@ -85,10 +84,6 @@ export const SocketContextProvider = ({ children }) => {
       //   },
       //   withCredentials: true,
       // });
-
-      if (data) {
-        setConversations((prev) => [data, ...prev]);
-      }
     } catch (err) {
       console.log(err);
     }
@@ -101,16 +96,6 @@ export const SocketContextProvider = ({ children }) => {
         message: encryptedMessage,
         receiverId,
       });
-
-      // await axios({
-      //   method: "POST",
-      //   url: `${process.env.REACT_APP_BACKEND_URL}api/message/create`,
-      //   data: {
-      //     message: encryptedMessage,
-      //     receiverId,
-      //   },
-      //   withCredentials: true,
-      // });
 
       if (data) {
         setConversations((prev) =>
@@ -125,7 +110,6 @@ export const SocketContextProvider = ({ children }) => {
             return c;
           })
         );
-        // return { ...res.data.message, message: message };
       }
     } catch (err) {
       console.log(err);
@@ -163,6 +147,7 @@ export const SocketContextProvider = ({ children }) => {
 
       newSocket?.on("newMessage", ({ message, conversationId }) => {
         const decryptedMessage = decrypt(message.message);
+
         setConversations((prev) =>
           prev.map((c) => {
             if (c._id === conversationId) {

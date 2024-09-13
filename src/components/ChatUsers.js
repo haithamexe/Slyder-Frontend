@@ -62,9 +62,9 @@ const ChatUsers = ({ setCurrentChat }) => {
         <Loader />
       ) : (
         <>
-          {conversations?.map((conversation) => (
+          {conversations?.map((conversation, index) => (
             <ChatUser
-              key={conversation._id}
+              key={index}
               conversation={conversation}
               setCurrentChat={setCurrentChat}
             />
