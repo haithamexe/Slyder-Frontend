@@ -102,11 +102,11 @@ const ChatWindow = ({ currentChat }) => {
     socket.emit("joinRoom", user.id);
 
     socket.on("newMessage", ({ message }) => {
-      const decryptedMessage = {
-        ...message,
-        message: decrypt(message.message),
-      };
-      setMessages((prevMessages) => [decryptedMessage, ...prevMessages]);
+      const decryptedMessage = decrypt(message.message);
+      setMessages((prevMessages) => [
+        { ...message, message: decryptedMessage },
+        ...prevMessages,
+      ]);
       handleScroll();
     });
 
@@ -127,15 +127,15 @@ const ChatWindow = ({ currentChat }) => {
       receiverId: currentChat.user._id,
       conversationId: currentChat._id,
     });
-    setMessages((prevMessages) => [
-      {
-        message: sendMessage,
-        sender: user.id,
-        receiver: currentChat.user._id,
-        createdAt: new Date().toISOString(),
-      },
-      ...prevMessages,
-    ]);
+    // setMessages((prevMessages) => [
+    //   {
+    //     message: sendMessage,
+    //     sender: user.id,
+    //     receiver: currentChat.user._id,
+    //     createdAt: new Date().toISOString(),
+    //   },
+    //   ...prevMessages,
+    // ]);
     setSendMessage("");
   };
 

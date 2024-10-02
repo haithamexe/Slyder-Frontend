@@ -18,12 +18,32 @@ export const SocketContextProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [conversations, setConversations] = useState([]);
+  const [page, setPage] = useState(0);
   const user = useSelector(userAuthed);
+  const [activeConversationMessages, setActiveConversationMessages] = useState(
+    []
+  );
+  const [activeConversation, setActiveConversation] = useState(null);
 
   const api = axios.create({
     baseURL: process.env.REACT_APP_BACKEND_URL,
     withCredentials: true,
   });
+
+  const fetchMessages = async (conversationId) => {
+    try {
+      const { data } = await api.post(`api/message/messages${conversationId}`, {
+        page: page,
+      });
+      const decryptedMessages = data.map((m) => {
+        const decryptedMessage = decrypt(m.message);
+        return { ...m, message: decryptedMessage };
+      });
+      setActiveConversationMessages(decryptedMessages);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const fetchNotifications = async () => {
     try {
@@ -67,8 +87,32 @@ export const SocketContextProvider = ({ children }) => {
     }
   };
 
-  const deleteConversation = (conversationId) => {
-    setConversations((prev) => prev.filter((c) => c._id !== conversationId));
+  const deleteConversation = async (conversationId) => {
+    try {
+      const deleted = await api.delete(
+        `api/message/conversation/${conversationId}`
+      );
+      if (deleted) {
+        setConversations((prev) =>
+          prev.filter((c) => c._id !== conversationId)
+        );
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const deleteMessages = async (conversationId) => {
+    try {
+      const deleted = await api.delete(
+        `api/message/messages/${conversationId}`
+      );
+      if (deleted) {
+        setActiveConversationMessages([]);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const newConversation = async (userId) => {
@@ -182,20 +226,22 @@ export const SocketContextProvider = ({ children }) => {
     }
   }, [user]);
 
+  const socketValue = {
+    socket,
+    onlineUsers,
+    notifications,
+    unreadCount,
+    markAllRead,
+    deleteConversation,
+    deleteMessages,
+    conversations,
+    newConversation,
+    newMessage,
+    activeConversationMessages,
+  };
+
   return (
-    <SocketContext.Provider
-      value={{
-        socket,
-        onlineUsers,
-        notifications,
-        unreadCount,
-        markAllRead,
-        deleteConversation,
-        conversations,
-        newConversation,
-        newMessage,
-      }}
-    >
+    <SocketContext.Provider value={socketValue}>
       {children}
     </SocketContext.Provider>
   );
