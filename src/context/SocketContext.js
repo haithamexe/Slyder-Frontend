@@ -12,10 +12,10 @@ export const useSocketContext = () => {
   return useContext(SocketContext);
 };
 
-let newSocket = null;
+let socket = null;
 
 export const SocketContextProvider = ({ children }) => {
-  const [socket, setSocket] = useState(null);
+  // const [socket, setSocket] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -92,7 +92,7 @@ export const SocketContextProvider = ({ children }) => {
         });
         const conversationIds = data.map((c) => c._id);
         console.log(conversationIds);
-        newSocket.emit("joinConversations", conversationIds);
+        socket.emit("joinConversations", conversationIds);
         setConversations(converationsFormatted);
       }
     } catch (err) {
@@ -190,7 +190,7 @@ export const SocketContextProvider = ({ children }) => {
       //   conversationId,
       // });
 
-      const data = newSocket.emit("newMessage", {
+      const data = socket.emit("newMessage", {
         message: encryptedMessage,
         conversationId,
         receiverId,
@@ -234,31 +234,31 @@ export const SocketContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (user) {
-      newSocket = io(process.env.REACT_APP_BACKEND_URL, {
+      socket = io(process.env.REACT_APP_BACKEND_URL, {
         query: {
           userId: user.id,
         },
         withCredentials: true,
       });
 
-      newSocket?.emit("joinNotificationRoom", user.id);
-      newSocket?.emit("joinConversationRoom", user.id);
+      socket?.emit("joinNotificationRoom", user.id);
+      socket?.emit("joinConversationRoom", user.id);
 
-      newSocket?.on("getOnlineUsers", (users) => {
+      socket?.on("getOnlineUsers", (users) => {
         setOnlineUsers(users);
       });
 
-      newSocket?.on("newNotification", (notification) => {
+      socket?.on("newNotification", (notification) => {
         setNotifications((prev) => [notification, ...prev]);
         setUnreadCount((prev) => prev + 1);
         apiSlice.util.invalidateTags(["Conversation"]);
       });
 
-      newSocket?.on("clearNotifications", () => {
+      socket?.on("clearNotifications", () => {
         setUnreadCount(0);
       });
 
-      newSocket?.on("newConversation", (conversation) => {
+      socket?.on("newConversation", (conversation) => {
         if (conversation?.lastMessage?.message) {
           conversation.lastMessage.message = decrypt(
             conversation.lastMessage.message
@@ -266,12 +266,22 @@ export const SocketContextProvider = ({ children }) => {
         }
         console.log(conversation);
         setConversations((prev) => [conversation, ...prev]);
-        newSocket?.emit("joinConversation", conversation?._id);
+        socket?.emit("joinConversation", conversation?._id);
       });
 
-      newSocket?.on("newMessage", ({ message, conversationId }) => {
+      socket?.on("newMessage", ({ message, conversationId }) => {
         console.log(message, conversationId);
         console.log(activeConversation?._id + "  " + conversationId);
+
+        const conversationIsFetched = conversations.find(
+          (c) => c._id === conversationId
+        );
+
+        if (!conversationIsFetched) {
+          socket.emit("joinConversation", conversationId);
+          return;
+        }
+
         const decryptedMessage = decrypt(message.message);
 
         if (activeConversation?._id === conversationId) {
@@ -292,25 +302,28 @@ export const SocketContextProvider = ({ children }) => {
             return c;
           })
         );
-        if (!conversations[0]?._id === conversationId) {
+        if (activeConversation?._id !== conversationId) {
           setConversations((prev) =>
-            prev.sort((a, b) => {
-              return new Date(b.updatedAt) - new Date(a.updatedAt);
-            })
+            [prev.find((c) => c._id === conversationId)].concat([
+              ...prev.filter((c) => c._id !== conversationId),
+            ])
           );
         }
       });
       if (!notifications) {
         fetchNotifications();
       }
+
       fetchConversations();
 
       return () => {
-        newSocket?.off("getOnlineUsers");
-        newSocket?.disconnect();
+        socket?.off("getOnlineUsers");
+        socket?.disconnect();
       };
     } else {
-      setSocket(null);
+      socket?.disconnect();
+      socket = null;
+      setConversations([]);
       setOnlineUsers([]);
     }
   }, [user, activeConversation]);
