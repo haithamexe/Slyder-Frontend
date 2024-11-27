@@ -6,12 +6,14 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { userAuthed } from "../features/user/userSlice";
 import UsersSearchChat from "./UsersSearchChat";
+import { useSocketContext } from "../context/SocketContext";
 
 const ChatList = () => {
   const user = useSelector(userAuthed);
   const [currentChat, setCurrentChat] = useState("");
   const [addConvo, setAddConvo] = useState(false);
   const [query, setQuery] = useState("");
+  const { activeConversation } = useSocketContext();
 
   return (
     <>
@@ -59,7 +61,7 @@ const ChatList = () => {
           </div>
         </div>
         <div className="chat-section">
-          {!currentChat ? (
+          {!activeConversation ? (
             <div className="chat-intro">
               <h1 className="chat-intro">
                 Welcome {user?.firstName} {user?.surName} Select a conversation
@@ -67,7 +69,7 @@ const ChatList = () => {
               </h1>
             </div>
           ) : (
-            <ChatWindow currentChat={currentChat} />
+            <ChatWindow activeConversation={activeConversation} />
           )}
         </div>
       </div>

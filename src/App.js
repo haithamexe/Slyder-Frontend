@@ -12,6 +12,7 @@ import Profile from "./pages/Profile";
 import PostPage from "./pages/PostPage";
 import TermsOfService from "./pages/Terms";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import AuthCheck from "./components/AuthCheck";
 
 const App = () => {
   return (

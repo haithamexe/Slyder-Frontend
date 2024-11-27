@@ -39,6 +39,7 @@ const Header = () => {
   const handleClickOutside = (e) => {
     if (notifyRef.current && !notifyRef.current.contains(e.target)) {
       setShowNotifications(false);
+      setQuery("");
     }
   };
 

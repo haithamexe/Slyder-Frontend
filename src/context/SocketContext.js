@@ -12,13 +12,16 @@ export const useSocketContext = () => {
   return useContext(SocketContext);
 };
 
+let newSocket = null;
+
 export const SocketContextProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [conversations, setConversations] = useState([]);
-  const [page, setPage] = useState(0);
+  const [hasMoreMessages, setHasMoreMessages] = useState(true);
+  const [newConversationsFetched, setNewConversationsFetched] = useState(false);
   const user = useSelector(userAuthed);
   const [activeConversationMessages, setActiveConversationMessages] = useState(
     []
@@ -30,18 +33,38 @@ export const SocketContextProvider = ({ children }) => {
     withCredentials: true,
   });
 
-  const fetchMessages = async (conversationId) => {
+  const setActiveConversationFunc = (conversationId) => {
+    const conversation = conversations.find((c) => c._id === conversationId);
+    setActiveConversation(conversation);
+    console.log("tried to set active conversation", conversation);
+
+    if (conversationId !== activeConversation?._id) {
+      setActiveConversationMessages([]);
+      fetchMessages(conversationId, 0);
+    }
+  };
+
+  const fetchMessages = async (conversationId, page) => {
     try {
-      const { data } = await api.post(`api/message/messages${conversationId}`, {
-        page: page,
-      });
-      const decryptedMessages = data.map((m) => {
-        const decryptedMessage = decrypt(m.message);
-        return { ...m, message: decryptedMessage };
-      });
-      setActiveConversationMessages(decryptedMessages);
+      const { data } = await api.get(
+        `api/message/messages/${conversationId}/${page}`
+      );
+      if (data && data.length > 0) {
+        const decryptedMessages = data.map((m) => {
+          const decryptedMessage = decrypt(m.message);
+          return { ...m, message: decryptedMessage };
+        });
+        setActiveConversationMessages((prev) => [
+          ...prev,
+          ...decryptedMessages,
+        ]);
+      } else {
+        setHasMoreMessages(false);
+        console.log("No more messages");
+      }
     } catch (err) {
-      console.log(err);
+      setHasMoreMessages(false);
+      console.log("No more messages");
     }
   };
 
@@ -58,15 +81,20 @@ export const SocketContextProvider = ({ children }) => {
   const fetchConversations = async () => {
     try {
       const { data } = await api.get("api/message/conversations");
-      const converationsFormatted = data.map((c) => {
-        const decryptedMessages = c.messages.map((m) => {
-          const decryptedMessage = decrypt(m.message);
-          return { ...m, message: decryptedMessage };
+      console.log(data);
+      if (data) {
+        const converationsFormatted = data.map((c) => {
+          if (c?.lastMessage?.message) {
+            const lastMessage = decrypt(c?.lastMessage?.message);
+            c.lastMessage.message = lastMessage;
+          }
+          return c;
         });
-        const lastMessage = decryptedMessages[0];
-        return { ...c, messages: decryptedMessages, lastMessage };
-      });
-      setConversations(converationsFormatted);
+        const conversationIds = data.map((c) => c._id);
+        console.log(conversationIds);
+        newSocket.emit("joinConversations", conversationIds);
+        setConversations(converationsFormatted);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -120,14 +148,6 @@ export const SocketContextProvider = ({ children }) => {
       await api.post("api/message/conversation", {
         receiverId: userId,
       });
-      // await axios({
-      //   method: "POST",
-      //   url: `${process.env.REACT_APP_BACKEND_URL}api/message/conversation`,
-      //   data: {
-      //     receiverId: userId,
-      //   },
-      //   withCredentials: true,
-      // });
     } catch (err) {
       console.log(err);
     }
@@ -160,12 +180,65 @@ export const SocketContextProvider = ({ children }) => {
     }
   };
 
+  const sendMessage = async (message) => {
+    try {
+      const encryptedMessage = encrypt(message);
+      const conversationId = activeConversation._id;
+      const receiverId = activeConversation?.user;
+      // const { data } = await api.post("api/message/create", {
+      //   message: encryptedMessage,
+      //   conversationId,
+      // });
+
+      const data = newSocket.emit("newMessage", {
+        message: encryptedMessage,
+        conversationId,
+        receiverId,
+      });
+
+      const localMessage = {
+        message: message,
+        sender: user.id,
+        receiver: receiverId,
+        conversation: conversationId,
+        createdAt: new Date().toISOString(),
+      };
+
+      if (data) {
+        setActiveConversationMessages((prev) => [localMessage, ...prev]);
+      }
+      //kinnda slow
+      if (conversations[0]?._id !== conversationId) {
+        setConversations(
+          [conversations.find((c) => c._id === conversationId)].concat([
+            ...conversations.filter((c) => c._id !== conversationId),
+          ])
+        );
+      }
+
+      setConversations((prev) =>
+        prev.map((c) => {
+          if (c._id === conversationId) {
+            return {
+              ...c,
+              lastMessage: localMessage,
+            };
+          }
+          return c;
+        })
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     if (user) {
-      const newSocket = io(process.env.REACT_APP_BACKEND_URL, {
+      newSocket = io(process.env.REACT_APP_BACKEND_URL, {
         query: {
           userId: user.id,
         },
+        withCredentials: true,
       });
 
       newSocket?.emit("joinNotificationRoom", user.id);
@@ -186,11 +259,27 @@ export const SocketContextProvider = ({ children }) => {
       });
 
       newSocket?.on("newConversation", (conversation) => {
+        if (conversation?.lastMessage?.message) {
+          conversation.lastMessage.message = decrypt(
+            conversation.lastMessage.message
+          );
+        }
+        console.log(conversation);
         setConversations((prev) => [conversation, ...prev]);
+        newSocket?.emit("joinConversation", conversation?._id);
       });
 
       newSocket?.on("newMessage", ({ message, conversationId }) => {
+        console.log(message, conversationId);
+        console.log(activeConversation?._id + "  " + conversationId);
         const decryptedMessage = decrypt(message.message);
+
+        if (activeConversation?._id === conversationId) {
+          setActiveConversationMessages((prev) => [
+            { ...message, message: decryptedMessage },
+            ...prev,
+          ]);
+        }
 
         setConversations((prev) =>
           prev.map((c) => {
@@ -198,33 +287,37 @@ export const SocketContextProvider = ({ children }) => {
               return {
                 ...c,
                 lastMessage: { ...message, message: decryptedMessage },
-                messages: [
-                  {
-                    ...message,
-                    message: decryptedMessage,
-                  },
-                  ...c.messages,
-                ],
               };
             }
             return c;
           })
         );
+        if (!conversations[0]?._id === conversationId) {
+          setConversations((prev) =>
+            prev.sort((a, b) => {
+              return new Date(b.updatedAt) - new Date(a.updatedAt);
+            })
+          );
+        }
       });
-
-      fetchNotifications();
+      if (!notifications) {
+        fetchNotifications();
+      }
       fetchConversations();
 
       return () => {
         newSocket?.off("getOnlineUsers");
-        newSocket?.off("joinNotificationRoom", user.id);
-        newSocket?.close();
+        newSocket?.disconnect();
       };
     } else {
       setSocket(null);
       setOnlineUsers([]);
     }
-  }, [user]);
+  }, [user, activeConversation]);
+
+  useEffect(() => {
+    setHasMoreMessages(true);
+  }, [activeConversation]);
 
   const socketValue = {
     socket,
@@ -234,10 +327,15 @@ export const SocketContextProvider = ({ children }) => {
     markAllRead,
     deleteConversation,
     deleteMessages,
+    sendMessage,
     conversations,
     newConversation,
     newMessage,
+    setActiveConversationFunc,
     activeConversationMessages,
+    activeConversation,
+    fetchMessages,
+    hasMoreMessages,
   };
 
   return (

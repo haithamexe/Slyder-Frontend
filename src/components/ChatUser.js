@@ -8,40 +8,13 @@ import CircleRoundedIcon from "@mui/icons-material/CircleRounded";
 import { useSocketContext } from "../context/SocketContext";
 
 const ChatUser = ({ conversation, setCurrentChat }) => {
-  const { onlineUsers } = useSocketContext();
-  // const [loading, setLoading] = useState(true);
-  // const dispatch = useDispatch();
-  // const [lastMessage, setLastMessage] = useState(null);
-  // const [lastMessageTime, setLastMessageTime] = useState(null);
-  // const [lastMessageTurnicated, setLastMessageContent] = useState(null);
-  // const { data: conversationData, isSuccess } = useGetConversationQuery({
-  //   receiverId: contact._id,
-  // });
-
-  // useEffect(() => {
-  //   if (isSuccess) {
-  //     setConversation(conversationData);
-  //     setLastMessage(conversationData?.lastMessage);
-  //     if (conversationData?.lastMessage?.message?.length >= 15) {
-  //       setLastMessageContent(
-  //         conversationData?.lastMessage?.message.substring(0, 13) + "..."
-  //       );
-  //     } else {
-  //       setLastMessageContent(conversationData?.lastMessage?.message);
-  //     }
-  //     setLastMessageTime(conversationData?.lastMessage?.createdAt);
-  //     setLoading(false);
-
-  //     console.log("conversationData", conversationData);
-  //     console.log("lastMessage", lastMessage);
-  //   }
-  // }, [conversationData, isSuccess]);
+  const { onlineUsers, setActiveConversationFunc } = useSocketContext();
 
   return (
     <div
       className="chat-user"
       onClick={() => {
-        // dispatch(clearMessages());
+        setActiveConversationFunc(conversation._id);
         setCurrentChat(conversation);
       }}
     >

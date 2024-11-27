@@ -91,27 +91,29 @@ const Register = (props) => {
 
   useEffect(() => {
     if (user) {
-      navigate("/");
+      navigate("/", { replace: true });
     }
+  }, [user]);
 
+  useEffect(() => {
     if (refreshSuccess) {
-      dispatch(userActions.refreshToken(refreshToken));
-      navigate("/");
+      navigate("/", { replace: true });
     }
+    refreshTokenApi();
+  }, [refreshSuccess]);
 
+  useEffect(() => {
     if (isSuccess) {
       setRegError(false);
       setRegErrorMsg("");
-      navigate("/login");
+      navigate("/login", { replace: true });
     } else if (error) {
       setRegError(true);
       console.log(error);
       setRegErrorMsg(error?.data?.message);
       alert("Error", error?.message);
     }
-
-    refreshTokenApi();
-  }, [isSuccess, error, user, refreshSuccess]);
+  }, [isSuccess, error]);
 
   return (
     <div className="loginRegister">

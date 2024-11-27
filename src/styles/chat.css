@@ -1,7 +1,7 @@
 .chat {
   /* position: relative; */
-  width: 100%;
-  height: 100vh;
+  /* width: 100%; */
+  /* height: 100vh; */
   display: flex;
   justify-content: space-between;
   padding-top: 3px;
@@ -111,8 +111,8 @@
 .chat-list {
   display: flex;
   background-color: var(--bg-s-third);
-  /* height: 95%; */
-  height: 805px;
+  height: 79vh;
+  /* height: 100vh; */
   width: 100%;
   border-radius: 15px;
   margin-top: 17px;
@@ -312,9 +312,10 @@
 .msg-container {
   display: flex;
   flex-direction: column-reverse;
-  padding: 15px;
+  padding: 5px;
   gap: 10px 0;
-  height: 71vh;
+  /* height: 71vh; */
+  height: 100%;
   width: 100%;
   /* background-color: var(--bg-s-third); */
   /* align-items: flex-end; */

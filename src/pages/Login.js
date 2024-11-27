@@ -74,21 +74,28 @@ const Login = (props) => {
 
   useEffect(() => {
     if (user) {
-      navigate("/");
+      navigate("/", { replace: true });
     }
+  }, [user]);
 
+  useEffect(() => {
+    if (refSuccess) {
+      navigate("/", { replace: true });
+    }
+    refreshTokenApi();
+  }, [refSuccess]);
+
+  useEffect(() => {
     if (loginSuccess) {
       dispatch(userActions.loginUser(loginData));
       setError(false);
       setErrorMsg("");
-      navigate("/");
+      navigate("/", { replace: true });
     } else if (loginError) {
       setError(true);
       setErrorMsg(loginError);
     }
-
-    refreshTokenApi();
-  }, [user, loginError, loginSuccess]);
+  }, [loginError, loginSuccess]);
 
   return (
     <div className="loginRegister">
