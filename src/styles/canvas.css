@@ -1,12 +1,16 @@
 .canvas-container {
   position: relative;
-  width: 100%;
+  width: 50%;
   height: 100%;
   overflow: hidden;
   background-color: rgb(17, 17, 18);
   display: flex;
   justify-content: center;
   align-items: center;
+
+  @media screen and (max-width: 850px) {
+    display: none;
+  }
 }
 
 canvas {

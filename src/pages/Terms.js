@@ -1,12 +1,14 @@
 import React from "react";
 import "../styles/TermsOfService.css";
+import { Link } from "react-router-dom";
 
 const TermsOfService = () => {
-  const date = new Date().getDate();
   return (
     <div className="terms-container">
+      <Link className="back-button" to="/register">
+        <div>Back</div>
+      </Link>
       <h1>Terms of Service</h1>
-      {/* <p>Last updated: [{date}]</p> */}
 
       <h2>1. Introduction</h2>
       <p>

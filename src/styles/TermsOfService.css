@@ -1,25 +1,28 @@
 .terms-container {
   max-width: 800px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 50px 0;
   font-family: Arial, sans-serif;
   line-height: 1.6;
-  color: #e3d9d9;
+  color: #cbd1c7;
   width: 100%;
-  overflow: hidden;
   height: 100vh;
+
+  @media screen and (max-width: 850px) {
+    padding: 50px 3.5vw;
+    font-size: 3vw;
+  }
 }
 
 .terms-container h1 {
   text-align: center;
   margin-bottom: 20px;
-  /* background-color: #0056b3; */
-  color: #9ec33a;
+  color: #9cd84c;
 }
 
 .terms-container h2 {
   margin-top: 20px;
-  color: #9ec33a;
+  color: #9cd84c;
 }
 
 .terms-container p {
@@ -33,4 +36,27 @@
 
 .terms-container ul li {
   margin-bottom: 5px;
+}
+
+.back-button div {
+  padding: 5px 30px;
+  margin: 7.5px 0;
+  border: none;
+  border-radius: 15px;
+  background-color: var(--color-primary);
+  color: #000000;
+  font-size: 1.1rem;
+  cursor: pointer;
+  position: fixed;
+  left: 0;
+  margin-left: 50px;
+  color: #000000;
+  font-size: large;
+  font-weight: bold;
+
+  @media screen and (max-width: 850px) {
+    margin-left: 20px;
+    padding: 3px 7px;
+    font-size: 4vw;
+  }
 }

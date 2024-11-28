@@ -2,6 +2,7 @@ import FormBoxes from "./FormBoxes";
 import FormDate from "./FormDate";
 import FormGender from "./FormGender";
 import LoginRegisterButtons from "./LoginRegisterButtons";
+import { Link } from "react-router-dom";
 
 const RegisterForm = (props) => {
   const {
@@ -57,8 +58,8 @@ const RegisterForm = (props) => {
         </button>
         <p>
           By registering you are agreeing to our{" "}
-          <a href="/terms">terms and conditions</a> and{" "}
-          <a href="/privacy">privacy policy .</a>
+          <Link to="/terms">terms and conditions</Link> and{" "}
+          <Link to="/privacy">privacy policy .</Link>
         </p>
       </form>
     </div>

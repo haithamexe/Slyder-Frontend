@@ -1,9 +1,13 @@
 import React from "react";
 import "../styles/PrivacyPolicy.css";
+import { Link } from "react-router-dom";
 
 const PrivacyPolicy = () => {
   return (
     <div className="privacy-container">
+      <Link className="back-button" to="/register">
+        <div>Back</div>
+      </Link>
       <h1>Privacy Policy</h1>
       {/* <p>Last updated: [Date]</p> */}
 

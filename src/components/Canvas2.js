@@ -7,8 +7,10 @@ const Canvas2 = () => {
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
-    canvas.width = 550;
-    canvas.height = 750;
+    // canvas.width = 550;
+    // canvas.height = 750;
+    canvas.width = document.documentElement.clientWidth * 0.38;
+    canvas.height = document.documentElement.clientHeight * 0.9;
 
     let frameCount = 0;
     let animationFrameId;
@@ -132,9 +134,13 @@ const Canvas2 = () => {
         radius: 120,
       };
 
-      // window.addEventListener("resize", (e) => {
-      //   this.resize(e.target.window.innerWidth, e.target.window.innerHeight);
-      // });
+      window.addEventListener("resize", (e) => {
+        this.resize(
+          document.documentElement.clientWidth * 0.38,
+          document.documentElement.clientHeight * 0.9
+        );
+      });
+
       canvas.addEventListener("mousemove", (e) => {
         if (this.mouse.pressed) {
           this.mouse.x = e.offsetX;
@@ -198,24 +204,28 @@ const Canvas2 = () => {
         }
       }
     }
-    // resize(width, height) {
-    //   this.canvas.width = width;
-    //   this.canvas.height = height;
-    //   // this.canvas2.width = width;
-    //   // this.canvas2.height = height;
-    //   this.width = width;
-    //   this.height = height;
-    //   // const gradient = this.context.createLinearGradient(0, 0, width, height);
-    //   // gradient.addColorStop(0, "white");
-    //   // gradient.addColorStop(0.5, "gold");
-    //   // gradient.addColorStop(1, "orangered");
+    resize(width, height) {
+      this.canvas.width = width;
+      this.canvas.height = height;
+      // this.canvas2.width = width;
+      // this.canvas2.height = height;
+      this.width = width;
+      this.height = height;
+      // const gradient = this.context.createLinearGradient(0, 0, width, height);
+      // gradient.addColorStop(0, "white");
+      // gradient.addColorStop(0.5, "gold");
+      // gradient.addColorStop(1, "orangered");
 
-    //   this.context.fillStyle = "white";
-    //   this.context.strokeStyle = "white";
-    //   this.particles.forEach((particle) => {
-    //     particle.reset();
-    //   });
-    // }
+      // this.context.fillStyle = "white";
+      // this.context.strokeStyle = "white";
+
+      this.context.fillStyle = "#5976ff";
+      this.context.strokeStyle = "#a7c750";
+
+      this.particles.forEach((particle) => {
+        particle.reset();
+      });
+    }
   }
   // const effect = new Effect(canvas, ctx);
 
