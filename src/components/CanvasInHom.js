@@ -8,13 +8,24 @@ const Canvas = () => {
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
-    canvas.width = 850;
-    canvas.height = 390;
+
+    // canvas.width = document.documentElement.clientWidth * 0.5;
+    // canvas.height = document.documentElement.clientHeight * 2;
+
+    // canvas.width = 850;
+    // canvas.height = 390;
 
     const canvas2 = canvasRef2.current;
     const context2 = canvas2.getContext("2d");
-    canvas2.width = 860;
-    canvas2.height = 395;
+
+    // canvas2.width = 860;
+    // canvas2.height = 395;
+
+    canvas.width = document.documentElement.clientWidth;
+    canvas.height = document.documentElement.clientHeight * 0.5;
+
+    canvas2.width = document.documentElement.clientWidth;
+    canvas2.height = document.documentElement.clientHeight * 0.5;
 
     let frameCount = 0;
     let animationFrameId;
@@ -59,7 +70,7 @@ const Canvas = () => {
   class Particle {
     constructor(effect) {
       this.effect = effect;
-      this.radius = Math.floor(Math.random() * 40 + 10);
+      this.radius = Math.floor(Math.random() * 40 + 8);
       this.buffer = this.radius * -2;
       this.x =
         this.radius + Math.random() * (this.effect.width - this.radius * 2);
@@ -132,7 +143,7 @@ const Canvas = () => {
         x: 0,
         y: 0,
         pressed: false,
-        radius: 200,
+        radius: 100,
       };
 
       // window.addEventListener("resize", (e) => {
@@ -232,8 +243,8 @@ const Canvas = () => {
 
   return (
     <div className="canvas-home">
-      <canvas ref={canvasRef} className="canvasChat-element" />
-      <canvas ref={canvasRef2} className="canvasChat-element" />
+      <canvas ref={canvasRef} className="canvas-home-element" />
+      <canvas ref={canvasRef2} className="canvas-home-element" />
     </div>
   );
 };

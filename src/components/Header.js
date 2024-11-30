@@ -8,6 +8,9 @@ import WhatshotRoundedIcon from "@mui/icons-material/WhatshotRounded";
 import SettingsRoundedIcon from "@mui/icons-material/Settings";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import NotificationsRoundedIcon from "@mui/icons-material/NotificationsRounded";
+import PersonSearchRoundedIcon from "@mui/icons-material/PersonSearchRounded";
+import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import { userActions, userAuthed } from "../features/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useLogoutUserApiMutation } from "../features/user/userApiSlice";
@@ -27,6 +30,7 @@ const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [curWidth, setCurWidth] = useState(window.innerWidth);
+  const [mobileSearch, setMobileSearch] = useState(true);
   const user = useSelector(userAuthed);
   const [logoutUserApi, { data, error, isLoading, isSuccess: logoutSuccess }] =
     useLogoutUserApiMutation();
@@ -71,7 +75,7 @@ const Header = () => {
 
   return (
     <div className="header">
-      {curWidth > 900 && (
+      {curWidth > 600 && (
         <div className="header-left">
           <img
             src="/images/slyder-s.png"
@@ -131,6 +135,41 @@ const Header = () => {
             cursor: "pointer",
           }}
         />
+
+        {curWidth < 650 && (
+          <>
+            {mobileSearch && (
+              <div className="header-left-mobile">
+                <input
+                  type="text"
+                  placeholder="Search"
+                  onChange={(e) => setQuery(e.target.value)}
+                  value={query}
+                />
+              </div>
+            )}
+            {!mobileSearch ? (
+              <PersonSearchRoundedIcon
+                sx={{
+                  fontSize: 30,
+                  color: "#a7c750;",
+                  cursor: "pointer",
+                }}
+                onClick={() => setMobileSearch(true)}
+              />
+            ) : (
+              <HighlightOffRoundedIcon
+                sx={{
+                  fontSize: 30,
+                  color: "#a7c750;",
+                  cursor: "pointer",
+                }}
+                onClick={() => setMobileSearch(false)}
+              />
+            )}
+          </>
+        )}
+
         {showNotifications && notifications.length > 0 && (
           <div className="notifications-container">
             {notifications?.map((notification) => (
@@ -143,47 +182,47 @@ const Header = () => {
           </div>
         )}
       </div>
-      {curWidth > 900 && (
-        <div className="header-right">
+
+      <div className="header-right">
+        <div
+          onClick={() => setMenuClicked(!menuClicked)}
+          className="header-user"
+        >
+          <div className="header-user-img-wrapper">
+            <img src={user?.picture} alt="post" />
+          </div>
+          <SettingsRoundedIcon
+            className="user-settings-icon"
+            sx={{
+              fontSize: 25,
+              color: "#a7c750",
+              cursor: "pointer",
+              backgroundColor: "#161921",
+              borderRadius: "50%",
+              padding: "3px",
+            }}
+          />
           <div
-            onClick={() => setMenuClicked(!menuClicked)}
-            className="header-user"
+            className={
+              menuClicked
+                ? "user-header-menu show-user-header-menu"
+                : "user-header-menu"
+            }
           >
-            <div className="header-user-img-wrapper">
-              <img src={user?.picture} alt="post" />
-            </div>
-            <SettingsRoundedIcon
-              className="user-settings-icon"
-              sx={{
-                fontSize: 25,
-                color: "#a7c750",
-                cursor: "pointer",
-                backgroundColor: "#161921",
-                borderRadius: "50%",
-                padding: "3px",
-              }}
-            />
             <div
-              className={
-                menuClicked
-                  ? "user-header-menu show-user-header-menu"
-                  : "user-header-menu"
-              }
+              className="menu-item"
+              onClick={() => navigate(`/${user?.username}`)}
             >
-              <div
-                className="menu-item"
-                onClick={() => navigate(`/${user?.username}`)}
-              >
-                <h3>Profile</h3>
-                <AccountCircleRoundedIcon
-                  sx={{
-                    fontSize: 20,
-                    color: "#a7c750",
-                    marginRight: "10px",
-                  }}
-                />
-              </div>
-              {/* <div className="menu-item">
+              <h3>Profile</h3>
+              <AccountCircleRoundedIcon
+                sx={{
+                  fontSize: 20,
+                  color: "#a7c750",
+                  marginRight: "10px",
+                }}
+              />
+            </div>
+            {/* <div className="menu-item">
                 <h3>Settings</h3>
                 <SettingsRoundedIcon
                   sx={{
@@ -193,13 +232,13 @@ const Header = () => {
                   }}
                 />
               </div> */}
-              <h1 className="logout-btn-header" onClick={handleLogout}>
-                Logout
-              </h1>
-            </div>
+            <h1 className="logout-btn-header" onClick={handleLogout}>
+              Logout
+            </h1>
           </div>
         </div>
-      )}
+      </div>
+
       {query && <UsersSearch query={query} setQuery={setQuery} />}
       {postId && (
         <PostPreveiw

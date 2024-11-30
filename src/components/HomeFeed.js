@@ -84,9 +84,9 @@ const HomeFeed = ({ setNewPost, user, redirectionPage }) => {
     <>
       <div className="post">
         <div className="post-input-img">
-          <div className="post-input-img-wrapper">
+          {/* <div className="post-input-img-wrapper">
             <img src={user?.picture} alt="post" />
-          </div>
+          </div> */}
           <button
             type="button"
             className="post-new-button"

@@ -4,8 +4,15 @@
   /* position: absolute; */
   /* top: 90px; */
   /* right: 50px; */
-  width: 200px;
-  height: 500px;
+  /* width: 200px; */
+  height: 15vh;
+  @media screen and (max-height: 810px) {
+    height: 10vh;
+  }
+  /* height: ; */
+
+  /* height: 100%; */
+
   /* background-color: rgb(12, 12, 48); */
   display: flex;
   justify-content: center;
@@ -22,6 +29,11 @@
   cursor: pointer;
   border-radius: 15px;
   border: 1px solid var(--bg-s-border);
+  width: 100%;
+
+  @media screen and (max-height: 810px) {
+    height: 55%;
+  }
 
   /* filter: blur(10px) contrast(30); */
 }

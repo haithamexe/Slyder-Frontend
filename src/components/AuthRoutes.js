@@ -10,6 +10,7 @@ import {
 } from "../features/user/userSlice";
 
 const REACT_INTERVAL_TIMER = 15 * 60 * 1000;
+// const REACT_INTERVAL_TIMER = 15 * 60;
 
 const AuthRoutes = () => {
   const navigate = useNavigate();

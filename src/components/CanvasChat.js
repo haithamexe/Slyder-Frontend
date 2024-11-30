@@ -21,7 +21,7 @@ const CanvasChat = (props) => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
     canvas.width = 370;
-    canvas.height = 530;
+    canvas.height = document.documentElement.clientHeight * 0.546;
 
     let frameCount = 0;
     let animationFrameId;
@@ -151,9 +151,9 @@ const CanvasChat = (props) => {
         radius: 80,
       };
 
-      // window.addEventListener("resize", (e) => {
-      //   this.resize(e.target.window.innerWidth, e.target.window.innerHeight);
-      // });
+      window.addEventListener("resize", (e) => {
+        this.resize(370, document.documentElement.clientHeight * 0.546);
+      });
       canvas.addEventListener("mousemove", (e) => {
         if (this.mouse.pressed) {
           this.mouse.x = e.offsetX;
@@ -217,24 +217,28 @@ const CanvasChat = (props) => {
         }
       }
     }
-    // resize(width, height) {
-    //   this.canvas.width = width;
-    //   this.canvas.height = height;
-    //   // this.canvas2.width = width;
-    //   // this.canvas2.height = height;
-    //   this.width = width;
-    //   this.height = height;
-    //   // const gradient = this.context.createLinearGradient(0, 0, width, height);
-    //   // gradient.addColorStop(0, "white");
-    //   // gradient.addColorStop(0.5, "gold");
-    //   // gradient.addColorStop(1, "orangered");
+    resize(width, height) {
+      // this.canvas.width = width;
+      this.canvas.height = height;
+      // this.canvas2.width = width;
+      // this.canvas2.height = height;
+      // this.width = width;
+      this.height = height;
+      // const gradient = this.context.createLinearGradient(0, 0, width, height);
+      // gradient.addColorStop(0, "white");
+      // gradient.addColorStop(0.5, "gold");
+      // gradient.addColorStop(1, "orangered");
 
-    //   this.context.fillStyle = "white";
-    //   this.context.strokeStyle = "white";
-    //   this.particles.forEach((particle) => {
-    //     particle.reset();
-    //   });
-    // }
+      // this.context.fillStyle = "white";
+      // this.context.strokeStyle = "white";
+
+      this.context.fillStyle = colorsChangedPri;
+      this.context.strokeStyle = colorChangedSec;
+
+      this.particles.forEach((particle) => {
+        particle.reset();
+      });
+    }
   }
   // const effect = new Effect(canvas, ctx);
 

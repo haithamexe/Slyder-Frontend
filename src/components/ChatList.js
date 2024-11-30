@@ -2,7 +2,7 @@ import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import ChatUsers from "./ChatUsers";
 import ChatWindow from "./ChatWindow";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { userAuthed } from "../features/user/userSlice";
 import UsersSearchChat from "./UsersSearchChat";
@@ -14,11 +14,39 @@ const ChatList = () => {
   const [addConvo, setAddConvo] = useState(false);
   const [query, setQuery] = useState("");
   const { activeConversation } = useSocketContext();
+  const [isMobile, setIsMobile] = useState(false);
+  const [mobileMenu, setMobileMenu] = useState(true);
+
+  useEffect(() => {
+    window.addEventListener("resize", () => {
+      setMobileMenu(window.innerWidth < 768);
+    });
+
+    if (window.innerWidth < 768) {
+      setIsMobile(true);
+    }
+
+    return () => {
+      window.removeEventListener("resize", () => {
+        setMobileMenu(window.innerWidth < 768);
+      });
+    };
+  }, []);
 
   return (
     <>
       <div className="chat-list">
-        <div className="list">
+        <div className="chat-mobile-menu">
+          <MoreVertRoundedIcon
+            sx={{
+              fontSize: 30,
+              color: "#a7c750;",
+              cursor: "pointer",
+            }}
+            onClick={() => setMobileMenu(!mobileMenu)}
+          />
+        </div>
+        {/* <div className="list">
           <div className="Messages-header">
             {addConvo ? (
               <input
@@ -46,20 +74,10 @@ const ChatList = () => {
             {query && <UsersSearchChat query={query} setQuery={setQuery} />}
           </div>
           <div className="chat-body">
-            {/* <div className="chat-user">
-              <div className="chat-user-img">
-                <img src="/images/demo/3.png" alt="user" />
-              </div>
-              <div className="chat-user-info">
-                <h1>John Doe</h1>
-                <p>
-                  hello didnt see at the office <span>1d</span>
-                </p>
-              </div>
-            </div> */}
             <ChatUsers setCurrentChat={setCurrentChat} />
           </div>
-        </div>
+        </div> */}
+
         <div className="chat-section">
           {!activeConversation ? (
             <div className="chat-intro">

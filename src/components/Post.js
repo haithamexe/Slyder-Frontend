@@ -157,7 +157,11 @@ const Post = ({ postId, setFetchPostId, stateChanged }) => {
       <div className="feed-post">
         <div className="feed-post-header">
           <div className="feed-post-header-img">
-            <img src={fetchedPost?.user?.picture} alt="post" />
+            <img
+              src={fetchedPost?.user?.picture}
+              alt="post"
+              onClick={() => navigate("/" + fetchedPost?.user?.username)}
+            />
           </div>
           <div className="feed-post-header-info">
             <div className="feed-post-header-info-name">
