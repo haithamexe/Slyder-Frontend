@@ -37,11 +37,16 @@ const ChatUser = ({ conversation, setCurrentChat }) => {
           {conversation?.user?.firstName + " " + conversation?.user?.surName}
         </h1>
         <p>
-          {conversation?.lastMessage?.message}
-          <span>
-            {conversation?.lastMessage?.createdAt &&
-              formatTimeAgo(conversation?.lastMessage?.createdAt)}
-          </span>
+          {conversation?.lastMessage?.message.toString().length > 15
+            ? conversation?.lastMessage?.message.toString().substring(0, 15) +
+              "..."
+            : conversation?.lastMessage?.message.toString()}
+          <div>
+            <span>
+              {conversation?.lastMessage?.createdAt &&
+                formatTimeAgo(conversation?.lastMessage?.createdAt)}
+            </span>
+          </div>
         </p>
       </div>
     </div>

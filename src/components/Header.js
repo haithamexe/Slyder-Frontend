@@ -30,7 +30,7 @@ const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [curWidth, setCurWidth] = useState(window.innerWidth);
-  const [mobileSearch, setMobileSearch] = useState(true);
+  const [mobileSearch, setMobileSearch] = useState(false);
   const user = useSelector(userAuthed);
   const [logoutUserApi, { data, error, isLoading, isSuccess: logoutSuccess }] =
     useLogoutUserApiMutation();
