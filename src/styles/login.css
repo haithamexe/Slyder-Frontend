@@ -142,3 +142,33 @@
     border: 3px solid rgb(189, 55, 55) !important;
   }
 }
+
+.alert-fail-login {
+  background-color: #b91c1c;
+  color: #000000;
+
+  padding: 10px;
+  border-radius: 10px;
+  margin: 10px 0;
+  text-align: center;
+  position: absolute;
+  z-index: 5;
+  bottom: 0;
+  right: 0;
+  padding: 15px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  visibility: hidden;
+  font-weight: 500;
+
+  @media screen and (max-width: 850px) {
+    padding: 0.7rem;
+    width: 50%;
+  }
+
+  /* height: 60px; */
+}
+
+.show-login-alert {
+  visibility: visible;
+}

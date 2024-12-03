@@ -28,6 +28,9 @@
   /* align-items: center; */
   /* justify-content: center; */
   width: 40%;
+  @media screen and (max-width: 850px) {
+    width: 70vw;
+  }
   margin-top: 20px;
   margin-bottom: 20px;
   padding: 20px;
@@ -97,9 +100,14 @@
   font-weight: 200;
 }
 
-.inNewPost {
-  /* margin-left: 10px; */
+.new-post-body .post-options {
+  margin-left: 0;
   padding-left: 0;
+}
+
+.inNewPost {
+  margin-left: 0;
+  /* padding-left: 0; */
 }
 
 .new-post-footer button {
@@ -133,6 +141,10 @@
 .new-post-img img {
   width: 100%;
   height: 100%;
+
+  @media screen and (max-width: 850px) {
+    width: 80%;
+  }
   /* width: 200px; */
   object-fit: contain;
   border-radius: 10px;

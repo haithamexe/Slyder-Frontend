@@ -78,7 +78,6 @@ const Home = ({ redirectionPage }) => {
                   color: "#0d0e10",
                   padding: 0,
                   margin: 0,
-                  // height: 30,
                   position: "absolute",
                   top: 350,
                   left: -12,

@@ -38,7 +38,13 @@ const FormGender = (props) => {
           />
         </div>
 
-        <div className={errors?.gender ? "radio-select" : "radio-select"}>
+        <div
+          className={
+            errors?.gender
+              ? "register-error-gender radio-select"
+              : "radio-select"
+          }
+        >
           <h3>Other</h3>
           <input
             type="radio"

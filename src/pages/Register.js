@@ -89,6 +89,9 @@ const Register = (props) => {
   const [regError, setRegError] = useState(false);
   const [regErrorMsg, setRegErrorMsg] = useState("");
 
+  const [successAlert, setSuccessAlert] = useState(false);
+  const [failAlert, setFailAlert] = useState(false);
+
   useEffect(() => {
     if (user) {
       navigate("/", { replace: true });
@@ -106,12 +109,23 @@ const Register = (props) => {
     if (isSuccess) {
       setRegError(false);
       setRegErrorMsg("");
-      navigate("/login", { replace: true });
+      setSuccessAlert(true);
+
+      setTimeout(() => {
+        setSuccessAlert(false);
+        navigate("/login", { replace: true });
+      }, 3000);
     } else if (error) {
       setRegError(true);
-      console.log(error);
+      setFailAlert(true);
       setRegErrorMsg(error?.data?.message);
-      alert("Error", error?.message);
+
+      setTimeout(() => {
+        setFailAlert(false);
+        setRegError(false);
+        setRegErrorMsg("");
+      }, 3000);
+      console.log(error);
     }
   }, [isSuccess, error]);
 
@@ -131,6 +145,29 @@ const Register = (props) => {
         />
         <Canvas />
       </div>
+      <dev
+        className={
+          successAlert
+            ? "alert-success-register show-register-alert"
+            : "alert-success-register"
+        }
+        onClick={() => setSuccessAlert(false)}
+      >
+        <p>
+          Welcome to Slyder! Please verify your email to complete the
+          registration .
+        </p>
+      </dev>
+      <dev
+        className={
+          failAlert
+            ? "alert-fail-register show-register-alert-fail"
+            : "alert-fail-register"
+        }
+        onClick={() => setFailAlert(false)}
+      >
+        <p>{regErrorMsg}</p>
+      </dev>
     </div>
   );
 };

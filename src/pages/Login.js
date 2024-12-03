@@ -46,6 +46,9 @@ const Login = (props) => {
 
   const [error, setError] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
+
+  const [alert, setAlert] = useState(false);
+
   const schema = yup.object().shape({
     email: yup
       .string()
@@ -92,6 +95,12 @@ const Login = (props) => {
       setErrorMsg("");
       navigate("/", { replace: true });
     } else if (loginError) {
+      setAlert(true);
+
+      setTimeout(() => {
+        setAlert(false);
+      }, 3000);
+
       setError(true);
       setErrorMsg(loginError);
     }
@@ -110,6 +119,14 @@ const Login = (props) => {
           {...props}
         />
         <Canvas2 />
+      </div>
+      <div
+        className={
+          alert ? "alert-fail-login show-login-alert" : "alert-fail-login"
+        }
+        onClick={() => setAlert(false)}
+      >
+        <p>Invalid Email or Password</p>
       </div>
     </div>
   );
