@@ -47,7 +47,9 @@ const PostPreveiw = ({ postId, setFetchPostId, origin, originUsername }) => {
   const [pageRootUrl, setPageRootUrl] = useState(window.location.pathname);
   const [commentsCount, setCommentsCount] = useState(0);
   const [isSaved, setIsSaved] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const imageRef = useRef(null);
+  const [showMobileComments, setShowMobileComments] = useState(false);
   const [
     likePost,
     { data: likeData, error: likeError, isLoading: likeLoading },
@@ -109,6 +111,20 @@ const PostPreveiw = ({ postId, setFetchPostId, origin, originUsername }) => {
     unsavePost({ postId: post?._id, userId: currentUser?.id });
   };
 
+  useEffect(() => {
+    window.addEventListener("resize", () => {
+      setIsMobile(window.innerWidth < 1100);
+    });
+
+    setIsMobile(window.innerWidth < 1100);
+
+    return () => {
+      window.removeEventListener("resize", () => {
+        setIsMobile(window.innerWidth < 1100);
+      });
+    };
+  }, []);
+
   const handleClickOutside = (e) => {
     if (previewRef.current && !previewRef.current.contains(e.target)) {
       if (pageRootUrl.includes("/feed")) {
@@ -167,6 +183,8 @@ const PostPreveiw = ({ postId, setFetchPostId, origin, originUsername }) => {
         }
       });
 
+      setCommentsCount(post?.comments?.length);
+
       post?.savedBy?.map((save) => {
         if (save?.user === currentUser?.id) {
           setIsSaved(true);
@@ -186,6 +204,40 @@ const PostPreveiw = ({ postId, setFetchPostId, origin, originUsername }) => {
   return (
     <div className="post-preveiw-container">
       <div className="post-preveiw-inside-container" ref={previewRef}>
+        <div
+          className={
+            !isMobile
+              ? "post-preveiw-user-info-mobile hide"
+              : "post-preveiw-user-info-mobile "
+          }
+        >
+          <div className="post-preveiw-user-img">
+            <img
+              src={post?.user?.picture}
+              alt="user"
+              onClick={(e) => {
+                setFetchPostId("");
+                navigate("/" + post?.user?.username);
+              }}
+              style={{ cursor: "pointer" }}
+            />
+          </div>
+          <div className="post-preveiw-user-name">
+            <h1
+              onClick={() => {
+                setFetchPostId("");
+                navigate("/" + post?.user?.username);
+              }}
+              style={{ cursor: "pointer" }}
+            >
+              {post?.user?.firstName + " " + post?.user?.surName}
+            </h1>
+            <p title={post?.createdAt}>
+              {post?.createdAt && formatTimeAgo(post?.createdAt)}
+            </p>
+          </div>
+        </div>
+
         <CloseRounded
           className="post-preveiw-close-icon"
           sx={{
@@ -196,18 +248,152 @@ const PostPreveiw = ({ postId, setFetchPostId, origin, originUsername }) => {
           onClick={closePostPreveiw}
         />
         {post?.image && (
-          <div
-            className="post-preveiw-img-container"
-            style={
-              imageRef.current?.width >= imageRef.current?.height
-                ? { width: imageRef.current?.width }
-                : {}
-            }
-          >
-            <img src={post?.image} alt="post" ref={imageRef} />
-          </div>
+          <>
+            <div
+              className="post-preveiw-img-container"
+              style={
+                imageRef.current?.width >= imageRef.current?.height
+                  ? { width: imageRef.current?.width }
+                  : {}
+              }
+            >
+              <img src={post?.image} alt="post" ref={imageRef} />
+
+              <div
+                className={
+                  !isMobile
+                    ? "post-preveiw-img-mobile hide"
+                    : "post-preveiw-img-mobile"
+                }
+              >
+                <div className="post-preveiw-post-footer-icons">
+                  <div className="post-icon-with-numbers mobile-numbers">
+                    {isLiked ? (
+                      <FavoriteRoundedIcon
+                        onClick={handleReaction}
+                        className={
+                          isLiked
+                            ? "post-like-new post-like-animate"
+                            : "post-like-new "
+                        }
+                        sx={{
+                          fontSize: 27,
+                          color: "#b51d24",
+                          cursor: "pointer",
+                        }}
+                      />
+                    ) : (
+                      <FavoriteBorderRoundedIcon
+                        onClick={handleReaction}
+                        className={
+                          isLiked
+                            ? "post-like-new post-like-animate"
+                            : "post-like-new "
+                        }
+                        sx={{
+                          fontSize: 27,
+                          color: "#a7c750",
+                          cursor: "pointer",
+                        }}
+                      />
+                    )}
+                    <p className="post-like-text-icon">
+                      {post?.likes?.length || 0}
+                    </p>
+                  </div>
+                  <div className="post-preveiw-post-footer-icons-comments mobile-comments">
+                    <ChatBubbleOutlineRoundedIcon
+                      onClick={() => setShowMobileComments(true)}
+                      sx={{
+                        fontSize: 27,
+                        color: "#a7c750;",
+                        cursor: "pointer",
+                      }}
+                    />
+                    <p className="post-like-text-icon">{commentsCount || 0}</p>
+                  </div>
+
+                  {isSaved ? (
+                    <BookmarkRoundedIcon
+                      className="post-save-veiw mobile-save"
+                      sx={{
+                        fontSize: 27,
+                        color: "#a7c750;",
+                        cursor: "pointer",
+                      }}
+                      onClick={handleSaveState}
+                    />
+                  ) : (
+                    <TurnedInNotRoundedIcon
+                      className="post-save-veiw mobile-save"
+                      sx={{
+                        fontSize: 27,
+                        color: "#a7c750;",
+                        cursor: "pointer",
+                      }}
+                      onClick={handleSaveState}
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div
+              className={
+                !showMobileComments || !isMobile
+                  ? "post-preveiw-post-comments-mobile hide"
+                  : "post-preveiw-post-comments-mobile"
+              }
+            >
+              <CloseRounded
+                className="mobile-comment-close"
+                sx={{
+                  fontSize: 27,
+                  color: "#a7c750;",
+                  cursor: "pointer",
+                }}
+                onClick={() => setShowMobileComments(false)}
+              />
+              <div className="post-preveiw-post-comments-mobile-list">
+                <CommentsList
+                  postId={post?._id}
+                  setCommentsCount={setCommentsCount}
+                  setFetchPostId={setFetchPostId}
+                />
+              </div>
+              <div className="post-preveiw-post-footer-comment mobile-input">
+                <img src={currentUser?.picture} alt="user" />
+                <input
+                  type="text"
+                  placeholder="Write a comment"
+                  value={onFlyComment}
+                  onChange={(e) => setOnFlyComment(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleCommentPost();
+                    }
+                  }}
+                />
+                <SendRoundedIcon
+                  className="comment-send-icon-veiw"
+                  sx={{
+                    fontSize: 27,
+                    color: "#a7c750;",
+                    cursor: "pointer",
+                  }}
+                  onClick={handleCommentPost}
+                />
+              </div>
+            </div>
+          </>
         )}
-        <div className="post-preveiw-info-container">
+        <div
+          className={
+            isMobile
+              ? "post-preveiw-info-container hide"
+              : "post-preveiw-info-container"
+          }
+        >
           <div className="post-preveiw-user-info">
             <div className="post-preveiw-user-img">
               <img
@@ -324,6 +510,11 @@ const PostPreveiw = ({ postId, setFetchPostId, origin, originUsername }) => {
                 placeholder="Write a comment"
                 value={onFlyComment}
                 onChange={(e) => setOnFlyComment(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleCommentPost();
+                  }
+                }}
               />
               <SendRoundedIcon
                 className="comment-send-icon-veiw"
