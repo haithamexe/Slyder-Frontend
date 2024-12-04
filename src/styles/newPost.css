@@ -132,6 +132,11 @@
   align-items: center;
   justify-content: center;
   height: 450px;
+
+  @media screen and (max-height: 800px) {
+    height: 40vh;
+  }
+
   /* width: 900px; */
   border-radius: 15px;
   /* border: 5px solid var(--bg-s-secondary); */
@@ -144,6 +149,10 @@
 
   @media screen and (max-width: 850px) {
     width: 80%;
+  }
+
+  @media screen and (max-height: 800px) {
+    height: 35vh;
   }
   /* width: 200px; */
   object-fit: contain;

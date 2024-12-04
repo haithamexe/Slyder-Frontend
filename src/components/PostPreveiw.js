@@ -18,6 +18,7 @@ import PersonRemoveRoundedIcon from "@mui/icons-material/PersonRemoveRounded";
 import InsertLinkRoundedIcon from "@mui/icons-material/InsertLinkRounded";
 import TurnedInNotRoundedIcon from "@mui/icons-material/TurnedInNotRounded";
 import BookmarkRoundedIcon from "@mui/icons-material/BookmarkRounded";
+import axios from "axios";
 
 import { useGetUserWithIdApiQuery } from "../features/user/userApiSlice";
 import { useEffect, useState, useRef } from "react";
@@ -68,7 +69,8 @@ const PostPreveiw = ({ postId, setFetchPostId, origin, originUsername }) => {
   const [unsavePost, { data: unsaveData, error: unsaveError }] =
     useUnsavePostMutation();
 
-  const { data: post } = useGetPostQuery(postId);
+  // const { data: post } = useGetPostQuery(postId);
+  const [post, setPost] = useState(null);
 
   const handleReaction = () => {
     if (isLiked) {
@@ -164,7 +166,6 @@ const PostPreveiw = ({ postId, setFetchPostId, origin, originUsername }) => {
   };
 
   useEffect(() => {
-    console.log(postId, "postId");
     document.addEventListener("mousedown", handleClickOutside);
     window.history.pushState(
       null,
@@ -200,7 +201,17 @@ const PostPreveiw = ({ postId, setFetchPostId, origin, originUsername }) => {
     };
   }, [post, postId]);
 
-  console.log(post);
+  useEffect(() => {
+    if (postId) {
+      axios
+        .get(`${process.env.REACT_APP_BACKEND_URL}api/post/${postId}`)
+        .then((res) => {
+          setPost(res.data);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [postId]);
+
   return (
     <div className="post-preveiw-container">
       <div className="post-preveiw-inside-container" ref={previewRef}>

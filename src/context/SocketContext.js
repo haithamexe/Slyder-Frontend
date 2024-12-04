@@ -245,6 +245,7 @@ export const SocketContextProvider = ({ children }) => {
       socket?.emit("joinConversationRoom", user.id);
 
       socket?.on("getOnlineUsers", (users) => {
+        console.log(users);
         setOnlineUsers(users);
       });
 

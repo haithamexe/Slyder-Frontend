@@ -9,6 +9,7 @@
   align-items: center;
   justify-content: center;
   gap: 0 35px;
+  overflow-y: hidden;
 }
 
 .trending-list {
@@ -104,6 +105,10 @@
   color: rgb(109, 109, 109);
   /* height: 73.7vh; */
   border: 5px solid var(--bg-s-secondary);
+
+  @media screen and (max-height: 810px) {
+    height: 74.5vh;
+  }
 }
 
 .note-header {

@@ -4,14 +4,21 @@ import { useSocketContext } from "../context/SocketContext";
 import CircleRoundedIcon from "@mui/icons-material/CircleRounded";
 
 const ChatAvatars = () => {
-  const { conversations, onlineUsers } = useSocketContext();
+  const { conversations, onlineUsers, setActiveConversationFunc } =
+    useSocketContext();
 
   return (
     <>
       {conversations?.map((conversation, index) => (
-        <div className="chat-mobile-user">
+        <div className="chat-mobile-user" key={index}>
           <div className="chat-user-img">
-            <img src={conversation?.user?.picture} alt="user" />
+            <img
+              src={conversation?.user?.picture}
+              alt="user"
+              onClick={() => {
+                setActiveConversationFunc(conversation?._id);
+              }}
+            />
           </div>
           {onlineUsers.includes(conversation?.user?._id) ? (
             <CircleRoundedIcon

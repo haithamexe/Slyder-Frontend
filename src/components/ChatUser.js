@@ -15,7 +15,7 @@ const ChatUser = ({ conversation, setCurrentChat }) => {
       className="chat-user"
       onClick={() => {
         setActiveConversationFunc(conversation._id);
-        setCurrentChat(conversation);
+        // setCurrentChat(conversation);
       }}
     >
       <div className="chat-user-img">

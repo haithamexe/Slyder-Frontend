@@ -123,6 +123,12 @@
   border: 5px var(--bg-s-fourth) solid;
   cursor: pointer;
   margin-bottom: 10px;
+
+  @media screen and (max-height: 800px) {
+    height: 10.4vh;
+    width: 10.4vh;
+    margin-bottom: 140px;
+  }
 }
 
 .followers {

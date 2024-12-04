@@ -134,8 +134,8 @@
   overflow: hidden;
   border: 1px solid var(--bg-s-border);
 
-  @media screen and (max-height: 700px) {
-    height: 81.5vh;
+  @media screen and (max-height: 800px) {
+    height: 83vh;
   }
 }
 .list {
