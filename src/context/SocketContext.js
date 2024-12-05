@@ -22,6 +22,7 @@ export const SocketContextProvider = ({ children }) => {
   const [conversations, setConversations] = useState([]);
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const [newConversationsFetched, setNewConversationsFetched] = useState(false);
+  const [userTyping, setUserTyping] = useState(false);
   const user = useSelector(userAuthed);
   const [activeConversationMessages, setActiveConversationMessages] = useState(
     []
@@ -32,6 +33,14 @@ export const SocketContextProvider = ({ children }) => {
     baseURL: process.env.REACT_APP_BACKEND_URL,
     withCredentials: true,
   });
+
+  const setUserIsTyping = (conversationId) => {
+    socket?.emit("typing", conversationId);
+  };
+
+  const setUserHasStoppedTyping = (conversationId) => {
+    socket?.emit("stopTyping", conversationId);
+  };
 
   const setActiveConversationFunc = (conversationId) => {
     const conversation = conversations.find((c) => c._id === conversationId);
@@ -249,6 +258,57 @@ export const SocketContextProvider = ({ children }) => {
         setOnlineUsers(users);
       });
 
+      socket?.on("messageSeen", (conversationId) => {
+        setConversations((prev) =>
+          prev.map((c) => {
+            if (c._id === conversationId) {
+              return {
+                ...c,
+                lastMessage: {
+                  ...c.lastMessage,
+                  status: "seen",
+                },
+              };
+            }
+            return c;
+          })
+        );
+      });
+
+      socket?.on("typing", (conversationId) => {
+        if (activeConversation?._id === conversationId) {
+          setUserTyping(true);
+        }
+        setConversations((prev) =>
+          prev.map((c) => {
+            if (c._id === conversationId) {
+              return {
+                ...c,
+                typing: true,
+              };
+            }
+            return c;
+          })
+        );
+      });
+
+      socket?.on("stopTyping", (conversationId) => {
+        if (activeConversation?._id === conversationId) {
+          setUserTyping(false);
+        }
+        setConversations((prev) =>
+          prev.map((c) => {
+            if (c._id === conversationId) {
+              return {
+                ...c,
+                typing: false,
+              };
+            }
+            return c;
+          })
+        );
+      });
+
       socket?.on("newNotification", (notification) => {
         setNotifications((prev) => [notification, ...prev]);
         setUnreadCount((prev) => prev + 1);
@@ -350,6 +410,9 @@ export const SocketContextProvider = ({ children }) => {
     activeConversation,
     fetchMessages,
     hasMoreMessages,
+    setUserIsTyping,
+    setUserHasStoppedTyping,
+    userTyping,
   };
 
   return (

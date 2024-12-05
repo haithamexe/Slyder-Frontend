@@ -27,6 +27,9 @@ const ChatWindow = ({ activeConversation }) => {
     deleteMessages,
     fetchMessages,
     hasMoreMessages,
+    setUserIsTyping,
+    setUserHasStoppedTyping,
+    userTyping,
   } = useSocketContext();
   const inputRef = useRef(null);
   const [messagesLoading, setMessagesLoading] = useState(true);
@@ -34,6 +37,7 @@ const ChatWindow = ({ activeConversation }) => {
   const messagesContainerRef = useRef(null);
   const observerRef = useRef(null);
   const pageRef = useRef(0);
+  const typingRef = useRef(false);
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -92,6 +96,18 @@ const ChatWindow = ({ activeConversation }) => {
     }
   }, [activeConversation, hasMoreMessages]);
 
+  useEffect(() => {
+    if (newMessage.length > 0 && typingRef.current === false) {
+      setUserIsTyping(activeConversation?._id);
+      typingRef.current = true;
+    }
+
+    if (newMessage.length === 0 && typingRef.current === true) {
+      setUserHasStoppedTyping(activeConversation?._id);
+      typingRef.current = false;
+    }
+  }, [newMessage]);
+
   return (
     <div className="messages-container">
       <div className="messages-header">
@@ -125,6 +141,22 @@ const ChatWindow = ({ activeConversation }) => {
       </div>
       <div className="messages-body">
         <div className="msg-container" ref={messagesContainerRef}>
+          <div
+            className={
+              userTyping
+                ? "messages-footer-status left"
+                : "messages-footer-status"
+            }
+          >
+            {userTyping ? (
+              <p>{activeConversation?.user?.firstName + " is typing..."}</p>
+            ) : (
+              activeConversation?.lastMessage?.sender === user._id &&
+              (activeConversation?.lastMessage?.status === "sent"
+                ? "Sent"
+                : "seen")
+            )}
+          </div>
           {activeConversationMessages?.map((message, index) => (
             <Message key={index} msg={message} curUser={user} />
           ))}

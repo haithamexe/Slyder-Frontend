@@ -183,7 +183,7 @@
 .chat-user-info {
   display: flex;
   flex-direction: column;
-  gap: 4px 0;
+  /* gap: -2vh 0; */
 }
 
 .chat-user-info p {
@@ -196,6 +196,14 @@
   /* display: block; */
   right: 15px;
   bottom: 10px;
+
+  @media screen and (max-height: 800px) {
+    right: 10px;
+
+    bottom: 4px;
+    font-size: 0.6rem;
+  }
+  /* color: var(--color-secondary); */
 }
 .chat-user-info p div {
   height: 1px;
@@ -254,7 +262,7 @@
 .messages-container {
   display: flex;
   flex-direction: column;
-  gap: 10px 0;
+  gap: 2px 0;
   height: 100%;
   width: 100%;
   background-color: var(--bg-s-third);
@@ -585,7 +593,7 @@
 .chat-mobile-menu-list {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
   padding: 10px;
   background-color: var(--bg-s-third);
   overflow-y: auto;
@@ -614,4 +622,24 @@
 
 .hide-chat-list {
   display: none;
+}
+
+.message-status {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0 10px;
+  padding: 10px;
+  background-color: var(--bg-s-fourth);
+  border-radius: 15px;
+}
+
+.messages-footer-status {
+  font-size: 1rem;
+  color: var(--text-s-secondary);
+  margin-left: auto;
+}
+
+.left {
+  margin: 0;
 }

@@ -5,6 +5,8 @@ export const formatTimeAgo = (date) => {
   distance = distance.replace("about ", ""); // Remove the word "about"
   const [value, unit] = distance.split(" ");
 
+  // if (unit.startsWith("minute")) return `${value}min ago`;
+  if (unit.startsWith("second")) return ` now`;
   if (unit.startsWith("minute")) return `${value}min ago`;
   if (unit.startsWith("hour")) return `${value}h ago`;
   if (unit.startsWith("day")) return `${value}d ago`;

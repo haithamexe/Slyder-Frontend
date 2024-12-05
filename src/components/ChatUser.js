@@ -6,8 +6,11 @@ import { clearMessages } from "../features/message/messageSlice";
 import { useDispatch } from "react-redux";
 import CircleRoundedIcon from "@mui/icons-material/CircleRounded";
 import { useSocketContext } from "../context/SocketContext";
+import { userAuthed } from "../features/user/userSlice";
+import { useSelector } from "react-redux";
 
 const ChatUser = ({ conversation, setCurrentChat }) => {
+  const user = useSelector(userAuthed);
   const { onlineUsers, setActiveConversationFunc } = useSocketContext();
 
   return (
@@ -37,11 +40,19 @@ const ChatUser = ({ conversation, setCurrentChat }) => {
           {conversation?.user?.firstName + " " + conversation?.user?.surName}
         </h1>
         <p>
-          {conversation?.lastMessage?.message.toString().length > 15
+          {conversation?.typing
+            ? "Typing..."
+            : conversation?.lastMessage?.message.toString().length > 15
             ? conversation?.lastMessage?.message.toString().substring(0, 15) +
               "..."
             : conversation?.lastMessage?.message.toString()}
           <div>
+            <span className="message-status">
+              {conversation?.lastMessage?.sender === user._id &&
+                (conversation?.lastMessage?.status === "sent"
+                  ? "Sent"
+                  : "seen")}
+            </span>
             <span>
               {conversation?.lastMessage?.createdAt &&
                 formatTimeAgo(conversation?.lastMessage?.createdAt)}

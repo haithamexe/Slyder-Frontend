@@ -30,7 +30,7 @@ const Chat = () => {
       {/* <Blob x={pos.x} y={pos.y} /> */}
 
       <ChatList />
-      {width > 1400 ? <ChatPlay /> : null}
+      {width > 1300 ? <ChatPlay /> : null}
     </div>
   );
 };

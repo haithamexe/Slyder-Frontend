@@ -232,6 +232,12 @@
 .slide-option {
   width: 40px !important;
 }
+.trending-sliders-new {
+  @media screen and (max-height: 810px) {
+    /* height: 70.5vh; */
+    overflow-y: auto;
+  }
+}
 
 .slyders-menu {
   /* position: absolute; */

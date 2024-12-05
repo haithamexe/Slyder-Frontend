@@ -199,8 +199,8 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
                     <h1>{user?.firstName + " " + user?.surName}</h1>
                     <p>@{user?.username}</p>
                     <div className="user-header-info-numbers">
-                      <p>{user?.followers?.length ?? 0} Followers</p>
-                      <p>{user?.following?.length ?? 0} Following</p>
+                      <p>{followersData?.length ?? 0} Followers</p>
+                      <p>{followingData?.length ?? 0} Following</p>
                     </div>
                   </div>
                   {user?.username === currentUser?.username && (
@@ -378,10 +378,16 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
             )}
 
             {clickedItem === "Followers" && (
-              <ProfilePeopleElement users={user?.followers} type="Followers" />
+              <ProfilePeopleElement
+                users={followersData || []}
+                type="Followers"
+              />
             )}
             {clickedItem === "Following" && (
-              <ProfilePeopleElement users={user?.following} type="Following" />
+              <ProfilePeopleElement
+                users={followingData || []}
+                type="Following"
+              />
             )}
             {clickedItem === "Photos" && (
               <ProfilePhotosElement posts={posts} user={user} />
