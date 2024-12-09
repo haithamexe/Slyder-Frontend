@@ -22,6 +22,8 @@
   display: flex;
   flex-direction: column;
   gap: 10px 0;
+  padding: 17px 15px;
+  /* padding: 90px; */
   /* justify-content: center; */
   /* background-color: aliceblue; */
   /* width: 200px; */
@@ -214,12 +216,17 @@
 .user-footer {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
   width: 100%;
+  height: 100px;
   /* gap: 0 15px; */
   padding: 14px 0;
   border-top: 2px solid var(--bg-s-third);
   margin-top: 25px;
+
+  @media screen and (max-height: 800px) {
+    height: 10vh;
+  }
 }
 
 .user-footer button {
@@ -1053,6 +1060,11 @@
     /* height: 70vh; */
     height: 80vh;
   }
+
+  /* @media screen and (max-width: 1100px) {
+    flex-direction: column;
+    align-items: flex-start;
+  } */
   padding: 10px;
   border-radius: 15px;
   overflow: hidden;
@@ -1091,6 +1103,16 @@
   }
   object-fit: contain;
   /* border-radius: 15px !important; */
+}
+
+.mobile-post-content {
+  color: var(--text-s-primary);
+  font-size: 1.2rem;
+  padding: 10px 0;
+  padding-top: 0;
+  padding-left: 4px;
+  border-bottom: 2px solid var(--bg-s-third);
+  padding-bottom: 20px;
 }
 
 .post-preveiw-info-container {
@@ -1684,17 +1706,40 @@
   display: flex;
   justify-content: center;
   align-items: center;
+
+  width: 35vw;
+  height: 35vw;
+
+  @media screen and (max-width: 1400px) {
+    width: 50vw;
+    height: 50vw;
+  }
+
+  @media screen and (max-width: 1100px) {
+    width: 70vw;
+    height: 70vw;
+  }
+
+  /* width: 35vw; */
+  /* height: 40vw; */
+
   /* width: 90%; */
-  height: 83%;
+  /* height: 83%; */
+  /* width: 40vw; */
+  /* height: 50vw; */
+
+  /* width: 90%; */
   /* gap: 10px; */
   /* padding: 10px; */
-  background-color: #1d1d1d;
+  /* background-color: #1d1d1d; */
 }
 
 .pic-display-container img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  /* height: 78vh; */
+  /* height: 100%; */
+  object-fit: contain !important;
   border-radius: 5px !important;
 }
 
@@ -1854,21 +1899,6 @@
   z-index: 10;
   background-color: var(--bg-s-secondary);
   border-radius: 15px;
-}
-
-.notifications-container {
-  position: absolute;
-  top: 100%;
-  width: 400px;
-  max-height: 40vh;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 10px;
-  border-radius: 15px;
-  background-color: var(--bg-s-secondary);
-  overflow-y: auto;
-  overflow-x: hidden;
 }
 
 .notification {

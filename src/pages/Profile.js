@@ -58,6 +58,7 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
   const { newConversation } = useSocketContext();
+  const [postFetched, setFetchedPost] = useState({});
   // const {
   //   data: postsData,
   //   isSuccess: fetchedPosts,
@@ -205,7 +206,7 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
                   </div>
                   {user?.username === currentUser?.username && (
                     <button
-                      className="user-header-info-btn"
+                      className="user-header-info-btn-new-edit"
                       onClick={() => setEditing(true)}
                     >
                       <EditRoundedIcon
@@ -222,14 +223,14 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
                     {user?.username !== currentUser?.username &&
                       (!isFollowed ? (
                         <button
-                          className="user-header-info-btn"
+                          className="user-header-info-btn-new"
                           onClick={handleFollowUser}
                         >
                           <span>Follow</span>
                         </button>
                       ) : (
                         <button
-                          className="user-header-info-btn"
+                          className="user-header-info-btn-new"
                           onClick={handleUnFollowUser}
                         >
                           <span>Unfollow</span>
@@ -237,7 +238,7 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
                       ))}
                     {user?.username !== currentUser?.username && (
                       <button
-                        className="user-header-info-btn"
+                        className="user-header-info-btn-new"
                         onClick={() => {
                           newConversation(user.id);
                           navigate(`/chat`);
@@ -349,23 +350,6 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
                     )}
                 </div>
               </div>
-              {/* <div className="profile-followers-container">
-                <div className="profile-followers-header">
-                  <h1>Followers</h1>
-                  <h2
-                    onClick={() => {
-                      setClickedItem("Followers");
-                    }}
-                  >
-                    See all
-                  </h2>
-                </div>
-                <div className="profile-followers-body">
-                  {user?.followers?.slice(0, 6)?.map((follower) => (
-                    <ProfilePeopleElement user={follower} />
-                  ))}
-                </div>
-              </div> */}
             </div>
           </div>
           <div className="profile-body-container">
@@ -405,6 +389,7 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
           setFetchPostId={setFetchPostId}
           origin="profile"
           originUsername={user?.username}
+          setFetchedPost={setFetchedPost}
         />
       )}
       {picDisplay && (

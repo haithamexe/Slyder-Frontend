@@ -4,20 +4,20 @@ import { formatTimeAgo } from "../utils/formatTimeAgo";
 import { useNavigate } from "react-router-dom";
 import Loader from "./Loader";
 
-const Comment = ({ commentId, setFetchPostId }) => {
+const Comment = ({ commentId, setFetchPostId, comment }) => {
   const navigate = useNavigate();
-  const { data: comment, isSuccess: isCommentFetchSuccess } =
-    useGetPostCommentByIdQuery({ commentId });
+  // const { data: comment, isSuccess: isCommentFetchSuccess } =
+  //   useGetPostCommentByIdQuery({ commentId });
 
   const content = (
     <div className="comment-individual">
       <div className="post-comment-user-img">
         <img
-          src={comment?.user.picture}
+          src={comment?.author?.picture}
           alt="user"
           onClick={() => {
             setFetchPostId("");
-            navigate("/" + comment?.user.username);
+            navigate("/" + comment?.author?.username);
           }}
           style={{ cursor: "pointer" }}
         />
@@ -30,11 +30,11 @@ const Comment = ({ commentId, setFetchPostId }) => {
               className="comment-username"
               onClick={() => {
                 setFetchPostId("");
-                navigate("/" + comment?.user.username);
+                navigate("/" + comment?.author?.username);
               }}
               style={{ cursor: "pointer" }}
             >
-              {comment?.user.username}
+              {comment?.author?.username}
             </span>
             {" " + comment?.content}
           </h1>
@@ -43,7 +43,7 @@ const Comment = ({ commentId, setFetchPostId }) => {
         </div>
         <div className="post-comment-container-interactive">
           <h2 className="post-comment-date">
-            {comment && formatTimeAgo(comment?.createdAt)}
+            {comment.createdAt && formatTimeAgo(comment?.createdAt)}
           </h2>
           <h2 className="post-comment-like">{comment?.likesCount} likes</h2>
           {/* <h2 className="post-comment-replies">{comment?.replyCount}Reply</h2> */}

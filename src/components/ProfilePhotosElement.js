@@ -3,6 +3,7 @@ import { useState } from "react";
 
 const ProfilePhotosElement = ({ posts }) => {
   const [postId, setFetchPostId] = useState("");
+  const [fetchedPost, setFetchedPost] = useState(null);
 
   const content = (
     <div className="profile-photos-element">
@@ -21,7 +22,11 @@ const ProfilePhotosElement = ({ posts }) => {
       </div>
 
       {postId && (
-        <PostPreveiw postId={postId} setFetchPostId={setFetchPostId} />
+        <PostPreveiw
+          postId={postId}
+          setFetchPostId={setFetchPostId}
+          setFetchedPost={setFetchedPost}
+        />
       )}
     </div>
   );

@@ -39,7 +39,7 @@ import { userAuthed } from "../features/user/userSlice";
 import { useNavigate } from "react-router-dom";
 import { formatTimeAgo } from "../utils/formatTimeAgo";
 
-const Post = ({ postId, setFetchPostId, stateChanged }) => {
+const Post = ({ postId, setFetchPostId, stateChanged, setFetchedPost }) => {
   const [deletePost] = useDeletePostMutation();
   const [likePost] = useLikePostMutation();
   const [unlikePost] = useUnlikePostMutation();
@@ -106,6 +106,7 @@ const Post = ({ postId, setFetchPostId, stateChanged }) => {
       setIsSaved(false);
     } else {
       savePost({ postId: fetchedPost._id, userId: currentUser.id });
+      setIsSaved(true);
     }
   };
 
@@ -137,20 +138,13 @@ const Post = ({ postId, setFetchPostId, stateChanged }) => {
         setIsLiked(false);
       }
 
+      if (fetchedPost?.savedBy?.length === 0) {
+        setIsSaved(false);
+      }
+
       console.log("fetchedPost", fetchedPost);
     }
   }, [fetchedPost, postId]);
-
-  useEffect(() => {
-    fetchedPost?.likes?.forEach((like) => {
-      if (like.user === currentUser.id) {
-        setIsLiked(true);
-        return;
-      } else {
-        setIsLiked(false);
-      }
-    });
-  }, [stateChanged]);
 
   const content = (
     <>
@@ -222,6 +216,7 @@ const Post = ({ postId, setFetchPostId, stateChanged }) => {
               alt="post"
               onClick={() => {
                 setFetchPostId(fetchedPost._id);
+                setFetchedPost(fetchedPost);
               }}
             />
           </div>
@@ -338,19 +333,7 @@ const Post = ({ postId, setFetchPostId, stateChanged }) => {
       </div>
     </>
   );
-  return (
-    <>
-      {postIsLoading ? (
-        <div className="home">
-          <div className="loader-box">
-            <Loader />
-          </div>
-        </div>
-      ) : (
-        content
-      )}
-    </>
-  );
+  return <>{!fetchedPost ? null : content}</>;
 };
 
 export default Post;

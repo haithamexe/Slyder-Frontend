@@ -25,7 +25,8 @@ const Header = () => {
   const [postId, setFetchPostId] = useState("");
   const notifyRef = useRef(null);
   const [showNotifications, setShowNotifications] = useState(false);
-  const { notifications, unreadCount, markAllRead } = useSocketContext();
+  const { notifications, unreadCount, markAllRead, unreadMessages } =
+    useSocketContext();
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -121,6 +122,9 @@ const Header = () => {
             cursor: "pointer",
           }}
         />
+        {/* {unreadMessages > 0 && ( */}
+        <div className="notifications-count-message">{1 > 0 && <p>{1}</p>}</div>
+        {/* )} */}
         {/* {
           <CircleRoundedIcon
             className="chat-icon-status-icon"
@@ -170,17 +174,22 @@ const Header = () => {
           </>
         )}
 
-        {showNotifications && notifications.length > 0 && (
-          <div className="notifications-container">
-            {notifications?.map((notification) => (
-              <Notification
-                key={notification._id}
-                notification={notification}
-                setFetchPostId={setFetchPostId}
-              />
-            ))}
-          </div>
-        )}
+        {showNotifications &&
+          (notifications.length > 0 ? (
+            <div className="notifications-container">
+              {notifications?.map((notification) => (
+                <Notification
+                  key={notification._id}
+                  notification={notification}
+                  setFetchPostId={setFetchPostId}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="notifications-container-no">
+              <h1>No notifications</h1>
+            </div>
+          ))}
       </div>
 
       <div className="header-right">

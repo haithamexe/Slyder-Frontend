@@ -26,6 +26,7 @@ import { userAuthed } from "../features/user/userSlice";
 const HomeFeed = ({ setNewPost, user, redirectionPage }) => {
   const dispatch = useDispatch();
   const [postId, setFetchPostId] = useState("");
+  const [fetchedPost, setFetchedPost] = useState("");
   const [posts, setPosts] = useState([]);
   const { postId: postInIdParam } = useParams();
   const [stateChanged, setStateChanged] = useState(false);
@@ -110,6 +111,7 @@ const HomeFeed = ({ setNewPost, user, redirectionPage }) => {
               postId={post}
               setFetchPostId={setFetchPostId}
               stateChanged={stateChanged}
+              setFetchedPost={setFetchedPost}
             />
           ))}
         </div>
@@ -122,7 +124,9 @@ const HomeFeed = ({ setNewPost, user, redirectionPage }) => {
         <PostPreveiw
           postId={postId}
           setFetchPostId={setFetchPostId}
+          setFetchedPost={setFetchedPost}
           origin="feed"
+          fetchedPost={fetchedPost}
         />
       )}
     </>

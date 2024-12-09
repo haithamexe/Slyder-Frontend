@@ -28,6 +28,7 @@ export const SocketContextProvider = ({ children }) => {
     []
   );
   const [activeConversation, setActiveConversation] = useState(null);
+  const [unreadMessages, setUnreadMessages] = useState([]);
 
   const api = axios.create({
     baseURL: process.env.REACT_APP_BACKEND_URL,
@@ -79,9 +80,22 @@ export const SocketContextProvider = ({ children }) => {
 
   const fetchNotifications = async () => {
     try {
-      const { data } = await api.get("api/notification/");
-      setNotifications(data);
-      setUnreadCount(data.filter((n) => !n.read).length);
+      const { data } = await api.get("api/notification");
+      if (data) {
+        setNotifications(data);
+        setUnreadCount(data.filter((n) => !n.read).length);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const fetchMeesagesNotifications = async () => {
+    try {
+      const { data } = await api.get("api/notification/messages");
+      if (data) {
+        setUnreadMessages(data);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -371,9 +385,8 @@ export const SocketContextProvider = ({ children }) => {
           );
         }
       });
-      if (!notifications) {
-        fetchNotifications();
-      }
+
+      fetchNotifications();
 
       fetchConversations();
 
@@ -413,6 +426,7 @@ export const SocketContextProvider = ({ children }) => {
     setUserIsTyping,
     setUserHasStoppedTyping,
     userTyping,
+    unreadMessages,
   };
 
   return (

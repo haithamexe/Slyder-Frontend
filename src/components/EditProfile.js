@@ -195,104 +195,100 @@ const EditProfile = ({ setEditing, user }) => {
       </div>
       <h1>Edit profile</h1>
       <div className="profile-edit-body">
-        {curWidth > 1200 && (
-          <div className="profile-edit-left">
-            <div className="profile-edit-photos">
-              <div className="profile-edit-cover">
-                {userUpdates.cover && <img src={userUpdates?.cover} />}
-                <input
-                  type="file"
-                  ref={fileRef1}
-                  onChange={handleFileChange}
-                  accept="image/*"
-                  name="cover"
-                  style={{ display: "none" }}
-                />
-                <CameraEnhanceRoundedIcon
-                  className="profile-edit-img-btn-icon"
-                  sx={{
-                    fontSize: 37,
-                    color: "#a7c750;",
-                    cursor: "pointer",
-                  }}
-                  name="cover"
-                  onClick={() => {
-                    fileRef1.current.click();
-                  }}
-                />
-                <p
-                  className="edit-images-text-cover"
-                  onClick={() => fileRef1.current.click()}
-                >
-                  Change Cover picture
-                </p>
-              </div>
-              <div className="profile-edit-img">
-                <img src={userUpdates?.picture} alt="user-picture" />
-                <input
-                  type="file"
-                  ref={fileRef2}
-                  onChange={handleFileChange}
-                  accept="image/*"
-                  name="picture"
-                  style={{ display: "none" }}
-                />
-                <CameraEnhanceRoundedIcon
-                  className="profile-edit-img-btn-icon"
-                  name="picture"
-                  sx={{
-                    fontSize: 37,
-                    color: "#a7c750;",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => fileRef2.current.click()}
-                />
-                <p
-                  className="edit-images-text"
-                  onClick={() => fileRef2.current.click()}
-                >
-                  Change Profile picture
-                </p>
-              </div>
+        {/* {curWidth > 1200 && ( */}
+        <div className="profile-edit-left">
+          <div className="profile-edit-photos">
+            <div className="profile-edit-cover">
+              {userUpdates.cover && <img src={userUpdates?.cover} />}
+              <input
+                type="file"
+                ref={fileRef1}
+                onChange={handleFileChange}
+                accept="image/*"
+                name="cover"
+                style={{ display: "none" }}
+              />
+              <CameraEnhanceRoundedIcon
+                className="profile-edit-img-btn-icon"
+                sx={{
+                  fontSize: 37,
+                  color: "#a7c750;",
+                  cursor: "pointer",
+                }}
+                name="cover"
+                onClick={() => {
+                  fileRef1.current.click();
+                }}
+              />
+              <p
+                className="edit-images-text-cover"
+                onClick={() => fileRef1.current.click()}
+              >
+                Change Cover picture
+              </p>
             </div>
-            <div className="profile-edit-skills">
-              <div className="skills-add">
-                <div className="skills-inputs">
-                  <input
-                    type="text"
-                    placeholder="Add skill"
-                    name="skill"
-                    value={userUpdates.skill}
-                    onChange={(e) => handleEditChange(e)}
-                  />
-                  <AddRoundedIcon
-                    onClick={handleSkillChange}
-                    sx={{
-                      fontSize: 35,
-                      color: "#a7c750;",
-                      cursor: "pointer",
-                    }}
-                  />
-                </div>
-                <div className="skills-header">
-                  {userUpdates?.skills?.map((skill) => (
-                    <h1
-                      className="edit-skill"
-                      key={skill}
-                      onClick={handleRemove}
-                    >
-                      {skill}
-                    </h1>
-                  ))}
-                </div>
-                <p className="edit-skill-remove">
-                  click on skill to remove, you can only have up to 7 skills to
-                  display
-                </p>
-              </div>
+            <div className="profile-edit-img">
+              <img src={userUpdates?.picture} alt="user-picture" />
+              <input
+                type="file"
+                ref={fileRef2}
+                onChange={handleFileChange}
+                accept="image/*"
+                name="picture"
+                style={{ display: "none" }}
+              />
+              <CameraEnhanceRoundedIcon
+                className="profile-edit-img-btn-icon"
+                name="picture"
+                sx={{
+                  fontSize: 37,
+                  color: "#a7c750;",
+                  cursor: "pointer",
+                }}
+                onClick={() => fileRef2.current.click()}
+              />
+              <p
+                className="edit-images-text"
+                onClick={() => fileRef2.current.click()}
+              >
+                Change Profile picture
+              </p>
             </div>
           </div>
-        )}
+          <div className="profile-edit-skills">
+            <div className="skills-add">
+              <div className="skills-inputs">
+                <input
+                  type="text"
+                  placeholder="Add skill"
+                  name="skill"
+                  value={userUpdates.skill}
+                  onChange={(e) => handleEditChange(e)}
+                />
+                <AddRoundedIcon
+                  onClick={handleSkillChange}
+                  sx={{
+                    fontSize: 35,
+                    color: "#a7c750;",
+                    cursor: "pointer",
+                  }}
+                />
+              </div>
+              <div className="skills-header">
+                {userUpdates?.skills?.map((skill) => (
+                  <h1 className="edit-skill" key={skill} onClick={handleRemove}>
+                    {skill}
+                  </h1>
+                ))}
+              </div>
+              <p className="edit-skill-remove">
+                click on skill to remove, you can only have up to 7 skills to
+                display
+              </p>
+            </div>
+          </div>
+        </div>
+        {/* )} */}
         <div className="profile-edit-right">
           <div className="profile-edit-inputs">
             <div className="profile-edit-input-names">

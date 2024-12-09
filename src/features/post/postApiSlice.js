@@ -49,12 +49,7 @@ const postApiSlice = apiSlice.injectEndpoints({
     getPosts: builder.query({
       query: () => "api/post/posts",
       providesTags: (result) =>
-        result
-          ? [
-              ...result.map(({ id }) => ({ type: "Post", id })),
-              { type: "Post", id: "LIST" },
-            ]
-          : [{ type: "Post", id: "LIST" }],
+        result ? [...result.map(({ id }) => ({ type: "Post", id }))] : [],
     }),
     getPost: builder.query({
       query: (postId) => `api/post/${postId}`,
@@ -132,7 +127,7 @@ const postApiSlice = apiSlice.injectEndpoints({
         }
       },
       invalidatesTags: (result, error, { postId }) => [
-        { type: ["Post"], id: postId },
+        { type: "Post", id: postId },
         { type: "SavedPosts" },
       ],
     }),
@@ -142,6 +137,8 @@ const postApiSlice = apiSlice.injectEndpoints({
         method: "DELETE",
       }),
       async onQueryStarted({ postId, userId }, { dispatch, queryFulfilled }) {
+        console.log("running unsaved");
+
         const patchResult = dispatch(
           postApiSlice.util.updateQueryData("getPost", postId, (draft) => {
             draft.savedBy = draft.savedBy.filter(
@@ -167,7 +164,7 @@ const postApiSlice = apiSlice.injectEndpoints({
         body: { userId, comment },
       }),
       invalidatesTags: (result, error, { postId }) => [
-        { type: "Post", id: postId },
+        { type: ["Post"], id: postId },
       ],
     }),
     uncommentPost: builder.mutation({
@@ -177,7 +174,7 @@ const postApiSlice = apiSlice.injectEndpoints({
         body: { commentId },
       }),
       invalidatesTags: (result, error, { postId }) => [
-        { type: "Post", id: postId },
+        { type: ["Post"], id: postId },
       ],
     }),
     getPostsByUserName: builder.query({

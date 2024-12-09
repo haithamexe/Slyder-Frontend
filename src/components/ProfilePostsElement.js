@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 const ProfilePostsElement = ({ user, posts, setNewPost }) => {
   const curUser = useSelector(userAuthed);
   const [postId, setFetchPostId] = useState("");
+  const [fetchedPost, setFetchedPost] = useState(null);
 
   const content = (
     <>
@@ -43,6 +44,7 @@ const ProfilePostsElement = ({ user, posts, setNewPost }) => {
               key={post._id}
               postId={post._id}
               setFetchPostId={setFetchPostId}
+              setFetchedPost={setFetchedPost}
             />
           ))}
         </div>
@@ -53,6 +55,7 @@ const ProfilePostsElement = ({ user, posts, setNewPost }) => {
           setFetchPostId={setFetchPostId}
           origin="profile"
           originUsername={user?.username}
+          setFetchedPost={setFetchedPost}
         />
       )}
     </>
