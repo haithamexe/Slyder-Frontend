@@ -148,14 +148,12 @@ const ChatWindow = ({ activeConversation }) => {
                 : "messages-footer-status"
             }
           >
-            {userTyping ? (
-              <p>{activeConversation?.user?.firstName + " is typing..."}</p>
-            ) : (
-              activeConversation?.lastMessage?.sender === user._id &&
-              (activeConversation?.lastMessage?.status === "sent"
-                ? "Sent"
-                : "seen")
-            )}
+            {userTyping
+              ? activeConversation?.user?.firstName + " is typing..."
+              : activeConversation?.lastMessage?.sender === user._id &&
+                (activeConversation?.lastMessage?.status === "sent"
+                  ? "Sent"
+                  : "seen")}
           </div>
           {activeConversationMessages?.map((message, index) => (
             <Message key={index} msg={message} curUser={user} />

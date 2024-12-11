@@ -11,13 +11,15 @@ import { useSelector } from "react-redux";
 
 const ChatUser = ({ conversation, setCurrentChat }) => {
   const user = useSelector(userAuthed);
-  const { onlineUsers, setActiveConversationFunc } = useSocketContext();
+  const { onlineUsers, setActiveConversationFunc, messageSeen } =
+    useSocketContext();
 
   return (
     <div
       className="chat-user"
       onClick={() => {
         setActiveConversationFunc(conversation._id);
+        messageSeen(conversation._id);
         // setCurrentChat(conversation);
       }}
     >

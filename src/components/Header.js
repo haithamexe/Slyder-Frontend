@@ -123,7 +123,9 @@ const Header = () => {
           }}
         />
         {/* {unreadMessages > 0 && ( */}
-        <div className="notifications-count-message">{1 > 0 && <p>{1}</p>}</div>
+        <div className="notifications-count-message">
+          <p>{unreadMessages?.length}</p>
+        </div>
         {/* )} */}
         {/* {
           <CircleRoundedIcon

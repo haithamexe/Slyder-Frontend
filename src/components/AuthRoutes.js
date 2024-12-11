@@ -9,7 +9,7 @@ import {
   userActions,
 } from "../features/user/userSlice";
 
-const REACT_INTERVAL_TIMER = 15 * 60 * 1000;
+// const REACT_INTERVAL_TIMER = 15 * 60 * 1000;
 // const REACT_INTERVAL_TIMER = 15 * 60;
 
 const AuthRoutes = () => {
@@ -42,11 +42,11 @@ const AuthRoutes = () => {
       refreshToken();
     }
 
-    intervalRef.current = setInterval(refreshToken, REACT_INTERVAL_TIMER);
+    // intervalRef.current = setInterval(refreshToken, REACT_INTERVAL_TIMER);
 
-    return () => {
-      clearInterval(intervalRef.current);
-    };
+    // return () => {
+    //   clearInterval(intervalRef.current);
+    // };
   }, [user]);
 
   useEffect(() => {
