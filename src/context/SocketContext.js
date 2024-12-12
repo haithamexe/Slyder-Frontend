@@ -30,6 +30,7 @@ export const SocketContextProvider = ({ children }) => {
   const [activeConversation, setActiveConversation] = useState(null);
   const activeConversationRef = useRef(null);
   const [unreadMessages, setUnreadMessages] = useState([]);
+  const unreadMessagesRef = useRef([]);
 
   const api = axios.create({
     baseURL: process.env.REACT_APP_BACKEND_URL,
@@ -45,16 +46,17 @@ export const SocketContextProvider = ({ children }) => {
   };
 
   const setActiveConversationFunc = (conversationId) => {
-    if (activeConversationRef.current?._id === conversationId) return;
+    if (
+      activeConversationRef.current &&
+      activeConversationRef.current?._id === conversationId
+    )
+      return;
+    // console.log("tried to set active conversation", conversation);
     const conversation = conversations.find((c) => c._id === conversationId);
     activeConversationRef.current = conversation;
     setActiveConversation(conversation);
-    console.log("tried to set active conversation", conversation);
-
-    if (conversationId !== activeConversation?._id) {
-      setActiveConversationMessages([]);
-      fetchMessages(conversationId, 0);
-    }
+    setActiveConversationMessages([]);
+    fetchMessages(conversationId, 0);
   };
 
   const fetchMessages = async (conversationId, page) => {
@@ -67,10 +69,16 @@ export const SocketContextProvider = ({ children }) => {
           const decryptedMessage = decrypt(m.message);
           return { ...m, message: decryptedMessage };
         });
-        setActiveConversationMessages((prev) => [
-          ...prev,
-          ...decryptedMessages,
-        ]);
+        if (page !== 0) {
+          {
+            setActiveConversationMessages((prev) => [
+              ...prev,
+              ...decryptedMessages,
+            ]);
+          }
+        } else {
+          setActiveConversationMessages(decryptedMessages);
+        }
       } else {
         setHasMoreMessages(false);
         console.log("No more messages");
@@ -100,6 +108,7 @@ export const SocketContextProvider = ({ children }) => {
         // alert(data);
         console.log("message notif", data);
         setUnreadMessages(data);
+        unreadMessagesRef.current = data;
       }
     } catch (err) {
       console.log(err);
@@ -207,6 +216,9 @@ export const SocketContextProvider = ({ children }) => {
       setUnreadMessages((prev) =>
         prev.filter((m) => m.conversation !== conversationId)
       );
+      unreadMessagesRef.current = unreadMessagesRef.current.filter(
+        (m) => m.conversation !== conversationId
+      );
     }
   };
 
@@ -261,16 +273,35 @@ export const SocketContextProvider = ({ children }) => {
     }
   };
 
-  const handleNewMessageNotification = (conversationId) => {
-    if (activeConversationRef.current?._id !== conversationId) {
-      console.log("new message with unread stuff", unreadMessages);
-      if (unreadMessages.find((m) => m?.conversation === conversationId)) {
-        setUnreadMessages((prev) => [
-          ...prev,
-          { ...message, conversation: conversationId },
-        ]);
-      }
+  const handleNewMessageNotification = (message, conversationId) => {
+    // if (activeConversationRef.current?._id !== conversationId) {
+    console.log("new message with unread stuff", unreadMessages);
+    // if (!unreadMessages.find((m) => m?.conversation === conversationId)) {
+
+    console.log("new message with unread stuff", unreadMessagesRef.current);
+    console.log(
+      "new message with unread stuff convo",
+      activeConversationRef.current
+    );
+    if (
+      !unreadMessagesRef.current.find(
+        (m) => m?.conversation === conversationId
+      ) &&
+      activeConversationRef.current?._id !== conversationId
+    ) {
+      setUnreadMessages((prev) => [
+        ...prev,
+        { ...message, conversation: conversationId },
+      ]);
     }
+
+    unreadMessagesRef.current = [
+      ...unreadMessagesRef.current,
+      { ...message, conversation: conversationId },
+    ];
+
+    // }
+    // }
   };
 
   useEffect(() => {
@@ -399,6 +430,8 @@ export const SocketContextProvider = ({ children }) => {
             ...prev,
           ]);
         }
+
+        handleNewMessageNotification(message, conversationId);
 
         // if (activeConversationRef.current?._id !== conversationId) {
         //   if (unreadMessages.find((m) => m?.conversation === conversationId)) {
