@@ -658,3 +658,19 @@
   margin: 0;
   height: 20px;
 }
+
+.msg-container {
+  /* @media screen and (max-height: 800px) {
+    height: 70vh;
+  } */
+
+  @media screen and (max-width: 700px) {
+    /* height: 70vh; */
+    /* width: 87% !important; */
+  }
+}
+
+.msg-text-receiver,
+.msg-text-sender {
+  font-size: 0.8rem !important;
+}

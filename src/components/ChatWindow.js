@@ -41,7 +41,13 @@ const ChatWindow = ({ activeConversation }) => {
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      if (newMessage && newMessage.trim !== "" && activeConversation) {
+      if (
+        newMessage &&
+        newMessage.trim().length !== "" &&
+        newMessage.trim() !== "" &&
+        newMessage.trim().length <= 15 &&
+        activeConversation
+      ) {
         sendMessage(newMessage);
         setNewMessage("");
         inputRef.current.focus();

@@ -11,8 +11,12 @@ import { useSelector } from "react-redux";
 
 const ChatUser = ({ conversation, setCurrentChat }) => {
   const user = useSelector(userAuthed);
-  const { onlineUsers, setActiveConversationFunc, messageSeen } =
-    useSocketContext();
+  const {
+    onlineUsers,
+    setActiveConversationFunc,
+    messageSeen,
+    unreadMessages,
+  } = useSocketContext();
 
   return (
     <div

@@ -211,15 +211,18 @@ export const SocketContextProvider = ({ children }) => {
   };
 
   const messageSeen = (conversationId) => {
-    if (unreadMessages.find((m) => m.conversation === conversationId)) {
-      socket.current.emit("messageSeen", conversationId);
-      setUnreadMessages((prev) =>
-        prev.filter((m) => m.conversation !== conversationId)
-      );
-      unreadMessagesRef.current = unreadMessagesRef.current.filter(
-        (m) => m.conversation !== conversationId
-      );
-    }
+    // if (unreadMessages.find((m) => m.conversation === conversationId)) {
+    const messageId = unreadMessages.find(
+      (m) => m.conversation === conversationId
+    );
+    socket.current.emit("messageSeen", (conversationId, messageId));
+    setUnreadMessages((prev) =>
+      prev.filter((m) => m.conversation !== conversationId)
+    );
+    unreadMessagesRef.current = unreadMessagesRef.current.filter(
+      (m) => m.conversation !== conversationId
+    );
+    // }
   };
 
   const sendMessage = async (message) => {
@@ -293,15 +296,11 @@ export const SocketContextProvider = ({ children }) => {
         ...prev,
         { ...message, conversation: conversationId },
       ]);
+      unreadMessagesRef.current = [
+        ...unreadMessagesRef.current,
+        { ...message, conversation: conversationId },
+      ];
     }
-
-    unreadMessagesRef.current = [
-      ...unreadMessagesRef.current,
-      { ...message, conversation: conversationId },
-    ];
-
-    // }
-    // }
   };
 
   useEffect(() => {
@@ -402,8 +401,6 @@ export const SocketContextProvider = ({ children }) => {
 
       socket.current?.on("newMessage", (message, conversationId) => {
         const decryptedMessage = decrypt(message.message);
-        // alert(decryptedMessage);
-
         setConversations((prev) =>
           prev.map((c) => {
             if (c?._id === conversationId) {
@@ -415,6 +412,7 @@ export const SocketContextProvider = ({ children }) => {
             return c;
           })
         );
+        // reorder conversations
         setConversations((prev) =>
           [prev.find((c) => c._id === conversationId)].concat([
             ...prev.filter((c) => c._id !== conversationId),
@@ -432,24 +430,10 @@ export const SocketContextProvider = ({ children }) => {
         }
 
         handleNewMessageNotification(message, conversationId);
-
-        // if (activeConversationRef.current?._id !== conversationId) {
-        //   if (unreadMessages.find((m) => m?.conversation === conversationId)) {
-        //     return;
-        //   } else {
-        //     setUnreadMessages((prev) => [
-        //       ...prev,
-        //       { ...message, conversation: conversationId },
-        //     ]);
-        //   }
-        // } else {
-        //   messageSeen(conversationId);
-        // }
       });
 
       return () => {
         socket.current?.off("getOnlineUsers");
-        // socket.current?.off("leaveRoom");
         socket.current?.disconnect();
       };
     }
