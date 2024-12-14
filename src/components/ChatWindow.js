@@ -45,7 +45,6 @@ const ChatWindow = ({ activeConversation }) => {
         newMessage &&
         newMessage.trim().length !== "" &&
         newMessage.trim() !== "" &&
-        newMessage.trim().length <= 15 &&
         activeConversation
       ) {
         sendMessage(newMessage);
@@ -150,7 +149,7 @@ const ChatWindow = ({ activeConversation }) => {
           <div
             className={
               userTyping
-                ? "messages-footer-status left"
+                ? "messages-footer-status left-msg"
                 : "messages-footer-status"
             }
           >

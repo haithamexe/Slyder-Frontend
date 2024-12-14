@@ -31,6 +31,7 @@ export const SocketContextProvider = ({ children }) => {
   const activeConversationRef = useRef(null);
   const [unreadMessages, setUnreadMessages] = useState([]);
   const unreadMessagesRef = useRef([]);
+  const conversationsRef = useRef([]);
 
   const api = axios.create({
     baseURL: process.env.REACT_APP_BACKEND_URL,
@@ -130,9 +131,9 @@ export const SocketContextProvider = ({ children }) => {
         const conversationIds = data.map((c) => {
           socket.current.emit("joinConversation", c._id);
         });
-        console.log(conversationIds);
 
         setConversations(converationsFormatted);
+        conversationsRef.current = converationsFormatted;
       }
     } catch (err) {
       console.log(err);
@@ -211,18 +212,39 @@ export const SocketContextProvider = ({ children }) => {
   };
 
   const messageSeen = (conversationId) => {
+    /// need to work this out
     // if (unreadMessages.find((m) => m.conversation === conversationId)) {
-    const messageId = unreadMessages.find(
-      (m) => m.conversation === conversationId
-    );
-    socket.current.emit("messageSeen", (conversationId, messageId));
-    setUnreadMessages((prev) =>
-      prev.filter((m) => m.conversation !== conversationId)
-    );
-    unreadMessagesRef.current = unreadMessagesRef.current.filter(
-      (m) => m.conversation !== conversationId
-    );
+    // const conversation = conversations.find((c) => c._id === conversationId);
+    // if (conversation?.lastMessage?.sender === user.id) return;
+    // const messageId = conversation?.lastMessage?._id;
+    // console.log("message seen", conversation, messageId);
+    // socket.current.emit("messageSeen", (conversationId, messageId));
+    // setUnreadMessages((prev) =>
+    //   prev.filter((m) => m.conversation !== conversationId)
+    // );
+    // unreadMessagesRef.current = unreadMessagesRef.current.filter(
+    //   (m) => m.conversation !== conversationId
+    // );
     // }
+    if (
+      unreadMessagesRef.current.find((m) => m.conversation === conversationId)
+    ) {
+      const conversation = conversationsRef.current.find(
+        (c) => c._id === conversationId
+      );
+      if (conversation?.lastMessage?.sender === user.id) return;
+      const messageId = conversation?.lastMessage?._id;
+
+      socket.current.emit("messageSeen", (conversationId, messageId));
+
+      setUnreadMessages((prev) =>
+        prev.filter((m) => m.conversation !== conversationId)
+      );
+
+      unreadMessagesRef.current = unreadMessagesRef.current.filter(
+        (m) => m.conversation !== conversationId
+      );
+    }
   };
 
   const sendMessage = async (message) => {
@@ -271,6 +293,16 @@ export const SocketContextProvider = ({ children }) => {
           return c;
         })
       );
+
+      conversationsRef.current = conversationsRef.current.map((c) => {
+        if (c._id === conversationId) {
+          return {
+            ...c,
+            lastMessage: localMessage,
+          };
+        }
+        return c;
+      });
     } catch (err) {
       console.log(err);
     }
@@ -301,6 +333,8 @@ export const SocketContextProvider = ({ children }) => {
         { ...message, conversation: conversationId },
       ];
     }
+
+    //else send to messageSeen
   };
 
   useEffect(() => {
@@ -341,6 +375,19 @@ export const SocketContextProvider = ({ children }) => {
             return c;
           })
         );
+
+        conversationsRef.current = conversationsRef.current.map((c) => {
+          if (c._id === conversationId) {
+            return {
+              ...c,
+              lastMessage: {
+                ...c.lastMessage,
+                status: "seen",
+              },
+            };
+          }
+          return c;
+        });
       });
 
       socket.current?.on("typing", (conversationId) => {
@@ -396,6 +443,7 @@ export const SocketContextProvider = ({ children }) => {
         }
         console.log(conversation);
         setConversations((prev) => [conversation, ...prev]);
+        conversationsRef.current = [conversation, ...conversationsRef.current];
         socket.current?.emit("joinConversation", conversation?._id);
       });
 
@@ -412,6 +460,17 @@ export const SocketContextProvider = ({ children }) => {
             return c;
           })
         );
+
+        conversationsRef.current = conversationsRef.current.map((c) => {
+          if (c?._id === conversationId) {
+            return {
+              ...c,
+              lastMessage: { ...message, message: decryptedMessage },
+            };
+          }
+          return c;
+        });
+
         // reorder conversations
         setConversations((prev) =>
           [prev.find((c) => c._id === conversationId)].concat([
