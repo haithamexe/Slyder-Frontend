@@ -122,11 +122,11 @@ const Header = () => {
             cursor: "pointer",
           }}
         />
-        {/* {unreadMessages > 0 && ( */}
-        <div className="notifications-count-message">
-          <p>{unreadMessages?.length}</p>
-        </div>
-        {/* )} */}
+        {unreadMessages.length > 0 && (
+          <div className="notifications-count-message">
+            <p>{unreadMessages?.length}</p>
+          </div>
+        )}
         {/* {
           <CircleRoundedIcon
             className="chat-icon-status-icon"

@@ -16,6 +16,7 @@ const ChatUser = ({ conversation, setCurrentChat }) => {
     setActiveConversationFunc,
     messageSeen,
     unreadMessages,
+    activeConversation,
   } = useSocketContext();
 
   return (
@@ -23,8 +24,6 @@ const ChatUser = ({ conversation, setCurrentChat }) => {
       className="chat-user"
       onClick={() => {
         setActiveConversationFunc(conversation._id);
-        messageSeen(conversation._id);
-        // setCurrentChat(conversation);
       }}
     >
       <div className="chat-user-img">
@@ -48,17 +47,17 @@ const ChatUser = ({ conversation, setCurrentChat }) => {
         <p>
           {conversation?.typing
             ? "Typing..."
-            : conversation?.lastMessage?.message.toString().length > 15
-            ? conversation?.lastMessage?.message.toString().substring(0, 15) +
+            : conversation?.lastMessage?.message?.toString().length > 15
+            ? conversation?.lastMessage?.message?.toString().substring(0, 13) +
               "..."
-            : conversation?.lastMessage?.message.toString()}
+            : conversation?.lastMessage?.message?.toString()}
           <div>
-            <span className="message-status">
+            {/* <span className="message-status">
               {conversation?.lastMessage?.sender === user._id &&
                 (conversation?.lastMessage?.status === "sent"
                   ? "Sent"
                   : "seen")}
-            </span>
+            </span> */}
             <span>
               {conversation?.lastMessage?.createdAt &&
                 formatTimeAgo(conversation?.lastMessage?.createdAt)}

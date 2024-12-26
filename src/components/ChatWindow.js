@@ -16,7 +16,7 @@ import { decrypt } from "../utils/encryptionUtils";
 import { useSocketContext } from "../context/SocketContext";
 import { current } from "@reduxjs/toolkit";
 
-const ChatWindow = ({ activeConversation }) => {
+const ChatWindow = () => {
   const [newMessage, setNewMessage] = useState("");
   const navigate = useNavigate();
   const user = useSelector(userAuthed);
@@ -30,6 +30,8 @@ const ChatWindow = ({ activeConversation }) => {
     setUserIsTyping,
     setUserHasStoppedTyping,
     userTyping,
+    setActiveConversationFunc,
+    activeConversation,
   } = useSocketContext();
   const inputRef = useRef(null);
   const [messagesLoading, setMessagesLoading] = useState(true);
@@ -113,6 +115,8 @@ const ChatWindow = ({ activeConversation }) => {
     }
   }, [newMessage]);
 
+  console.log("Active conversation", activeConversation);
+
   return (
     <div className="messages-container">
       <div className="messages-header">
@@ -155,10 +159,10 @@ const ChatWindow = ({ activeConversation }) => {
           >
             {userTyping
               ? activeConversation?.user?.firstName + " is typing..."
-              : activeConversation?.lastMessage?.sender === user._id &&
+              : activeConversation?.lastMessage?.sender === user.id &&
                 (activeConversation?.lastMessage?.status === "sent"
                   ? "Sent"
-                  : "seen")}
+                  : "Seen")}
           </div>
           {activeConversationMessages?.map((message, index) => (
             <Message key={index} msg={message} curUser={user} />

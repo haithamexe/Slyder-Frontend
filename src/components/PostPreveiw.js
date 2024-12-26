@@ -234,8 +234,6 @@ const PostPreveiw = ({
         if (like?.user === currentUser?.id) {
           setIsLiked(true);
           return;
-        } else {
-          setIsLiked(false);
         }
       });
 

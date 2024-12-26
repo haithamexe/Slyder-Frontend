@@ -47,17 +47,22 @@ export const SocketContextProvider = ({ children }) => {
   };
 
   const setActiveConversationFunc = (conversationId) => {
-    if (
-      activeConversationRef.current &&
-      activeConversationRef.current?._id === conversationId
-    )
+    if (conversationId === null || !conversationId) {
+      setActiveConversation(null);
+      setActiveConversationMessages(null);
+      activeConversationRef.current = null;
+      console.log("rannnn");
       return;
-    // console.log("tried to set active conversation", conversation);
+    }
+
+    if (activeConversationRef.current?._id === conversationId) return;
+
     const conversation = conversations.find((c) => c._id === conversationId);
     activeConversationRef.current = conversation;
     setActiveConversation(conversation);
     setActiveConversationMessages([]);
     fetchMessages(conversationId, 0);
+    messageSeen(conversationId);
   };
 
   const fetchMessages = async (conversationId, page) => {
@@ -212,46 +217,66 @@ export const SocketContextProvider = ({ children }) => {
   };
 
   const messageSeen = (conversationId) => {
-    /// need to work this out
-    // if (unreadMessages.find((m) => m.conversation === conversationId)) {
-    // const conversation = conversations.find((c) => c._id === conversationId);
-    // if (conversation?.lastMessage?.sender === user.id) return;
-    // const messageId = conversation?.lastMessage?._id;
-    // console.log("message seen", conversation, messageId);
-    // socket.current.emit("messageSeen", (conversationId, messageId));
-    // setUnreadMessages((prev) =>
-    //   prev.filter((m) => m.conversation !== conversationId)
-    // );
-    // unreadMessagesRef.current = unreadMessagesRef.current.filter(
-    //   (m) => m.conversation !== conversationId
-    // );
+    const conversation = conversationsRef.current.find(
+      (c) => c._id === conversationId
+    );
+
+    // if (conversation?.lastMessage?.sender === user.id) {
+    //   console.log("sender is the same as user");
+    //   return;
     // }
-    if (
-      unreadMessagesRef.current.find((m) => m.conversation === conversationId)
-    ) {
-      const conversation = conversationsRef.current.find(
-        (c) => c._id === conversationId
-      );
-      if (conversation?.lastMessage?.sender === user.id) return;
-      const messageId = conversation?.lastMessage?._id;
 
-      socket.current.emit("messageSeen", (conversationId, messageId));
+    const messageId = conversation?.lastMessage?._id;
 
-      setUnreadMessages((prev) =>
-        prev.filter((m) => m.conversation !== conversationId)
-      );
+    socket.current.emit("messageSeen", {
+      conversationId,
+      receiverId: conversation?.user?._id,
+      messageId,
+    });
 
-      unreadMessagesRef.current = unreadMessagesRef.current.filter(
-        (m) => m.conversation !== conversationId
-      );
-    }
+    console.log("message seen sent", conversation, messageId);
+    setUnreadMessages((prev) =>
+      prev.filter((m) => m.conversation !== conversationId)
+    );
+
+    unreadMessagesRef.current = unreadMessagesRef.current.filter(
+      (m) => m.conversation !== conversationId
+    );
+
+    setConversations((prev) =>
+      prev.map((c) => {
+        if (c._id === conversationId) {
+          return {
+            ...c,
+            lastMessage: {
+              ...c.lastMessage,
+              status: "seen",
+            },
+          };
+        }
+        return c;
+      })
+    );
+
+    conversationsRef.current = conversationsRef.current.map((c) => {
+      if (c._id === conversationId) {
+        return {
+          ...c,
+          lastMessage: {
+            ...c.lastMessage,
+            status: "seen",
+          },
+        };
+      }
+      return c;
+    });
   };
 
   const sendMessage = async (message) => {
     try {
       const encryptedMessage = encrypt(message);
       const conversationId = activeConversation?._id;
-      const receiverId = activeConversation?.user;
+      const receiverId = activeConversation?.user._id;
       // const { data } = await api.post("api/message/create", {
       //   message: encryptedMessage,
       //   conversationId,
@@ -268,6 +293,7 @@ export const SocketContextProvider = ({ children }) => {
         sender: user.id,
         receiver: receiverId,
         conversation: conversationId,
+        status: "sent",
         createdAt: new Date().toISOString(),
       };
 
@@ -294,6 +320,13 @@ export const SocketContextProvider = ({ children }) => {
         })
       );
 
+      setActiveConversation((prev) => {
+        return {
+          ...prev,
+          lastMessage: localMessage,
+        };
+      });
+
       conversationsRef.current = conversationsRef.current.map((c) => {
         if (c._id === conversationId) {
           return {
@@ -303,6 +336,11 @@ export const SocketContextProvider = ({ children }) => {
         }
         return c;
       });
+
+      activeConversationRef.current = {
+        ...activeConversationRef.current,
+        lastMessage: localMessage,
+      };
     } catch (err) {
       console.log(err);
     }
@@ -310,14 +348,20 @@ export const SocketContextProvider = ({ children }) => {
 
   const handleNewMessageNotification = (message, conversationId) => {
     // if (activeConversationRef.current?._id !== conversationId) {
-    console.log("new message with unread stuff", unreadMessages);
+    // console.log("new message with unread stuff", unreadMessages);
     // if (!unreadMessages.find((m) => m?.conversation === conversationId)) {
 
-    console.log("new message with unread stuff", unreadMessagesRef.current);
-    console.log(
-      "new message with unread stuff convo",
-      activeConversationRef.current
-    );
+    // console.log("new message with unread stuff", unreadMessagesRef.current);
+    // console.log(
+    //   "new message with unread stuff convo",
+    //   activeConversationRef.current
+    // );
+
+    if (activeConversationRef?.current?._id === conversationId) {
+      messageSeen(conversationId);
+      return;
+    }
+
     if (
       !unreadMessagesRef.current.find(
         (m) => m?.conversation === conversationId
@@ -360,7 +404,28 @@ export const SocketContextProvider = ({ children }) => {
         setOnlineUsers(users);
       });
 
-      socket.current?.on("messageSeen", (conversationId) => {
+      socket.current?.on("messageSeen", ({ conversationId }) => {
+        // alert(conversationId);
+        if (activeConversationRef.current?._id === conversationId) {
+          setActiveConversation((prev) => {
+            return {
+              ...prev,
+              lastMessage: {
+                ...prev.lastMessage,
+                status: "seen",
+              },
+            };
+          });
+
+          activeConversationRef.current = {
+            ...activeConversationRef.current,
+            lastMessage: {
+              ...activeConversationRef.current.lastMessage,
+              status: "seen",
+            },
+          };
+        }
+
         setConversations((prev) =>
           prev.map((c) => {
             if (c._id === conversationId) {
@@ -436,6 +501,15 @@ export const SocketContextProvider = ({ children }) => {
       });
 
       socket.current?.on("newConversation", (conversation) => {
+        if (!conversation) {
+          return;
+        }
+
+        if (conversationsRef.current.find((c) => c._id === conversation._id)) {
+          setActiveConversationFunc(conversation._id);
+          return;
+        }
+
         if (conversation?.lastMessage?.message) {
           conversation.lastMessage.message = decrypt(
             conversation.lastMessage.message
@@ -461,14 +535,14 @@ export const SocketContextProvider = ({ children }) => {
           })
         );
 
-        conversationsRef.current = conversationsRef.current.map((c) => {
-          if (c?._id === conversationId) {
+        setActiveConversation((prev) => {
+          if (prev?._id === conversationId) {
             return {
-              ...c,
+              ...prev,
               lastMessage: { ...message, message: decryptedMessage },
             };
           }
-          return c;
+          return prev;
         });
 
         // reorder conversations

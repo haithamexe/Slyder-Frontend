@@ -67,6 +67,7 @@ const Slyders = (props) => {
             increase the "Sport" slider to receive more or less sports-related
             posts.
           </h1>
+          <h1>* Expermintal feature - work in progress</h1>
           <div className="trending-slyder-btns">
             <button className="algo-save-btn">
               Save

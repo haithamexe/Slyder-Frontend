@@ -3,8 +3,10 @@ import { useState, useEffect } from "react";
 import ChatPlay from "../components/ChatPlay";
 import ChatList from "../components/ChatList";
 import Blob from "../components/Blob";
+import { useSocketContext } from "../context/SocketContext";
 
 const Chat = () => {
+  const { setActiveConversationFunc } = useSocketContext();
   const [width, setWidth] = useState(window.innerWidth);
   const [pos, setPos] = useState({ x: 650, y: 200 });
 
@@ -22,6 +24,7 @@ const Chat = () => {
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
+      setActiveConversationFunc(null);
     };
   }, []);
 

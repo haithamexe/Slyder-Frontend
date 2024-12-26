@@ -123,7 +123,7 @@ const ChatList = () => {
               </h1>
             </div>
           ) : (
-            <ChatWindow activeConversation={activeConversation} />
+            <ChatWindow />
           )}
         </div>
       </div>
