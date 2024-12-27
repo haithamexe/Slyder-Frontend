@@ -398,19 +398,30 @@ export const SocketContextProvider = ({ children }) => {
       //   path: "/socket.io",
       // });
 
+      // socket.current = io(process.env.REACT_APP_BACKEND_URL, {
+      //   query: {
+      //     userId: user.id,
+      //   },
+      //   withCredentials: true, // This is crucial for sending cookies
+      //   transports: ['polling'],
+      //   path: '/',
+      //   reconnection: true,
+      //   reconnectionAttempts: 5,
+      //   reconnectionDelay: 1000,
+      //   autoConnect: true,
+      //   forceNew: true,
+      //   timeout: 20000
+      // });
+
       socket.current = io(process.env.REACT_APP_BACKEND_URL, {
         query: {
           userId: user.id,
         },
-        withCredentials: true, // This is crucial for sending cookies
+        withCredentials: true,
         transports: ['polling'],
-        path: '/',
+        path: '/', // Changed to match your auth path
         reconnection: true,
-        reconnectionAttempts: 5,
-        reconnectionDelay: 1000,
-        autoConnect: true,
-        forceNew: true,
-        timeout: 20000
+        reconnectionAttempts: 3
       });
   
 
