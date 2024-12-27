@@ -418,10 +418,11 @@ export const SocketContextProvider = ({ children }) => {
           userId: user.id,
         },
         withCredentials: true,
-        transports: ['polling'],
-        path: '/', // Changed to match your auth path
+        transports: ['polling', 'websocket'], // Specify both transport types
+        path: '/',
         reconnection: true,
-        reconnectionAttempts: 3
+        reconnectionAttempts: 3,
+        reconnectionDelay: 1000
       });
   
 
