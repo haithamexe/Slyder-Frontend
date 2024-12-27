@@ -394,7 +394,8 @@ export const SocketContextProvider = ({ children }) => {
           userId: user.id,
         },
         withCredentials: true,
-        transports: ['websocket', 'polling']
+        transports: ['polling'],
+        path: "/socket.io",
       });
 
       socket.current?.emit("joinNotificationRoom", user.id);
