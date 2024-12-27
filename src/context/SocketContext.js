@@ -389,14 +389,12 @@ export const SocketContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (user) {
-      // socket.current = io(process.env.REACT_APP_BACKEND_URL, {
-      //   query: {
-      //     userId: user.id,
-      //   },
-      //   withCredentials: true,
-      //   transports: ['polling'],
-      //   path: "/socket.io",
-      // });
+      socket.current = io(process.env.REACT_APP_BACKEND_URL, {
+        query: {
+          userId: user.id,
+        },
+        withCredentials: true,
+      });
 
       // socket.current = io(process.env.REACT_APP_BACKEND_URL, {
       //   query: {
@@ -413,17 +411,17 @@ export const SocketContextProvider = ({ children }) => {
       //   timeout: 20000
       // });
 
-      socket.current = io(process.env.REACT_APP_BACKEND_URL, {
-        query: {
-          userId: user.id,
-        },
-        withCredentials: true,
-        transports: ['polling', 'websocket'], // Specify both transport types
-        path: '/',
-        reconnection: true,
-        reconnectionAttempts: 3,
-        reconnectionDelay: 1000
-      });
+      // socket.current = io(process.env.REACT_APP_BACKEND_URL, {
+      //   query: {
+      //     userId: user.id,
+      //   },
+      //   withCredentials: true,
+      //   transports: ['polling', 'websocket'], // Specify both transport types
+      //   path: '/',
+      //   reconnection: true,
+      //   reconnectionAttempts: 3,
+      //   reconnectionDelay: 1000
+      // });
   
 
       socket.current?.emit("joinNotificationRoom", user.id);
