@@ -389,7 +389,7 @@ export const SocketContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (user) {
-      socket.current = io(process.env.REACT_APP_BACKEND_URL, {
+      socket.current = io("https://slyderback.vercel.app", {
         query: {
           userId: user.id,
         },
