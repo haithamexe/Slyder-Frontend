@@ -428,8 +428,6 @@ export const SocketContextProvider = ({ children }) => {
           userId: user.id,
         },
         withCredentials: true,
-        transports: ['websocket', 'polling'], // Include both transports
-        path: '/', // Make sure this matches backend
         reconnection: true,
         reconnectionAttempts: 5,
         reconnectionDelay: 1000,
