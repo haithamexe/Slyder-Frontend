@@ -47,7 +47,7 @@ import { Outlet, Navigate } from "react-router-dom";
 
 const AuthUser = () => {
   const user = useSelector(userAuthed);
-  console.log("AuthUser", userAuthed, userActions, user);
+  // console.log("AuthUser", userAuthed, userActions, user);
   return <>{user ? <Outlet /> : <Navigate to="/login" />}</>;
 };
 
