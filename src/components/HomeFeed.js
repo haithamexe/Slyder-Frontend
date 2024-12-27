@@ -100,7 +100,11 @@ const HomeFeed = ({ setNewPost, user, redirectionPage }) => {
 
       {postsData?.length > 0 ? (
         <div
-          className={feedScrollable ? "feed feed-scrollable" : "feed"}
+          className={
+            window.innerWidth < 900 || feedScrollable
+              ? "feed feed-scrollable"
+              : "feed"
+          }
           onMouseEnter={handleScrollEnter}
           onMouseLeave={handleScrollExit}
           ref={feedRef}

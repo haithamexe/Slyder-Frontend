@@ -93,7 +93,11 @@ const TrendingList = ({ postId }) => {
     <div className="trending-list">
       <div
         ref={feedRef}
-        className={feedScrollable ? "feed feed-scrollable" : "feed"}
+        className={
+          window.innerWidth < 900 || feedScrollable
+            ? "feed feed-scrollable"
+            : "feed"
+        }
         onMouseEnter={handleScrollEnter}
         onMouseLeave={handleScrollExit}
       >

@@ -97,7 +97,9 @@ const UserCol = ({ user }) => {
         <p>Friends</p>
         <div
           className={
-            communityScrolled ? "communities communites-scroll" : "communities"
+            window.innerWidth < 900 || communityScrolled
+              ? "communities communites-scroll"
+              : "communities"
           }
           onMouseEnter={handleScrollEnter}
           onMouseLeave={handleScrollExit}
