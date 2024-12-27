@@ -389,12 +389,12 @@ export const SocketContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (user) {
-      socket.current = io("https://slyderback.vercel.app", {
-        query: {
-          userId: user.id,
-        },
-        withCredentials: true,
-      });
+      // socket.current = io("https://slyder-backend.onrender.com", {
+      //   query: {
+      //     userId: user.id,
+      //   },
+      //   withCredentials: true,
+      // });
 
       // socket.current = io(process.env.REACT_APP_BACKEND_URL, {
       //   query: {
@@ -422,6 +422,19 @@ export const SocketContextProvider = ({ children }) => {
       //   reconnectionAttempts: 3,
       //   reconnectionDelay: 1000
       // });
+
+      socket.current = io("https://slyder-backend.onrender.com", {
+        query: {
+          userId: user.id,
+        },
+        withCredentials: true,
+        transports: ['websocket'], // Force WebSocket only
+        path: '/', // Make sure this matches backend
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
+        secure: true // Important for HTTPS
+      });
   
 
       socket.current?.emit("joinNotificationRoom", user.id);
