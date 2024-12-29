@@ -101,7 +101,7 @@ const HomeFeed = ({ setNewPost, user, redirectionPage }) => {
       {postsData?.length > 0 ? (
         <div
           className={
-            window.innerWidth < 900 || feedScrollable
+            window.innerWidth < 1200 || feedScrollable
               ? "feed feed-scrollable"
               : "feed"
           }

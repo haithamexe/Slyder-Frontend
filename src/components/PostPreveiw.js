@@ -243,9 +243,7 @@ const PostPreveiw = ({
         if (save?.user === currentUser?.id) {
           setIsSaved(true);
           return;
-        } else {
-          setIsSaved(false);
-        }
+        } 
       });
     }
 

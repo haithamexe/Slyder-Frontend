@@ -97,7 +97,7 @@ const UserCol = ({ user }) => {
         <p>Friends</p>
         <div
           className={
-            window.innerWidth < 900 || communityScrolled
+            window.innerWidth < 1200 || communityScrolled
               ? "communities communites-scroll"
               : "communities"
           }

@@ -96,6 +96,7 @@ const TrendNotes = ({ setElementShow }) => {
         {!newNote ? (
           <div
             className={
+              window.innerWidth < 1200 ||
               noteScroll ? "note-container note-scroll" : "note-container"
             }
             onMouseEnter={handleScrollEnter}

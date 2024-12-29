@@ -120,18 +120,14 @@ const Post = ({ postId, setFetchPostId, stateChanged, setFetchedPost }) => {
         if (like.user === currentUser.id) {
           setIsLiked(true);
           return;
-        } else {
-          setIsLiked(false);
-        }
+        } 
       });
 
       fetchedPost?.savedBy?.forEach((saved) => {
         if (saved.user === currentUser.id) {
           setIsSaved(true);
           return;
-        } else {
-          setIsSaved(false);
-        }
+        } 
       });
 
       if (fetchedPost?.likes?.length === 0) {
