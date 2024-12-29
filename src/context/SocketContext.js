@@ -187,6 +187,9 @@ export const SocketContextProvider = ({ children }) => {
         setActiveConversationMessages([]);
         setActiveConversation(null);
         activeConversationRef.current = null;
+        conversationsRef.current = conversationsRef.current.filter(
+          (c) => c._id !== conversationId
+        );
       }
     } catch (err) {
       console.log(err);
@@ -431,9 +434,8 @@ export const SocketContextProvider = ({ children }) => {
         reconnection: true,
         reconnectionAttempts: 5,
         reconnectionDelay: 1000,
-        secure: true // Important for HTTPS
+        secure: true, // Important for HTTPS
       });
-  
 
       socket.current?.emit("joinNotificationRoom", user.id);
       socket.current?.emit("joinConversationRoom", user.id);

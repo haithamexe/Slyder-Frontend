@@ -47,10 +47,12 @@ const ChatUser = ({ conversation, setCurrentChat }) => {
         <p>
           {conversation?.typing
             ? "Typing..."
-            : conversation?.lastMessage?.message?.toString().length > 15
-            ? conversation?.lastMessage?.message?.toString().substring(0, 13) +
-              "..."
-            : conversation?.lastMessage?.message?.toString()}
+            : conversation?.lastMessage?.visibleFor?.includes(user.id) &&
+              (conversation?.lastMessage?.message?.toString().length > 15
+                ? conversation?.lastMessage?.message
+                    ?.toString()
+                    .substring(0, 13) + "..."
+                : conversation?.lastMessage?.message?.toString())}
           <div>
             {/* <span className="message-status">
               {conversation?.lastMessage?.sender === user._id &&
