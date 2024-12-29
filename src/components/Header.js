@@ -44,7 +44,9 @@ const Header = () => {
   const handleLogout = () => {
     logoutUserApi();
     dispatch(userActions.logoutUser());
-    navigate("/login", { replace: true });
+    setTimeout(() => {
+      navigate("/login", { replace: true });
+    }, 2000);
   };
 
   const handleClickOutside = (e) => {
