@@ -75,25 +75,6 @@ const Activate = (props) => {
       navigate("/");
     }
 
-    if (!refreshError) {
-      refreshTokenApi(token);
-    }
-
-    if (refreshSuccess) {
-      dispatch(userActions.refreshToken(refreshToken));
-      navigate("/", { replace: true });
-    }
-
-    if (token && !error) {
-      activateUserApi(token);
-    }
-
-    if (isSuccess) {
-      setIsDone(true);
-      dispatch(userActions.activateUser(data));
-      navigate("/", { replace: true });
-    }
-
     if (refreshActivateTokenSuccess) {
       setIsDone(true);
       setRunTimer(true);
@@ -103,16 +84,17 @@ const Activate = (props) => {
     return () => {
       clearInterval(intervalId);
     };
-  }, [
-    user,
-    token,
-    runTimer,
-    timer,
-    isSuccess,
-    refreshSuccess,
-    refreshError,
-    refreshActivateTokenSuccess,
-  ]);
+  }, [user, token, runTimer, timer, refreshActivateTokenSuccess]);
+
+  useEffect(() => {
+    if (token && !isSuccess) {
+      activateUserApi(token);
+    }
+
+    if (isSuccess) {
+      navigate("/login", { replace: true });
+    }
+  }, [token, isSuccess]);
 
   const handleMouseMove = (e) => {
     setTimeout(() => {
@@ -127,7 +109,12 @@ const Activate = (props) => {
         <div className="activate-container">
           <CheckCircleOutlineIcon sx={{ fontSize: 140, color: "#a7c750;" }} />
           <h1>Email Activation</h1>
-          {!isDone ? (
+          {!error ? (
+            <p>
+              this page will redirect to login page in <span>{timer}</span>{" "}
+              seconds
+            </p>
+          ) : !isDone ? (
             <>
               <h2>
                 Something went wrong, please retry activating your account
@@ -158,12 +145,6 @@ const Activate = (props) => {
                 Activation email sent, Check your email please
               </h1>
             </>
-          )}
-          {runTimer && (
-            <p>
-              this page will redirect to login page in <span>{timer}</span>{" "}
-              seconds
-            </p>
           )}
         </div>
       </div>
