@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from "react";
 import { useNavigate, Outlet } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { useLogoutUserApiMutation } from "../features/user/userApiSlice";
 
 import {
   userAuthToken,
@@ -14,8 +13,6 @@ import {
 // const REACT_INTERVAL_TIMER = 15 * 60;
 
 const AuthRoutes = () => {
-  const [logoutUserApi, { data, error, isLoading }] =
-    useLogoutUserApiMutation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector(userAuthed);
@@ -35,9 +32,6 @@ const AuthRoutes = () => {
           setAccessToken(data.data?.accessToken);
         }
       } catch (error) {
-        dispatch(userActions.logoutUser());
-        logoutUserApi();
-
         navigate("/login");
         console.log("Error", error);
       }

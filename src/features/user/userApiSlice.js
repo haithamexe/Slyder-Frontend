@@ -7,7 +7,6 @@ const userApiSlice = apiSlice.injectEndpoints({
         url: "api/user/register",
         method: "POST",
         body: userData,
-        credentials: "include",
       }),
     }),
     loginUserApi: builder.mutation({
@@ -15,7 +14,6 @@ const userApiSlice = apiSlice.injectEndpoints({
         url: "api/user/login",
         method: "POST",
         body: userData,
-        credentials: "include",
       }),
       providesTags: ["Token"],
     }),
@@ -24,7 +22,6 @@ const userApiSlice = apiSlice.injectEndpoints({
         url: "api/user/activate",
         method: "POST",
         body: { token: token },
-        credentials: "include",
       }),
       providesTags: ["Token"],
     }),
@@ -33,7 +30,6 @@ const userApiSlice = apiSlice.injectEndpoints({
         url: "api/user/auth",
         method: "POST",
         body: accessToken,
-        credentials: "include",
       }),
       providesTags: ["User"],
     }),
@@ -41,8 +37,6 @@ const userApiSlice = apiSlice.injectEndpoints({
       query: () => ({
         url: "api/user/refresh",
         method: "POST",
-        credentials: "include",
-        credentials: "include",
       }),
       invalidatesTags: ["Token", "User"],
     }),
@@ -51,7 +45,6 @@ const userApiSlice = apiSlice.injectEndpoints({
         url: "api/user/forgotPassword",
         method: "POST",
         body: email,
-        credentials: "include",
       }),
     }),
     logoutUserApi: builder.mutation({
@@ -68,7 +61,6 @@ const userApiSlice = apiSlice.injectEndpoints({
         url: "api/user/refreshActivation",
         method: "POST",
         body: { email: email },
-        credentials: "include",
       }),
     }),
     getUserWithIdApi: builder.query({
@@ -83,7 +75,6 @@ const userApiSlice = apiSlice.injectEndpoints({
         url: "api/user/update/" + userId,
         method: "PUT",
         body: userData,
-        credentials: "include",
       }),
       invalidatesTags: (result, error, { userId }) => [
         { type: "UserWithId", id: userId },
@@ -111,7 +102,6 @@ const userApiSlice = apiSlice.injectEndpoints({
         url: `api/user/unfollow/${userId}`,
         method: "PUT",
         body: { unFollowId },
-        credentials: "include",
       }),
       invalidatesTags: ["Following", "Followers", "HomePost", "Contacts"],
     }),
