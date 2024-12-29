@@ -42,8 +42,8 @@ const Header = () => {
   const [menuClicked, setMenuClicked] = useState(false);
 
   const handleLogout = () => {
-    dispatch(userActions.logoutUser());
     logoutUserApi();
+    // dispatch(userActions.logoutUser());
     setTimeout(() => {
       navigate("/login", { replace: true });
     }, 1000);
