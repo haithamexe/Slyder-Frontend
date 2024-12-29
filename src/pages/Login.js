@@ -93,7 +93,9 @@ const Login = (props) => {
       dispatch(userActions.loginUser(loginData));
       setError(false);
       setErrorMsg("");
-      navigate("/", { replace: true });
+      setTimeout(() => {
+        navigate("/", { replace: true });
+      }, 500);
     } else if (loginError) {
       setAlert(true);
 
