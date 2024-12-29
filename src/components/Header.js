@@ -11,7 +11,11 @@ import NotificationsRoundedIcon from "@mui/icons-material/NotificationsRounded";
 import PersonSearchRoundedIcon from "@mui/icons-material/PersonSearchRounded";
 import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
-import { userActions, userAuthed } from "../features/user/userSlice";
+import {
+  userActions,
+  userAuthed,
+  logoutUser,
+} from "../features/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useLogoutUserApiMutation } from "../features/user/userApiSlice";
 import CircleRoundedIcon from "@mui/icons-material/CircleRounded";
@@ -39,6 +43,8 @@ const Header = () => {
 
   const handleLogout = () => {
     logoutUserApi();
+    dispatch(userActions.logoutUser());
+    navigate("/login", { replace: true });
   };
 
   const handleClickOutside = (e) => {
@@ -53,10 +59,6 @@ const Header = () => {
     window.addEventListener("resize", () => {
       setCurWidth(window.innerWidth);
     });
-    if (logoutSuccess) {
-      dispatch(userActions.logoutUser());
-      navigate("/login", { replace: true });
-    }
 
     if (window.location.pathname === "/profile") {
       setPath("feed");
