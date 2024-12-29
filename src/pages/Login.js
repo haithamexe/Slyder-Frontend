@@ -75,11 +75,11 @@ const Login = (props) => {
     loginUserApi(data);
   };
 
-  useEffect(() => {
-    if (user) {
-      navigate("/", { replace: true });
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user) {
+  //     navigate("/", { replace: true });
+  //   }
+  // }, [user]);
 
   useEffect(() => {
     if (refSuccess) {

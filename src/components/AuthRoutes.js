@@ -32,8 +32,9 @@ const AuthRoutes = () => {
           setAccessToken(data.data?.accessToken);
         }
       } catch (error) {
-        navigate("/login");
-        console.log("Error", error);
+        if (error && !user) {
+          navigate("/login");
+        }
       }
     };
 

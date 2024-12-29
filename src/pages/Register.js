@@ -92,11 +92,11 @@ const Register = (props) => {
   const [successAlert, setSuccessAlert] = useState(false);
   const [failAlert, setFailAlert] = useState(false);
 
-  useEffect(() => {
-    if (user) {
-      navigate("/", { replace: true });
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user) {
+  //     navigate("/", { replace: true });
+  //   }
+  // }, [user]);
 
   useEffect(() => {
     if (refreshSuccess) {
