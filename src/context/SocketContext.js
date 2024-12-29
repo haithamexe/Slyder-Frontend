@@ -298,6 +298,7 @@ export const SocketContextProvider = ({ children }) => {
         conversation: conversationId,
         status: "sent",
         createdAt: new Date().toISOString(),
+        visibleFor: [user.id, receiverId],
       };
 
       setActiveConversationMessages((prev) => [localMessage, ...prev]);
