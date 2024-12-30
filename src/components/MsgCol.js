@@ -60,8 +60,6 @@ const MsgCol = (props) => {
       const likedpostsrevresedOrder = [...likedPostsData].reverse();
       setLikedPosts(likedpostsrevresedOrder);
     }
-
-    // console.log(savedPostsData, isSuccess, "savedPostsData");
   }, [savedPostsData, likedPostsData]);
 
   useEffect(() => {

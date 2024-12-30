@@ -44,7 +44,7 @@ const ChatUser = ({ conversation, setCurrentChat }) => {
         <h1>
           {conversation?.user?.firstName + " " + conversation?.user?.surName}
         </h1>
-        <p>
+        <div className="idk-what-to-do-with-this">
           {conversation?.typing
             ? "Typing..."
             : conversation?.lastMessage?.visibleFor?.includes(user.id) &&
@@ -53,7 +53,7 @@ const ChatUser = ({ conversation, setCurrentChat }) => {
                     ?.toString()
                     .substring(0, 13) + "..."
                 : conversation?.lastMessage?.message?.toString())}
-          <div>
+          <p>
             {/* <span className="message-status">
               {conversation?.lastMessage?.sender === user._id &&
                 (conversation?.lastMessage?.status === "sent"
@@ -64,8 +64,8 @@ const ChatUser = ({ conversation, setCurrentChat }) => {
               {conversation?.lastMessage?.createdAt &&
                 formatTimeAgo(conversation?.lastMessage?.createdAt)}
             </span>
-          </div>
-        </p>
+          </p>
+        </div>
       </div>
     </div>
   );

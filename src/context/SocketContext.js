@@ -51,7 +51,6 @@ export const SocketContextProvider = ({ children }) => {
       setActiveConversation(null);
       setActiveConversationMessages(null);
       activeConversationRef.current = null;
-      console.log("rannnn");
       return;
     }
 
@@ -112,7 +111,6 @@ export const SocketContextProvider = ({ children }) => {
       const { data } = await api.get("api/notification/messages");
       if (data) {
         // alert(data);
-        console.log("message notif", data);
         setUnreadMessages(data);
         unreadMessagesRef.current = data;
       }
@@ -124,8 +122,7 @@ export const SocketContextProvider = ({ children }) => {
   const fetchConversations = async () => {
     try {
       const { data } = await api.get("api/message/conversations");
-      console.log(data);
-      if (data) {
+      if (data && socket.current) {
         const converationsFormatted = data.map((c) => {
           if (c?.lastMessage?.message) {
             const lastMessage = decrypt(c?.lastMessage?.message);
@@ -433,8 +430,6 @@ export const SocketContextProvider = ({ children }) => {
         process.env.REACT_APP_BACKEND_URL.toString().length - 1
       );
 
-      console.log(backendUrl);
-
       socket.current = io(backendUrl, {
         query: {
           userId: user.id,
@@ -450,7 +445,6 @@ export const SocketContextProvider = ({ children }) => {
       socket.current?.emit("joinConversationRoom", user.id);
 
       socket.current?.on("getOnlineUsers", (users) => {
-        console.log(users);
         setOnlineUsers(users);
       });
 
@@ -506,7 +500,6 @@ export const SocketContextProvider = ({ children }) => {
       });
 
       socket.current?.on("typing", (conversationId) => {
-        console.log("typing", conversationId);
         if (conversationId === activeConversationRef.current?._id) {
           setUserTyping(true);
         }
@@ -565,7 +558,6 @@ export const SocketContextProvider = ({ children }) => {
             conversation.lastMessage.message
           );
         }
-        console.log(conversation);
         setConversations((prev) => [conversation, ...prev]);
         conversationsRef.current = [conversation, ...conversationsRef.current];
         socket.current?.emit("joinConversation", conversation?._id);

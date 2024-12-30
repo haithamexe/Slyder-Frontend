@@ -107,7 +107,7 @@ const UserCol = ({ user }) => {
           <div className="active-people">
             <div className="active-people-list">
               {following?.map((person) => (
-                <FollowersDisplay key={person} person={person} />
+                <FollowersDisplay key={person._id} person={person} />
               ))}
             </div>
           </div>
