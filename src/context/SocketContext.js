@@ -181,6 +181,7 @@ export const SocketContextProvider = ({ children }) => {
         `api/message/conversation/${conversationId}`
       );
       if (deleted) {
+        socket?.current?.emit("leaveConversation", conversationId);
         setConversations((prev) =>
           prev.filter((c) => c._id !== conversationId)
         );
@@ -427,7 +428,14 @@ export const SocketContextProvider = ({ children }) => {
       //   reconnectionDelay: 1000
       // });
 
-      socket.current = io("https://slyder-backend.onrender.com", {
+      const backendUrl = process.env.REACT_APP_BACKEND_URL.toString().slice(
+        0,
+        process.env.REACT_APP_BACKEND_URL.toString().length - 1
+      );
+
+      console.log(backendUrl);
+
+      socket.current = io(backendUrl, {
         query: {
           userId: user.id,
         },
@@ -504,7 +512,7 @@ export const SocketContextProvider = ({ children }) => {
         }
         setConversations((prev) =>
           prev.map((c) => {
-            if (c._id === conversationId) {
+            if (c?._id === conversationId) {
               return {
                 ...c,
                 typing: true,
@@ -521,7 +529,7 @@ export const SocketContextProvider = ({ children }) => {
         }
         setConversations((prev) =>
           prev.map((c) => {
-            if (c._id === conversationId) {
+            if (c?._id === conversationId) {
               return {
                 ...c,
                 typing: false,
@@ -547,7 +555,7 @@ export const SocketContextProvider = ({ children }) => {
           return;
         }
 
-        if (conversationsRef.current.find((c) => c._id === conversation._id)) {
+        if (conversationsRef.current.find((c) => c?._id === conversation._id)) {
           setActiveConversationFunc(conversation._id);
           return;
         }
@@ -605,6 +613,18 @@ export const SocketContextProvider = ({ children }) => {
         }
 
         handleNewMessageNotification(message, conversationId);
+      });
+
+      socket.current?.on("newMessageNoConversation", (conversation) => {
+        if (conversation?.lastMessage?.message) {
+          conversation.lastMessage.message = decrypt(
+            conversation.lastMessage.message
+          );
+        }
+        setConversations((prev) => [conversation, ...prev]);
+        conversationsRef.current = [conversation, ...conversationsRef.current];
+
+        socket.current?.emit("joinConversation", conversation?._id);
       });
 
       return () => {

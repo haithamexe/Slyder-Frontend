@@ -115,8 +115,6 @@ const ChatWindow = () => {
     }
   }, [newMessage]);
 
-  console.log("Active conversation", activeConversation);
-
   return (
     <div className="messages-container">
       <div className="messages-header">
@@ -159,7 +157,10 @@ const ChatWindow = () => {
           >
             {userTyping
               ? activeConversation?.user?.firstName + " is typing..."
-              : activeConversation?.lastMessage?.sender === user.id &&
+              : activeConversation?.lastMessage?.visibleFor?.includes(
+                  user.id
+                ) &&
+                activeConversation?.lastMessage?.sender === user.id &&
                 (activeConversation?.lastMessage?.status === "sent"
                   ? "Sent"
                   : "Seen")}
