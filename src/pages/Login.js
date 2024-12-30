@@ -128,7 +128,7 @@ const Login = (props) => {
         }
         onClick={() => setAlert(false)}
       >
-        <p>Verification needed orInvalid Email or Password</p>
+        <p>Verification needed or Invalid Email or Password</p>
       </div>
     </div>
   );
