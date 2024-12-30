@@ -34,7 +34,6 @@ const MsgCol = (props) => {
   const [activityScrollable, setActivityScrollable] = useState(false);
   const [isMobile, setIsMobile] = useState(true);
   const [showMenu, setShowMenu] = useState(true);
-
   const [messagesScrollable, setMessagesScrollable] = useState(false);
   const handleActivtyScrollEnter = () => {
     setActivityScrollable(true);
@@ -54,10 +53,12 @@ const MsgCol = (props) => {
 
   useEffect(() => {
     if (savedPostsData) {
-      setSavedPosts(savedPostsData);
+      const savedpostsrevresedOrder = [...savedPostsData].reverse();
+      setSavedPosts(savedpostsrevresedOrder);
     }
     if (likedPostsData) {
-      setLikedPosts(likedPostsData);
+      const likedpostsrevresedOrder = [...likedPostsData].reverse();
+      setLikedPosts(likedpostsrevresedOrder);
     }
 
     // console.log(savedPostsData, isSuccess, "savedPostsData");

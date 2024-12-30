@@ -2088,6 +2088,15 @@
   margin-left: auto;
 }
 
+.post-new-button-icon-newPost-icon {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin-bottom: 14px;
+  margin-right: 20px;
+  /* margin-top: 20px; */
+}
+
 /* .post-preveiw-img-container {
   position: relative !important;
 } */
