@@ -66,7 +66,6 @@ const ChatWindow = () => {
     fetchMessages(activeConversation?._id, pageRef.current + 1);
     pageRef.current += 1;
     setCanLoadMore(true);
-    console.log("Getting more messages", "status of fetching", hasMoreMessages);
   };
 
   useEffect(() => {

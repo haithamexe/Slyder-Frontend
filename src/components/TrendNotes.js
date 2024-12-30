@@ -96,8 +96,9 @@ const TrendNotes = ({ setElementShow }) => {
         {!newNote ? (
           <div
             className={
-              window.innerWidth < 1200 ||
-              noteScroll ? "note-container note-scroll" : "note-container"
+              window.innerWidth < 1200 || noteScroll
+                ? "note-container note-scroll"
+                : "note-container"
             }
             onMouseEnter={handleScrollEnter}
             onMouseLeave={handleScrollExit}
@@ -121,7 +122,6 @@ const TrendNotes = ({ setElementShow }) => {
                     }}
                     onClick={() => {
                       handleDeleteNote({ noteId: note?._id });
-                      console.log("delete note", note?._id);
                     }}
                   />
                 )}

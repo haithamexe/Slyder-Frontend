@@ -44,9 +44,7 @@ const NewPost = ({ newPost, setNewPost }) => {
           },
           "base64" // output type
         );
-      } catch (err) {
-        console.error("Error resizing the image:", err);
-      }
+      } catch (err) {}
     }
   };
 
@@ -70,7 +68,6 @@ const NewPost = ({ newPost, setNewPost }) => {
   useEffect(() => {
     document.addEventListener("click", handleClickOutside);
     if (isSuccess) {
-      console.log(data, "data");
       setNewPostData({ content: "", image: "", type: "" });
       setNewPost(false);
     }

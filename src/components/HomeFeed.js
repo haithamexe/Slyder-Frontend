@@ -79,8 +79,6 @@ const HomeFeed = ({ setNewPost, user, redirectionPage }) => {
     // setScrolledAmount(scrollPercentage);
   };
 
-  console.log("HomeFeed User", userAuth);
-
   return (
     <>
       <div className="post">

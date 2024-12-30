@@ -243,7 +243,7 @@ const PostPreveiw = ({
         if (save?.user === currentUser?.id) {
           setIsSaved(true);
           return;
-        } 
+        }
       });
     }
 
@@ -258,7 +258,6 @@ const PostPreveiw = ({
         .get(`${process.env.REACT_APP_BACKEND_URL}api/post/${postId}`)
         .then((res) => {
           setPost(res.data);
-          console.log(res.data.comments);
         })
         .catch((err) => console.log(err));
     }

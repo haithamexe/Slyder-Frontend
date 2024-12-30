@@ -66,7 +66,6 @@ const Post = ({ postId, setFetchPostId, stateChanged, setFetchedPost }) => {
   };
 
   const handleDeletePost = () => {
-    console.log("deleting post");
     deletePost(fetchedPost._id);
     setDropDownMenu(false);
   };
@@ -120,14 +119,14 @@ const Post = ({ postId, setFetchPostId, stateChanged, setFetchedPost }) => {
         if (like.user === currentUser.id) {
           setIsLiked(true);
           return;
-        } 
+        }
       });
 
       fetchedPost?.savedBy?.forEach((saved) => {
         if (saved.user === currentUser.id) {
           setIsSaved(true);
           return;
-        } 
+        }
       });
 
       if (fetchedPost?.likes?.length === 0) {
@@ -137,8 +136,6 @@ const Post = ({ postId, setFetchPostId, stateChanged, setFetchedPost }) => {
       if (fetchedPost?.savedBy?.length === 0) {
         setIsSaved(false);
       }
-
-      console.log("fetchedPost", fetchedPost);
     }
   }, [fetchedPost, postId]);
 

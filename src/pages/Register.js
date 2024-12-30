@@ -81,9 +81,7 @@ const Register = (props) => {
   const watched = watch(["year", "month", "gender"]);
 
   const onSubmit = (data) => {
-    console.log(data);
     registerUserApi(data);
-    console.log(error, isLoading, isSuccess, regData);
   };
 
   const [regError, setRegError] = useState(false);
@@ -125,7 +123,6 @@ const Register = (props) => {
         setRegError(false);
         setRegErrorMsg("");
       }, 3000);
-      console.log(error);
     }
   }, [isSuccess, error]);
 
