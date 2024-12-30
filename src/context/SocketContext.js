@@ -218,24 +218,10 @@ export const SocketContextProvider = ({ children }) => {
   };
 
   const messageSeen = (conversationId) => {
-    const conversation = conversationsRef.current.find(
-      (c) => c._id === conversationId
-    );
-
-    // if (conversation?.lastMessage?.sender === user.id) {
-    //   console.log("sender is the same as user");
-    //   return;
-    // }
-
-    const messageId = conversation?.lastMessage?._id;
-
     socket.current.emit("messageSeen", {
       conversationId,
-      receiverId: conversation?.user?._id,
-      messageId,
     });
 
-    console.log("message seen sent", conversation, messageId);
     setUnreadMessages((prev) =>
       prev.filter((m) => m.conversation !== conversationId)
     );
@@ -278,10 +264,6 @@ export const SocketContextProvider = ({ children }) => {
       const encryptedMessage = encrypt(message);
       const conversationId = activeConversation?._id;
       const receiverId = activeConversation?.user._id;
-      // const { data } = await api.post("api/message/create", {
-      //   message: encryptedMessage,
-      //   conversationId,
-      // });
 
       socket.current.emit("newMessage", {
         message: encryptedMessage,
@@ -349,16 +331,6 @@ export const SocketContextProvider = ({ children }) => {
   };
 
   const handleNewMessageNotification = (message, conversationId) => {
-    // if (activeConversationRef.current?._id !== conversationId) {
-    // console.log("new message with unread stuff", unreadMessages);
-    // if (!unreadMessages.find((m) => m?.conversation === conversationId)) {
-
-    // console.log("new message with unread stuff", unreadMessagesRef.current);
-    // console.log(
-    //   "new message with unread stuff convo",
-    //   activeConversationRef.current
-    // );
-
     if (activeConversationRef?.current?._id === conversationId) {
       messageSeen(conversationId);
       return;
@@ -391,40 +363,6 @@ export const SocketContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (user) {
-      // socket.current = io("https://slyder-backend.onrender.com", {
-      //   query: {
-      //     userId: user.id,
-      //   },
-      //   withCredentials: true,
-      // });
-
-      // socket.current = io(process.env.REACT_APP_BACKEND_URL, {
-      //   query: {
-      //     userId: user.id,
-      //   },
-      //   withCredentials: true, // This is crucial for sending cookies
-      //   transports: ['polling'],
-      //   path: '/',
-      //   reconnection: true,
-      //   reconnectionAttempts: 5,
-      //   reconnectionDelay: 1000,
-      //   autoConnect: true,
-      //   forceNew: true,
-      //   timeout: 20000
-      // });
-
-      // socket.current = io(process.env.REACT_APP_BACKEND_URL, {
-      //   query: {
-      //     userId: user.id,
-      //   },
-      //   withCredentials: true,
-      //   transports: ['polling', 'websocket'], // Specify both transport types
-      //   path: '/',
-      //   reconnection: true,
-      //   reconnectionAttempts: 3,
-      //   reconnectionDelay: 1000
-      // });
-
       const backendUrl = process.env.REACT_APP_BACKEND_URL.toString().slice(
         0,
         process.env.REACT_APP_BACKEND_URL.toString().length - 1
@@ -449,7 +387,6 @@ export const SocketContextProvider = ({ children }) => {
       });
 
       socket.current?.on("messageSeen", ({ conversationId }) => {
-        // alert(conversationId);
         if (activeConversationRef.current?._id === conversationId) {
           setActiveConversation((prev) => {
             return {
