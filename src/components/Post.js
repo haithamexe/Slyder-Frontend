@@ -164,18 +164,20 @@ const Post = ({ postId, setFetchPostId, stateChanged, setFetchedPost }) => {
               )}
             </div>
             {/* <button className="post-follow">Unfollow</button> */}
-            <MoreVertRoundedIcon
-              ref={menuRef}
-              onClick={() => setDropDownMenu(!dropDownMenu)}
-              className="post-on-options"
-              sx={{
-                fontSize: 24,
-                color: "#a7c750;",
-                cursor: "pointer",
-                width: "27px",
-                height: "27px",
-              }}
-            />
+            {isAuther && (
+              <MoreVertRoundedIcon
+                ref={menuRef}
+                onClick={() => setDropDownMenu(!dropDownMenu)}
+                className="post-on-options"
+                sx={{
+                  fontSize: 24,
+                  color: "#a7c750;",
+                  cursor: "pointer",
+                  width: "27px",
+                  height: "27px",
+                }}
+              />
+            )}
             <div className="post-menu-options-container">
               {dropDownMenu && isAuther && (
                 <div className="post-menu-options" ref={menuRef}>
