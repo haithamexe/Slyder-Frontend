@@ -44,7 +44,7 @@ const ChatUser = ({ conversation, setCurrentChat }) => {
         <h1>
           {conversation?.user?.firstName + " " + conversation?.user?.surName}
         </h1>
-        <div className="idk-what-to-do-with-this">
+        <p className="idk-what-to-do-with-this">
           {conversation?.typing
             ? "Typing..."
             : conversation?.lastMessage?.visibleFor?.includes(user.id) &&
@@ -65,7 +65,7 @@ const ChatUser = ({ conversation, setCurrentChat }) => {
                 formatTimeAgo(conversation?.lastMessage?.createdAt)}
             </span>
           </p>
-        </div>
+        </p>
       </div>
     </div>
   );
