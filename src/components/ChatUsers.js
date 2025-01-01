@@ -21,7 +21,6 @@ const ChatUsers = ({ setCurrentChat }) => {
   useEffect(() => {
     if (conversations) {
       setLoading(false);
-      console.log(conversations, " loaded");
     }
   }, [conversations]);
 

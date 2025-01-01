@@ -5,6 +5,8 @@ import ShortcutRoundIcon from "@mui/icons-material/ShortcutRounded";
 import TurnedInRoundIcon from "@mui/icons-material/TurnedInRounded";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import PhotoLibraryRoundedIcon from "@mui/icons-material/PhotoLibraryRounded";
+import AddRoundedIcon from "@mui/icons-material/AddRounded";
+
 import { useState } from "react";
 import Post from "./Post";
 import PostPreveiw from "./PostPreveiw";
@@ -22,9 +24,9 @@ const ProfilePostsElement = ({ user, posts, setNewPost }) => {
         {curUser?.username === user?.username && (
           <div className="post">
             <div className="post-input-img">
-              <div className="post-input-img-wrapper">
+              {/* <div className="post-input-img-wrapper">
                 <img src={curUser?.picture} alt="post" />
-              </div>
+              </div> */}
               <button
                 type="button"
                 className="post-new-button"
@@ -34,6 +36,10 @@ const ProfilePostsElement = ({ user, posts, setNewPost }) => {
                 }}
               >
                 What's on your mind?
+                <AddRoundedIcon
+                  className="post-new-button-icon-newPost-icon"
+                  style={{ color: "#a7c750", fontSize: "2rem" }}
+                />
               </button>
             </div>
           </div>

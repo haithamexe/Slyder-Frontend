@@ -97,7 +97,9 @@ const UserCol = ({ user }) => {
         <p>Friends</p>
         <div
           className={
-            communityScrolled ? "communities communites-scroll" : "communities"
+            window.innerWidth < 1200 || communityScrolled
+              ? "communities communites-scroll"
+              : "communities"
           }
           onMouseEnter={handleScrollEnter}
           onMouseLeave={handleScrollExit}
@@ -105,7 +107,7 @@ const UserCol = ({ user }) => {
           <div className="active-people">
             <div className="active-people-list">
               {following?.map((person) => (
-                <FollowersDisplay key={person} person={person} />
+                <FollowersDisplay key={person._id} person={person} />
               ))}
             </div>
           </div>

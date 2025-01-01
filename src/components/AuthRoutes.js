@@ -31,10 +31,10 @@ const AuthRoutes = () => {
         if (data) {
           setAccessToken(data.data?.accessToken);
         }
-        console.log("Refreshed Token", data);
       } catch (error) {
-        navigate("/login");
-        console.log("Error", error);
+        if (error && !user) {
+          navigate("/login");
+        }
       }
     };
 
@@ -51,7 +51,6 @@ const AuthRoutes = () => {
 
   useEffect(() => {
     if (accessToken) {
-      console.log("Access Token", accessToken);
       const authUser = async () => {
         try {
           const data = await axios({
@@ -61,7 +60,7 @@ const AuthRoutes = () => {
             withCredentials: true,
           });
           dispatch(userActions.setUser(data.data));
-          console.log("User Authed", data);
+          // console.log("User Authed", data);
         } catch (error) {
           navigate("/login");
         }

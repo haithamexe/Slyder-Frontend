@@ -75,11 +75,11 @@ const Login = (props) => {
     loginUserApi(data);
   };
 
-  useEffect(() => {
-    if (user) {
-      navigate("/", { replace: true });
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user) {
+  //     navigate("/", { replace: true });
+  //   }
+  // }, [user]);
 
   useEffect(() => {
     if (refSuccess) {
@@ -93,7 +93,9 @@ const Login = (props) => {
       dispatch(userActions.loginUser(loginData));
       setError(false);
       setErrorMsg("");
-      navigate("/", { replace: true });
+      setTimeout(() => {
+        navigate("/", { replace: true });
+      }, 500);
     } else if (loginError) {
       setAlert(true);
 
@@ -126,7 +128,7 @@ const Login = (props) => {
         }
         onClick={() => setAlert(false)}
       >
-        <p>Invalid Email or Password</p>
+        <p>Verification needed or Invalid Email or Password</p>
       </div>
     </div>
   );

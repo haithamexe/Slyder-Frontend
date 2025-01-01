@@ -186,7 +186,7 @@ const EditProfile = ({ setEditing, user }) => {
       >
         <CloseRoundedIcon
           sx={{
-            fontSize: 25,
+            fontSize: window.innerWidth <= 650 ? 15 : 25,
             color: "#a7c750;",
             cursor: "pointer",
           }}

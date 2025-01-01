@@ -52,6 +52,7 @@ const userApiSlice = apiSlice.injectEndpoints({
         url: "api/user/logout",
         method: "POST",
         body: {},
+        credentials: "include",
       }),
       invalidatesTags: ["Token", "User"],
     }),

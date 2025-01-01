@@ -11,13 +11,6 @@ const CanvasChat = (props) => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
-    console.log(
-      "CanvasChat.js",
-      numberOfParticlesChanged,
-      colorsChangedPri,
-      colorChangedSec,
-      radiusChanged
-    );
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
     canvas.width = 370;

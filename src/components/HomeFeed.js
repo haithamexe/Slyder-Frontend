@@ -13,6 +13,7 @@ import ChatRoundedIcon from "@mui/icons-material/ChatRounded";
 import TurnedInRoundIcon from "@mui/icons-material/TurnedInRounded";
 import ShortcutRoundIcon from "@mui/icons-material/ShortcutRounded";
 import ArrowDropUpRoundedIcon from "@mui/icons-material/ArrowDropUpRounded";
+import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import {
   useGetHomePostsQuery,
   useGetPostsQuery,
@@ -79,8 +80,6 @@ const HomeFeed = ({ setNewPost, user, redirectionPage }) => {
     // setScrolledAmount(scrollPercentage);
   };
 
-  console.log("HomeFeed User", userAuth);
-
   return (
     <>
       <div className="post">
@@ -94,13 +93,21 @@ const HomeFeed = ({ setNewPost, user, redirectionPage }) => {
             onClick={() => setNewPost(true)}
           >
             What's on your mind?
+            <AddRoundedIcon
+              className="post-new-button-icon-newPost-icon"
+              style={{ color: "#a7c750", fontSize: "2rem" }}
+            />
           </button>
         </div>
       </div>
 
       {postsData?.length > 0 ? (
         <div
-          className={feedScrollable ? "feed feed-scrollable" : "feed"}
+          className={
+            window.innerWidth < 1200 || feedScrollable
+              ? "feed feed-scrollable"
+              : "feed"
+          }
           onMouseEnter={handleScrollEnter}
           onMouseLeave={handleScrollExit}
           ref={feedRef}

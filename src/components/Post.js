@@ -66,7 +66,6 @@ const Post = ({ postId, setFetchPostId, stateChanged, setFetchedPost }) => {
   };
 
   const handleDeletePost = () => {
-    console.log("deleting post");
     deletePost(fetchedPost._id);
     setDropDownMenu(false);
   };
@@ -120,8 +119,6 @@ const Post = ({ postId, setFetchPostId, stateChanged, setFetchedPost }) => {
         if (like.user === currentUser.id) {
           setIsLiked(true);
           return;
-        } else {
-          setIsLiked(false);
         }
       });
 
@@ -129,8 +126,6 @@ const Post = ({ postId, setFetchPostId, stateChanged, setFetchedPost }) => {
         if (saved.user === currentUser.id) {
           setIsSaved(true);
           return;
-        } else {
-          setIsSaved(false);
         }
       });
 
@@ -141,8 +136,6 @@ const Post = ({ postId, setFetchPostId, stateChanged, setFetchedPost }) => {
       if (fetchedPost?.savedBy?.length === 0) {
         setIsSaved(false);
       }
-
-      console.log("fetchedPost", fetchedPost);
     }
   }, [fetchedPost, postId]);
 
@@ -171,18 +164,20 @@ const Post = ({ postId, setFetchPostId, stateChanged, setFetchedPost }) => {
               )}
             </div>
             {/* <button className="post-follow">Unfollow</button> */}
-            <MoreVertRoundedIcon
-              ref={menuRef}
-              onClick={() => setDropDownMenu(!dropDownMenu)}
-              className="post-on-options"
-              sx={{
-                fontSize: 24,
-                color: "#a7c750;",
-                cursor: "pointer",
-                width: "27px",
-                height: "27px",
-              }}
-            />
+            {isAuther && (
+              <MoreVertRoundedIcon
+                ref={menuRef}
+                onClick={() => setDropDownMenu(!dropDownMenu)}
+                className="post-on-options"
+                sx={{
+                  fontSize: 24,
+                  color: "#a7c750;",
+                  cursor: "pointer",
+                  width: "27px",
+                  height: "27px",
+                }}
+              />
+            )}
             <div className="post-menu-options-container">
               {dropDownMenu && isAuther && (
                 <div className="post-menu-options" ref={menuRef}>

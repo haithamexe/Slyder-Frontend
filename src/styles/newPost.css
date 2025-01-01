@@ -137,10 +137,17 @@
     height: 40vh;
   }
 
+  @media screen and (max-width: 650px) {
+    height: 30vh;
+  }
+
   /* width: 900px; */
   border-radius: 15px;
   /* border: 5px solid var(--bg-s-secondary); */
   /* padding: 5px; */
+
+  overflow-y: scroll;
+  /* overflow-x: hidden; */
 }
 
 .new-post-img img {
@@ -149,6 +156,7 @@
 
   @media screen and (max-width: 850px) {
     width: 80%;
+    height: 70%;
   }
 
   @media screen and (max-height: 800px) {
@@ -169,4 +177,9 @@
   color: var(--color-secondary);
   font-size: 1.2rem;
   cursor: pointer;
+
+  @media screen and (max-width: 850px) {
+    top: 5px;
+    right: -10px;
+  }
 }
