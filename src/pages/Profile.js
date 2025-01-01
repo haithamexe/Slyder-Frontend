@@ -1,5 +1,5 @@
 import "../styles/profile.css";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { userAuthed } from "../features/user/userSlice";
 import ProfilePostsElement from "../components/ProfilePostsElement";
@@ -59,6 +59,7 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
   const [following, setFollowing] = useState([]);
   const { newConversation } = useSocketContext();
   const [postFetched, setFetchedPost] = useState({});
+  const [isExist, setIsExist] = useState(true);
   // const {
   //   data: postsData,
   //   isSuccess: fetchedPosts,
@@ -98,6 +99,7 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
       });
       setUser(data?.data);
     } catch (error) {
+      setIsExist(false);
       console.log(error);
     }
   };
@@ -160,7 +162,7 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
     }
   }, [user, newPost]);
 
-  return (
+  const content = (
     <div className="profile">
       {editing && ableToEdit ? (
         <EditProfile setEditing={setEditing} user={user} />
@@ -396,6 +398,25 @@ const Profile = ({ redirectionPage, redirectionUsername }) => {
         <PicDisplay picDisplay={picDisplay} setPicDisplay={setPicDisplay} />
       )}
     </div>
+  );
+
+  return (
+    <>
+      {isExist ? (
+        content
+      ) : (
+        <div className="profile-doesnt-exist">
+          <h1>User does not exist</h1>
+          <Link
+            className="profile-doesnt-exist-btn"
+            // onClick={() => navigate(-1)}
+            to={-1}
+          >
+            Go back
+          </Link>
+        </div>
+      )}
+    </>
   );
 };
 

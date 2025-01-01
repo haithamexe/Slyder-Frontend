@@ -209,7 +209,7 @@ const Header = () => {
           <SettingsRoundedIcon
             className="user-settings-icon"
             sx={{
-              fontSize: 25,
+              fontSize: window.innerWidth <= 650 ? 20 : 25,
               color: "#a7c750",
               cursor: "pointer",
               backgroundColor: "#161921",

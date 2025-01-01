@@ -74,6 +74,10 @@
   position: relative;
   width: 50px;
   height: 50px;
+  @media screen and (max-width: 650px) {
+    width: 40px;
+    height: 40px;
+  }
   background-color: #2b2b2b;
   border-radius: 15px;
   background-color: var(--bg-s-third);
@@ -101,6 +105,10 @@
   position: absolute;
   bottom: 0;
   left: 29px;
+
+  @media screen and (max-width: 650px) {
+    left: 20px;
+  }
 }
 
 .header-right button:hover {
@@ -337,6 +345,11 @@
   align-items: center;
   padding: 7px;
   padding-left: 15px;
+  /* width: 97%; */
+
+  @media screen and (max-width: 650px) {
+    width: 90%;
+  }
   border: 1px solid var(--bg-s-third);
   border-radius: 15px;
   background-color: var(--bg-s-third);
