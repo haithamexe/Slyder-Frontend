@@ -1,0 +1,74 @@
+@import "../index.css";
+
+.reset-password-page {
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+  /* height: 100vh; */
+  /* width: 100%; */
+  /* height: 100v; */
+  /* background-color: var(--bg-s-primary); */
+  width: 100vw;
+  height: 100vh;
+}
+
+.reset-password-container {
+  position: relative;
+  margin-top: 10vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50vw;
+  height: 50vh;
+  padding: 20px;
+  border-radius: 15px;
+  background-color: var(--bg-s-secondary);
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  gap: 10px;
+
+  @media screen and (max-width: 850px) {
+    width: 90vw;
+  }
+}
+
+.reset-password-container h1 {
+  color: var(--color-primary);
+}
+.reset-password-container p {
+  color: var(--color-secondary);
+  font-size: 0.9rem;
+  width: 70%;
+  text-wrap: wrap;
+  /* right: 0; */
+}
+
+.reset-password-container input {
+  width: 80%;
+  padding: 10px;
+  margin: 7.5px 0;
+  border: none;
+  border-radius: 15px;
+  background-color: var(--bg-s-third);
+  border: #393939 1px solid;
+  color: #fff;
+}
+
+.reset-password-container button {
+  width: 80%;
+  padding: 7px;
+  margin: 7.5px 0;
+  border: 1px solid var(--color-secondary);
+  border-radius: 15px;
+  background-color: var(--bg-s-fourth);
+  color: #000000;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: var(--color-secondary);
+}
+
+.reset-password-container button:hover {
+  background-color: var(--color-primary);
+  color: #000000;
+  border: none;
+}
