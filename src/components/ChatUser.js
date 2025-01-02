@@ -18,11 +18,20 @@ const ChatUser = ({ conversation, setCurrentChat }) => {
     unreadMessages,
     activeConversation,
   } = useSocketContext();
+  const [isUnread, setIsUnread] = useState(false);
 
+  useEffect(() => {
+    unreadMessages.map((message) => {
+      if (message.conversation === conversation._id) {
+        setIsUnread(true);
+      }
+    });
+  }, [unreadMessages]);
   return (
     <div
-      className="chat-user"
+      className={!isUnread ? "chat-user" : "chat-user unread-messages"}
       onClick={() => {
+        setIsUnread(false);
         setActiveConversationFunc(conversation._id);
       }}
     >

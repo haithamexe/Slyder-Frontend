@@ -678,3 +678,8 @@
 .msg-text-sender {
   font-size: 0.8rem !important;
 }
+
+.unread-messages {
+  background-color: var(--bg-s-secondary);
+  border: var(--bg-s-border) 1px solid;
+}

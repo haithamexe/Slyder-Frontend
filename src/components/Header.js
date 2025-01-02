@@ -237,6 +237,16 @@ const Header = () => {
                 }}
               />
             </div>
+            <div className="menu-item" onClick={() => navigate("/reset/v0")}>
+              <h3>Reset Password</h3>
+              <SettingsRoundedIcon
+                sx={{
+                  fontSize: 20,
+                  color: "#a7c750",
+                  marginRight: "10px",
+                }}
+              />
+            </div>
             {/* <div className="menu-item">
                 <h3>Settings</h3>
                 <SettingsRoundedIcon

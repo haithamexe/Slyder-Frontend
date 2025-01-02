@@ -172,3 +172,47 @@
 .show-login-alert {
   visibility: visible;
 }
+
+.login-forgot-password {
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
+  margin-left: 2px;
+  width: 100%;
+  margin-top: 2px;
+  color: var(--color-secondary);
+  cursor: pointer;
+}
+
+.forgot-password-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 2px;
+  color: var(--color-secondary);
+  cursor: pointer;
+}
+.forgot-password-container input {
+  width: 100%;
+  padding: 10px;
+  margin: 7.5px 0;
+  border: none;
+  border-radius: 15px;
+  background-color: rgb(29, 29, 29);
+  border: #393939 1px solid;
+  color: #fff;
+}
+
+.forgot-password-container button {
+  width: 20%;
+  padding: 10px;
+  margin-left: 5px;
+  /* margin: 7.5px 0; */
+  border: none;
+  border-radius: 15px;
+  background-color: var(--color-primary);
+  color: #000000;
+  font-size: 1rem;
+  cursor: pointer;
+}

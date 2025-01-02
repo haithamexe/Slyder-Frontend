@@ -13,6 +13,7 @@ import PostPage from "./pages/PostPage";
 import TermsOfService from "./pages/Terms";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import AuthCheck from "./components/AuthCheck";
+import ResetPassword from "./pages/ResetPassword";
 
 const App = () => {
   return (
@@ -46,6 +47,7 @@ const App = () => {
       <Route path="/activate/:token" element={<Activate />} />
       <Route path="/terms" element={<TermsOfService />} />
       <Route path="/privacy" element={<PrivacyPolicy />} />
+      <Route path="/reset/:token" element={<ResetPassword />} />
       {/* 404 route  */}
       <Route path="*" element={<NotFound404 />} />
     </Routes>
