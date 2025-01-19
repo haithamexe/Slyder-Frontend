@@ -1,6 +1,11 @@
 import LoginRegisterButtons from "./LoginRegisterButtons";
 import LoginFormBoxes from "./LoginFormBoxes";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { userActions } from "../features/user/userSlice";
+import { useLoginUserApiMutation } from "../features/user/userApiSlice";
+
 import axios from "axios";
 const LoginForm = (props) => {
   const { register, error, handleSubmit, loginIsError, onSubmit, ...rest } =
@@ -8,6 +13,29 @@ const LoginForm = (props) => {
 
   const [isForgot, setIsForgot] = useState(false);
   const [email, setEmail] = useState("");
+  const [demoLogin, setDemoLogin] = useState(false);
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+
+  const [
+    loginUserApi,
+    {
+      data: loginData,
+      error: loginError,
+      isLoading: logingLoading,
+      isSuccess: loginSuccess,
+      isError: loginIsErrorCall,
+    },
+  ] = useLoginUserApiMutation();
+
+  const handleDemoLogin = async () => {
+    loginUserApi({
+      email: "demo@slydermail.com",
+      password: "test1234",
+    });
+  };
+
   const handleForgot = async () => {
     try {
       await axios.post(
@@ -24,6 +52,15 @@ const LoginForm = (props) => {
       setIsForgot(false);
     }
   };
+
+  useEffect(() => {
+    if (loginSuccess) {
+      dispatch(userActions.loginUser(loginData));
+      setTimeout(() => {
+        navigate("/", { replace: true });
+      }, 500);
+    }
+  }, [loginSuccess]);
 
   return (
     <div className="login-form">
@@ -51,9 +88,37 @@ const LoginForm = (props) => {
           <button onClick={handleForgot}>Reset</button>
         </div>
       ) : (
-        <p onClick={() => setIsForgot(true)} className="login-forgot-password">
-          Forgot password?
-        </p>
+        <div className="login-demo">
+          {!demoLogin ? (
+            <>
+              <p
+                onClick={() => setIsForgot(true)}
+                className="login-forgot-password"
+              >
+                Forgot password?
+              </p>
+
+              <p
+                onClick={() => setDemoLogin(true)}
+                className="login-forgot-password"
+              >
+                Guest Login?
+              </p>
+            </>
+          ) : (
+            <>
+              <p onClick={handleDemoLogin} className="login-forgot-password">
+                Guest account resets on refresh, continue?
+              </p>
+              <p
+                className="login-forgot-password"
+                onClick={() => setDemoLogin(false)}
+              >
+                Back
+              </p>
+            </>
+          )}
+        </div>
       )}
       <div className="login-hero">
         <img
